@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="APP_NAME">Localizer</string>
+    <string name="NAVIGATION_TITLE">Welcome</string>
+    <string name="PERFORM_ACTION">Make It Go!</string>
+</resources>
