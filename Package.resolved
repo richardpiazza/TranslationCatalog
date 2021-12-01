@@ -14,9 +14,9 @@
         "package": "LocaleSupport",
         "repositoryURL": "https://github.com/richardpiazza/LocaleSupport.git",
         "state": {
-          "branch": "feature/split-catalog",
-          "revision": "936c6972b8c04cafbefdc7d40522b3ef4782fb2b",
-          "version": null
+          "branch": null,
+          "revision": "105063b0f8fc664b25af8cf6d1eb84fed5df4e0c",
+          "version": "0.4.0"
         }
       },
       {
