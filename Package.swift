@@ -36,7 +36,7 @@ let package = Package(
         .package(name: "PerfectSQLite", url: "https://github.com/PerfectlySoft/Perfect-SQLite.git", .upToNextMinor(from: "5.0.0")),
         .package(url: "https://github.com/JohnSundell/Plot.git", .upToNextMinor(from: "0.8.0")),
         .package(url: "https://github.com/alexisakers/HTMLString.git", .upToNextMinor(from: "6.0.0")),
-        .package(url: "https://github.com/richardpiazza/Statement.git", .upToNextMinor(from: "0.4.0")),
+        .package(url: "https://github.com/richardpiazza/Statement.git", .upToNextMinor(from: "0.5.1")),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.

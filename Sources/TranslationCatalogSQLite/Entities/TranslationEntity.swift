@@ -3,45 +3,35 @@ import TranslationCatalog
 import LocaleSupport
 import Foundation
 
-struct TranslationEntity: Table {
+struct TranslationEntity: Entity {
     
-    enum CodingKeys: String, CodingKey {
-        case id
-        case uuid
-        case expressionID = "expression_id"
-        case language = "language_code"
-        case script = "script_code"
-        case region = "region_code"
-        case value
-    }
+    let tableName: String = "translation"
     
-    static var schema: Schema = { TranslationEntity().schema }()
-    static var id: AnyColumn { schema.columns[0] }
-    static var uuid: AnyColumn { schema.columns[1] }
-    static var expressionID: AnyColumn { schema.columns[2] }
-    static var language: AnyColumn { schema.columns[3] }
-    static var script: AnyColumn { schema.columns[4] }
-    static var region: AnyColumn { schema.columns[5] }
-    static var value: AnyColumn { schema.columns[6] }
-    private var schema: Schema { Schema(name: "translation", columns: [_id, _uuid, _expressionID, _language, _script, _region, _value]) }
-    
-    @Column(table: TranslationEntity.self, name: CodingKeys.id.rawValue, dataType: "INTEGER", notNull: true, unique: true, primaryKey: true, autoIncrement: true)
+    @Field("id", unique: true, primaryKey: true, autoIncrement: true)
     var id: Int = 0
-    @Column(table: TranslationEntity.self, name: CodingKeys.uuid.rawValue, dataType: "TEXT", notNull: true, unique: true)
+    @Field("uuid", unique: true)
     var uuid: String = ""
-    @Column(table: TranslationEntity.self, name: CodingKeys.expressionID.rawValue, dataType: "INTEGER", notNull: true, foreignKey: ExpressionEntity.id)
+    @Field("expression_id", foreignKey: ForeignKey("expression", "id"))
     var expressionID: Int = 0
-    @Column(table: TranslationEntity.self, name: CodingKeys.language.rawValue, dataType: "TEXT", notNull: true)
+    @Field("language_code")
     var language: String = ""
-    @Column(table: TranslationEntity.self, name: CodingKeys.script.rawValue, dataType: "TEXT")
+    @Field("script_code")
     var script: String? = nil
-    @Column(table: TranslationEntity.self, name: CodingKeys.region.rawValue, dataType: "TEXT")
+    @Field("region_code")
     var region: String? = nil
-    @Column(table: TranslationEntity.self, name: CodingKeys.value.rawValue, dataType: "TEXT", notNull: true)
+    @Field("value")
     var value: String = ""
 }
 
 extension TranslationEntity {
+    static var id: Attribute { Self["id"]! }
+    static var uuid: Attribute { Self["uuid"]! }
+    static var expressionID: Attribute { Self["expression_id"]! }
+    static var language: Attribute { Self["language_code"]! }
+    static var script: Attribute { Self["script_code"]! }
+    static var region: Attribute { Self["region_code"]! }
+    static var value: Attribute { Self["value"]! }
+    
     init(_ translation: TranslationCatalog.Translation) {
         uuid = translation.uuid.uuidString
         language = translation.languageCode.rawValue

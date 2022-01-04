@@ -98,7 +98,7 @@ extension SQLite {
         switch (from) {
         case .undefined:
             let names = tableNames
-            if names.contains(ExpressionEntity.schema.name) {
+            if names.contains(ExpressionEntity().tableName) {
                 try setSchemaVersion(.v1)
             } else {
                 try createSchema(.current)

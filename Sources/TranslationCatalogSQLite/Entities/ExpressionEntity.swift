@@ -3,45 +3,35 @@ import TranslationCatalog
 import LocaleSupport
 import Foundation
 
-struct ExpressionEntity: Table {
+struct ExpressionEntity: Entity {
     
-    enum CodingKeys: String, CodingKey {
-        case id
-        case uuid
-        case key
-        case name
-        case defaultLanguage = "default_language"
-        case context
-        case feature
-    }
+    let tableName: String = "expression"
     
-    static var schema: Schema = { ExpressionEntity().schema }()
-    static var id: AnyColumn { schema.columns[0] }
-    static var uuid: AnyColumn { schema.columns[1] }
-    static var key: AnyColumn { schema.columns[2] }
-    static var name: AnyColumn { schema.columns[3] }
-    static var defaultLanguage: AnyColumn { schema.columns[4] }
-    static var context: AnyColumn { schema.columns[5] }
-    static var feature: AnyColumn { schema.columns[6] }
-    private var schema: Schema { Schema(name: "expression", columns: [_id, _uuid, _key, _name, _defaultLanguage, _context, _feature]) }
-    
-    @Column(table: ExpressionEntity.self, name: CodingKeys.id.rawValue, dataType: "INTEGER", notNull: true, unique: true, primaryKey: true, autoIncrement: true)
+    @Field("id", unique: true, primaryKey: true, autoIncrement: true)
     var id: Int = 0
-    @Column(table: ExpressionEntity.self, name: CodingKeys.uuid.rawValue, dataType: "TEXT", notNull: true, unique: true)
+    @Field("uuid", unique: true)
     var uuid: String = ""
-    @Column(table: ExpressionEntity.self, name: CodingKeys.key.rawValue, dataType: "TEXT", notNull: true)
+    @Field("key")
     var key: String = ""
-    @Column(table: ExpressionEntity.self, name: CodingKeys.name.rawValue, dataType: "TEXT", notNull: true)
+    @Field("name")
     var name: String = ""
-    @Column(table: ExpressionEntity.self, name: CodingKeys.defaultLanguage.rawValue, dataType: "TEXT", notNull: true)
+    @Field("default_language")
     var defaultLanguage: String = ""
-    @Column(table: ExpressionEntity.self, name: CodingKeys.context.rawValue, dataType: "TEXT")
+    @Field("context")
     var context: String? = nil
-    @Column(table: ExpressionEntity.self, name: CodingKeys.feature.rawValue, dataType: "TEXT")
+    @Field("feature")
     var feature: String? = nil
 }
 
 extension ExpressionEntity {
+    static var id: Attribute { Self["id"]! }
+    static var uuid: Attribute { Self["uuid"]! }
+    static var key: Attribute { Self["key"]! }
+    static var name: Attribute { Self["name"]! }
+    static var defaultLanguage: Attribute { Self["default_language"]! }
+    static var context: Attribute { Self["context"]! }
+    static var feature: Attribute { Self["feature"]! }
+    
     init(_ expression: Expression) {
         uuid = expression.uuid.uuidString
         key = expression.key

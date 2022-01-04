@@ -163,12 +163,12 @@ extension SQLiteStatement {
                 .column(TranslationEntity.script)
             ),
             .VALUES(
-                .value(translation.uuid),
-                .value(translation.expressionID),
-                .value(translation.language),
-                .unwrap(translation.region, transform: { .value($0) }, else: .value(NSNull())),
-                .value(translation.value),
-                .unwrap(translation.script, transform: { .value($0) }, else: .value(NSNull()))
+                .value(translation.uuid as DataTypeConvertible),
+                .value(translation.expressionID as DataTypeConvertible),
+                .value(translation.language as DataTypeConvertible),
+                .unwrap(translation.region, transform: { .value($0 as DataTypeConvertible) }, else: .value(NSNull())),
+                .value(translation.value as DataTypeConvertible),
+                .unwrap(translation.script, transform: { .value($0 as DataTypeConvertible) }, else: .value(NSNull()))
             )
         )
     }
@@ -200,7 +200,7 @@ extension SQLiteStatement {
                         .column(TranslationEntity.script, op: .equal, value: value.rawValue)
                     },
                     else:
-                        .column(TranslationEntity.script, op: .equal, value: NSNull())
+                        .column(TranslationEntity.script, op: .equal, value: scriptCode)
                 )
             ),
             .WHERE(
@@ -222,7 +222,7 @@ extension SQLiteStatement {
                         .column(TranslationEntity.region, op: .equal, value: value.rawValue)
                     },
                     else:
-                        .column(TranslationEntity.region, op: .equal, value: NSNull())
+                        .column(TranslationEntity.region, op: .equal, value: regionCode)
                 )
             ),
             .WHERE(

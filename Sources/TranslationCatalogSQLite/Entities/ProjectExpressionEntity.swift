@@ -1,20 +1,17 @@
 import Statement
 import TranslationCatalog
 
-struct ProjectExpressionEntity: Table {
+struct ProjectExpressionEntity: Entity {
     
-    enum CodingKeys: String, CodingKey {
-        case projectID = "project_id"
-        case expressionID = "expression_id"
-    }
+    let tableName: String = "project_expression"
     
-    static var schema: Schema = { ProjectExpressionEntity().schema }()
-    static var projectID: AnyColumn { schema.columns[0] }
-    static var expressionID: AnyColumn { schema.columns[1] }
-    private var schema: Schema { Schema(name: "project_expression", columns: [_projectID, _expressionID]) }
-    
-    @Column(table: ProjectExpressionEntity.self, name: CodingKeys.projectID.rawValue, dataType: "INTEGER", notNull: true, foreignKey: ProjectEntity.id)
+    @Field("project_id", foreignKey: ForeignKey("project", "id"))
     var projectID: Int = 0
-    @Column(table: ProjectExpressionEntity.self, name: CodingKeys.expressionID.rawValue, dataType: "INTEGER", notNull: true, foreignKey: ExpressionEntity.id)
+    @Field("expression_id", foreignKey: ForeignKey("expression", "id"))
     var expressionID: Int = 0
+}
+
+extension ProjectExpressionEntity {
+    static var projectID: Attribute { Self["project_id"]! }
+    static var expressionID: Attribute { Self["expression_id"]! }
 }
