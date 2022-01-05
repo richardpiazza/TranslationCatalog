@@ -166,9 +166,9 @@ extension SQLiteStatement {
                 .value(translation.uuid as DataTypeConvertible),
                 .value(translation.expressionID as DataTypeConvertible),
                 .value(translation.language as DataTypeConvertible),
-                .unwrap(translation.region, transform: { .value($0 as DataTypeConvertible) }, else: .value(NSNull())),
+                .value(translation.region as DataTypeConvertible),
                 .value(translation.value as DataTypeConvertible),
-                .unwrap(translation.script, transform: { .value($0 as DataTypeConvertible) }, else: .value(NSNull()))
+                .value(translation.script as DataTypeConvertible)
             )
         )
     }
