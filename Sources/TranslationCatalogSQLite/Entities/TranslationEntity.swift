@@ -5,13 +5,13 @@ import Foundation
 
 struct TranslationEntity: Entity {
     
-    let tableName: String = "translation"
+    static let identifier: String = "translation"
     
     @Field("id", unique: true, primaryKey: true, autoIncrement: true)
     var id: Int = 0
     @Field("uuid", unique: true)
     var uuid: String = ""
-    @Field("expression_id", foreignKey: ForeignKey("expression", "id"))
+    @Field("expression_id", foreignKey: ForeignKey(ExpressionEntity.self, "id"))
     var expressionID: Int = 0
     @Field("language_code")
     var language: String = ""
@@ -24,13 +24,14 @@ struct TranslationEntity: Entity {
 }
 
 extension TranslationEntity {
-    static var id: Attribute { Self["id"]! }
-    static var uuid: Attribute { Self["uuid"]! }
-    static var expressionID: Attribute { Self["expression_id"]! }
-    static var language: Attribute { Self["language_code"]! }
-    static var script: Attribute { Self["script_code"]! }
-    static var region: Attribute { Self["region_code"]! }
-    static var value: Attribute { Self["value"]! }
+    static let entity = TranslationEntity()
+    static var id: Attribute { entity["id"]! }
+    static var uuid: Attribute { entity["uuid"]! }
+    static var expressionID: Attribute { entity["expression_id"]! }
+    static var language: Attribute { entity["language_code"]! }
+    static var script: Attribute { entity["script_code"]! }
+    static var region: Attribute { entity["region_code"]! }
+    static var value: Attribute { entity["value"]! }
     
     init(_ translation: TranslationCatalog.Translation) {
         uuid = translation.uuid.uuidString

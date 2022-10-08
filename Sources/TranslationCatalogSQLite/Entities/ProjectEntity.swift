@@ -4,7 +4,7 @@ import Foundation
 
 struct ProjectEntity: Entity, Identifiable {
     
-    let tableName: String = "project"
+    static let identifier: String = "project"
     
     @Field("id", unique: true, primaryKey: true, autoIncrement: true)
     var id: Int = 0
@@ -15,9 +15,10 @@ struct ProjectEntity: Entity, Identifiable {
 }
 
 extension ProjectEntity {
-    static var id: Attribute { Self["id"]! }
-    static var uuid: Attribute { Self["uuid"]! }
-    static var name: Attribute { Self["name"]! }
+    static let entity = ProjectEntity()
+    static var id: Attribute { entity["id"]! }
+    static var uuid: Attribute { entity["uuid"]! }
+    static var name: Attribute { entity["name"]! }
     
     init(_ project: Project) {
         uuid = project.uuid.uuidString

@@ -7,7 +7,7 @@ extension SQLiteStatement {
     static var createProjectEntity: Self {
         .init(
             .CREATE(
-                .SCHEMA(ProjectEntity.self, ifNotExists: true)
+                .SCHEMA(ProjectEntity.entity, ifNotExists: true)
             )
         )
     }

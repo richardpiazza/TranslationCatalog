@@ -5,7 +5,7 @@ import Foundation
 
 struct ExpressionEntity: Entity {
     
-    let tableName: String = "expression"
+    static let identifier: String = "expression"
     
     @Field("id", unique: true, primaryKey: true, autoIncrement: true)
     var id: Int = 0
@@ -24,13 +24,14 @@ struct ExpressionEntity: Entity {
 }
 
 extension ExpressionEntity {
-    static var id: Attribute { Self["id"]! }
-    static var uuid: Attribute { Self["uuid"]! }
-    static var key: Attribute { Self["key"]! }
-    static var name: Attribute { Self["name"]! }
-    static var defaultLanguage: Attribute { Self["default_language"]! }
-    static var context: Attribute { Self["context"]! }
-    static var feature: Attribute { Self["feature"]! }
+    static let entity = ExpressionEntity()
+    static var id: Attribute { entity["id"]! }
+    static var uuid: Attribute { entity["uuid"]! }
+    static var key: Attribute { entity["key"]! }
+    static var name: Attribute { entity["name"]! }
+    static var defaultLanguage: Attribute { entity["default_language"]! }
+    static var context: Attribute { entity["context"]! }
+    static var feature: Attribute { entity["feature"]! }
     
     init(_ expression: Expression) {
         uuid = expression.uuid.uuidString

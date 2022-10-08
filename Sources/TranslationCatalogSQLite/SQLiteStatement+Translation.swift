@@ -9,7 +9,7 @@ extension SQLiteStatement {
     static var createTranslationEntity: Self {
         .init(
             .CREATE(
-                .SCHEMA(TranslationEntity.self, ifNotExists: true)
+                .SCHEMA(TranslationEntity.entity, ifNotExists: true)
             )
         )
     }
