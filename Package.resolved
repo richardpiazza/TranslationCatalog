@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/richardpiazza/LocaleSupport.git",
         "state": {
           "branch": null,
-          "revision": "105063b0f8fc664b25af8cf6d1eb84fed5df4e0c",
-          "version": "0.4.0"
+          "revision": "a6eff5f3cc22fde3ac4ace4ace4774a9b5b898c5",
+          "version": "0.4.1"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/richardpiazza/Statement.git",
         "state": {
           "branch": null,
-          "revision": "9aed48e58e73a3947b2cfe0b9b801bfc4d7905bf",
-          "version": "0.4.0"
+          "revision": "cad6e6081c678b19b8140ad2afb8e5465eb99e97",
+          "version": "0.7.1"
         }
       },
       {

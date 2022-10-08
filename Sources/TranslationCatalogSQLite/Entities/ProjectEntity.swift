@@ -2,29 +2,24 @@ import Statement
 import TranslationCatalog
 import Foundation
 
-struct ProjectEntity: Table, Identifiable {
+struct ProjectEntity: Entity, Identifiable {
     
-    enum CodingKeys: String, CodingKey {
-        case id
-        case uuid
-        case name
-    }
+    static let identifier: String = "project"
     
-    static var schema: Schema = { ProjectEntity().schema }()
-    static var id: AnyColumn { schema.columns[0] }
-    static var uuid: AnyColumn { schema.columns[1] }
-    static var name: AnyColumn { schema.columns[2] }
-    private var schema: Schema { Schema(name: "project", columns: [_id, _uuid, _name]) }
-    
-    @Column(table: ProjectEntity.self, name: CodingKeys.id.rawValue, dataType: "INTEGER", notNull: true, unique: true, primaryKey: true, autoIncrement: true)
+    @Field("id", unique: true, primaryKey: true, autoIncrement: true)
     var id: Int = 0
-    @Column(table: ProjectEntity.self, name: CodingKeys.uuid.rawValue, dataType: "TEXT", notNull: true, unique: true)
+    @Field("uuid", unique: true)
     var uuid: String = ""
-    @Column(table: ProjectEntity.self, name: CodingKeys.name.rawValue, dataType: "TEXT", notNull: true)
+    @Field("name")
     var name: String = ""
 }
 
 extension ProjectEntity {
+    static let entity = ProjectEntity()
+    static var id: Attribute { entity["id"]! }
+    static var uuid: Attribute { entity["uuid"]! }
+    static var name: Attribute { entity["name"]! }
+    
     init(_ project: Project) {
         uuid = project.uuid.uuidString
         name = project.name
