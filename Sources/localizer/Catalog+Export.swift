@@ -3,7 +3,6 @@ import Foundation
 import Plot
 import LocaleSupport
 import TranslationCatalog
-import TranslationCatalogSQLite
 
 extension Catalog {
     struct Export: CatalogCommand {
@@ -43,11 +42,14 @@ extension Catalog {
         @Option(help: "Identifier of the project for which to limit results.")
         var projectId: Project.ID?
         
+        @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
+        var storage: Catalog.Storage = .default
+        
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
         
         func run() throws {
-            let catalog = try SQLiteCatalog(url: try catalogURL())
+            let catalog = try catalog(forStorage: storage)
             
             var expressions: [Expression]
             var expressionIds: [Expression.ID]

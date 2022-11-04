@@ -54,6 +54,9 @@ extension Catalog {
         @Option(help: "The 'default' Language for the expressions being imported.")
         var defaultLanguage: LanguageCode = .default
         
+        @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
+        var storage: Catalog.Storage = .default
+        
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
         
@@ -64,22 +67,21 @@ extension Catalog {
         }
         
         func run() throws {
-            let url = try FileManager.default.url(for: filename)
-            
-            let _format = format ?? Format(extension:  url.pathExtension)
+            let fileURL = try FileManager.default.url(for: filename)
+            let _format = format ?? Format(extension:  fileURL.pathExtension)
             guard let fileFormat = _format else {
                 throw ValidationError("Import format could not be determined. Use '--format' to specify.")
             }
             
-            let catalog = try SQLiteCatalog(url: try catalogURL())
+            let catalog = try catalog(forStorage: storage)
             
             let expressions: [Expression]
             switch fileFormat {
             case .android:
-                let android = try StringsXml.make(contentsOf: url)
+                let android = try StringsXml.make(contentsOf: fileURL)
                 expressions = android.expressions(defaultLanguage: defaultLanguage, language: language, script: script, region: region)
             case .apple:
-                let dictionary = try Dictionary(contentsOf: url)
+                let dictionary = try Dictionary(contentsOf: fileURL)
                 expressions = dictionary.expressions(defaultLanguage: defaultLanguage, language: language, script: script, region: region)
             }
             
@@ -88,7 +90,7 @@ extension Catalog {
             })
         }
         
-        private func importExpression(_ expression: Expression, into catalog: SQLiteCatalog) {
+        private func importExpression(_ expression: Expression, into catalog: TranslationCatalog.Catalog) {
             do {
                 try catalog.createExpression(expression)
                 print("Imported Expression '\(expression.name)'")
@@ -99,7 +101,7 @@ extension Catalog {
             }
         }
         
-        private func importTranslations(_ expression: Expression, into catalog: SQLiteCatalog) {
+        private func importTranslations(_ expression: Expression, into catalog: TranslationCatalog.Catalog) {
             guard let id = try? catalog.expression(matching: GenericExpressionQuery.key(expression.key)).id else {
                 return
             }
@@ -111,7 +113,7 @@ extension Catalog {
             }
         }
         
-        private func importTranslation(_ translation: TranslationCatalog.Translation, into catalog: SQLiteCatalog) {
+        private func importTranslation(_ translation: TranslationCatalog.Translation, into catalog: TranslationCatalog.Catalog) {
             do {
                 try catalog.createTranslation(translation)
                 print("Imported Translation '\(translation.value)'")

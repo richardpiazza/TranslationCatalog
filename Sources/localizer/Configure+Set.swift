@@ -22,6 +22,9 @@ extension Configure {
         @Option(help: "")
         var defaultRegion: RegionCode?
         
+        @Option(help: "")
+        var defaultStorage: Catalog.Storage?
+        
         func run() throws {
             var config = Configuration.`default`
             
@@ -33,6 +36,11 @@ extension Configure {
             if let region = defaultRegion {
                 print("Set 'defaultRegionCode' = '\(region.rawValue)'; was \(config.defaultRegionCode.rawValue)")
                 config.defaultRegionCode = region
+            }
+            
+            if let storage = defaultStorage {
+                print("Set 'defaultStorage' = '\(storage.rawValue)'; was \(config.defaultStorage.rawValue)")
+                config.defaultStorage = storage
             }
             
             try Configuration.save(config)

@@ -6,16 +6,21 @@ public extension SQLiteCatalog {
     
     enum Error: Swift.Error {
         case invalidAction(CatalogUpdate)
+        @available(*, deprecated, renamed: "CatalogError.badQuery()")
         case invalidQuery(CatalogQuery)
         case invalidPrimaryKey(Int)
+        @available(*, deprecated, renamed: "CatalogError.projectID()")
         case invalidProjectID(Project.ID)
+        @available(*, deprecated, renamed: "CatalogError.expressionID()")
         case invalidExpressionID(Expression.ID)
+        @available(*, deprecated, renamed: "CatalogError.translationID()")
         case invalidTranslationID(TranslationCatalog.Translation.ID)
         case invalidStringValue(String)
         case existingExpressionWithID(Expression.ID)
         case existingExpressionWithKey(String)
         case existingTranslationWithID(TranslationCatalog.Translation.ID)
         case unhandledAction(CatalogUpdate)
+        @available(*, deprecated, renamed: "CatalogError.unhandledQuery()")
         case unhandledQuery(CatalogQuery)
         case unhandledConversion
     }

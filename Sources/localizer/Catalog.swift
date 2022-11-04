@@ -1,7 +1,17 @@
 import Foundation
 import ArgumentParser
+import TranslationCatalog
+import TranslationCatalogSQLite
+import TranslationCatalogFilesystem
 
 struct Catalog: ParsableCommand {
+    
+    enum Storage: String, CaseIterable, Codable, ExpressibleByArgument {
+        case sqlite
+        case filesystem
+        
+        static var `default`: Storage = .sqlite
+    }
     
     static var configuration: CommandConfiguration = .init(
         commandName: "catalog",
@@ -24,15 +34,46 @@ struct Catalog: ParsableCommand {
 }
 
 protocol CatalogCommand: ParsableCommand {
+    var storage: Catalog.Storage { get }
     var path: String? { get }
 }
 
 extension CatalogCommand {
-    func catalogURL() throws -> URL {
-        if let path = path, !path.isEmpty {
-            return try FileManager.default.url(for: path)
-        } else {
-            return try FileManager.default.catalogURL()
+    func catalogURL(forStorage storage: Catalog.Storage) throws -> URL {
+        switch storage {
+        case .sqlite:
+            if let path = path, !path.isEmpty {
+                return try FileManager.default.url(for: path)
+            } else {
+                return try FileManager.default.catalogURL()
+            }
+        case .filesystem:
+            if let path = path, !path.isEmpty {
+                return try FileManager.default.directoryURL(for: path)
+            } else {
+                return try FileManager.default.catalogDirectoryURL()
+            }
         }
+    }
+    
+    func catalog(forStorage storage: Catalog.Storage, debug: Bool = false) throws -> TranslationCatalog.Catalog {
+        let url = try catalogURL(forStorage: storage)
+        
+        let catalog: TranslationCatalog.Catalog
+        
+        switch storage {
+        case .sqlite:
+            let sqliteCatalog = try SQLiteCatalog(url: url)
+            if debug {
+                sqliteCatalog.statementHook = { (sql) in
+                    print("======SQL======\n\(sql)\n======___======\n")
+                }
+            }
+            catalog = sqliteCatalog
+        case .filesystem:
+            catalog = try FilesystemCatalog(url: url)
+        }
+        
+        return catalog
     }
 }

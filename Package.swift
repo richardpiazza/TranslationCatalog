@@ -22,6 +22,10 @@ let package = Package(
             name: "TranslationCatalogSQLite",
             targets: ["TranslationCatalogSQLite"]
         ),
+        .library(
+            name: "TranslationCatalogFilesystem",
+            targets: ["TranslationCatalogFilesystem"]
+        ),
         .executable(
             name: "localizer",
             targets: ["localizer"]
@@ -56,11 +60,19 @@ let package = Package(
             ]
         ),
         .target(
+            name: "TranslationCatalogFilesystem",
+            dependencies: [
+                "LocaleSupport",
+                "TranslationCatalog",
+            ]
+        ),
+        .target(
             name: "localizer",
             dependencies: [
                 "LocaleSupport",
                 "TranslationCatalog",
                 "TranslationCatalogSQLite",
+                "TranslationCatalogFilesystem",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 "XMLCoder",
                 "Plot",
@@ -70,11 +82,18 @@ let package = Package(
         .testTarget(
             name: "LocalizerTests",
             dependencies: ["localizer"],
-            resources: [.process("Resources")]
+            resources: [
+                .process("Resources")
+            ]
         ),
         .testTarget(
             name: "TranslationCatalogSQLiteTests",
-            dependencies: ["LocaleSupport", "TranslationCatalog", "TranslationCatalogSQLite"]
+            dependencies: [
+                "LocaleSupport",
+                "TranslationCatalog",
+                "TranslationCatalogSQLite",
+                "TranslationCatalogFilesystem"
+            ]
         ),
     ],
     swiftLanguageVersions: [.v5]

@@ -54,7 +54,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             let entities = try db.projectEntities(statement: renderStatement(.selectProjects(withNameLike: name)))
             return try entities.map({ try $0.project() })
         default:
-            throw Error.unhandledQuery(query)
+            throw CatalogError.unhandledQuery(query)
         }
     }
     
@@ -72,7 +72,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             return try entity.project()
         case ProjectQuery.id(let id), GenericProjectQuery.id(let id):
             guard let entity = try db.projectEntity(statement: renderStatement(.selectProject(withID: id))) else {
-                throw Error.invalidProjectID(id)
+                throw CatalogError.projectID(id)
             }
             
             return try entity.project()
@@ -83,14 +83,14 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             
             return try entity.project()
         default:
-            throw Error.unhandledQuery(query)
+            throw CatalogError.unhandledQuery(query)
         }
     }
     
     @discardableResult public func createProject(_ project: Project) throws -> Project.ID {
         if project.id != .zero {
             if let existing = try? self.project(project.id) {
-                throw Error.invalidProjectID(existing.id)
+                throw CatalogError.projectID(existing.id)
             }
         }
         
@@ -112,7 +112,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
     
     public func updateProject(_ id: Project.ID, action: CatalogUpdate) throws {
         guard let entity = try db.projectEntity(statement: renderStatement(.selectProject(withID: id))) else {
-            throw Error.invalidProjectID(id)
+            throw CatalogError.projectID(id)
         }
         
         switch action {
@@ -120,13 +120,13 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             try db.execute(statement: renderStatement(.updateProject(entity.id, name: name)))
         case ProjectUpdate.linkExpression(let uuid), GenericProjectUpdate.linkExpression(let uuid):
             guard let expression = try db.expressionEntity(statement: renderStatement(.selectExpression(withID: uuid))) else {
-                throw Error.invalidExpressionID(uuid)
+                throw CatalogError.expressionID(uuid)
             }
             
             try linkProject(entity.id, expressionID: expression.id)
         case ProjectUpdate.unlinkExpression(let uuid), GenericProjectUpdate.unlinkExpression(let uuid):
             guard let expression = try db.expressionEntity(statement: renderStatement(.selectExpression(withID: uuid))) else {
-                throw Error.invalidExpressionID(uuid)
+                throw CatalogError.expressionID(uuid)
             }
             
             try unlinkProject(entity.id, expressionID: expression.id)
@@ -137,7 +137,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
     
     public func deleteProject(_ id: Project.ID) throws {
         guard let entity = try db.projectEntity(statement: renderStatement(.selectProject(withID: id))) else {
-            throw Error.invalidProjectID(id)
+            throw CatalogError.projectID(id)
         }
         
         try db.doWithTransaction {
@@ -164,7 +164,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             return output
         case ExpressionQuery.projectID(let projectID), GenericExpressionQuery.projectID(let projectID):
             guard let project = try? db.projectEntity(statement: renderStatement(.selectProject(withID: projectID))) else {
-                throw Error.invalidProjectID(projectID)
+                throw CatalogError.projectID(projectID)
             }
             
             let entities = try db.expressionEntities(statement: renderStatement(.selectExpressions(withProjectID: project.id)))
@@ -182,7 +182,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             let entities = try db.expressionEntities(statement: renderStatement(.selectExpressionsWith(languageCode: languageCode, scriptCode: scriptCode, regionCode: regionCode)))
             return try entities.map({ try $0.expression() })
         default:
-            throw Error.unhandledQuery(query)
+            throw CatalogError.unhandledQuery(query)
         }
     }
     
@@ -200,18 +200,18 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             return try entity.expression()
         case ExpressionQuery.id(let uuid), GenericExpressionQuery.id(let uuid):
             guard let entity = try db.expressionEntity(statement: renderStatement(.selectExpression(withID: uuid))) else {
-                throw Error.invalidExpressionID(uuid)
+                throw CatalogError.expressionID(uuid)
             }
             
             return try entity.expression()
         case ExpressionQuery.key(let key), GenericExpressionQuery.key(let key):
             guard let entity = try db.expressionEntity(statement: renderStatement(.selectExpression(withKey: key))) else {
-                throw Error.invalidQuery(query)
+                throw CatalogError.badQuery(query)
             }
             
             return try entity.expression()
         default:
-            throw Error.unhandledQuery(query)
+            throw CatalogError.unhandledQuery(query)
         }
     }
     
@@ -254,7 +254,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
     
     public func updateExpression(_ id: Expression.ID, action: CatalogUpdate) throws {
         guard let entity = try? db.expressionEntity(statement: renderStatement(.selectExpression(withID: id))) else {
-            throw Error.invalidExpressionID(id)
+            throw CatalogError.expressionID(id)
         }
         
         switch action {
@@ -290,13 +290,13 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             try db.execute(statement: renderStatement(.updateExpression(entity.id, feature: feature)))
         case ExpressionUpdate.linkProject(let uuid):
             guard let project = try db.projectEntity(statement: renderStatement(.selectProject(withID: uuid))) else {
-                throw Error.invalidProjectID(uuid)
+                throw CatalogError.projectID(uuid)
             }
             
             try linkProject(project.id, expressionID: entity.id)
         case ExpressionUpdate.unlinkProject(let uuid):
             guard let project = try db.projectEntity(statement: renderStatement(.selectProject(withID: uuid))) else {
-                throw Error.invalidProjectID(uuid)
+                throw CatalogError.projectID(uuid)
             }
             
             try unlinkProject(project.id, expressionID: entity.id)
@@ -307,7 +307,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
     
     public func deleteExpression(_ id: Expression.ID) throws {
         guard let entity = try? db.expressionEntity(statement: renderStatement(.selectExpression(withID: id))) else {
-            throw Error.invalidExpressionID(id)
+            throw CatalogError.expressionID(id)
         }
         
         try db.doWithTransaction {
@@ -340,27 +340,27 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
         switch query {
         case TranslationQuery.expressionID(let expressionUUID), GenericTranslationQuery.expressionID(let expressionUUID):
             guard let expressionEntity = try db.expressionEntity(statement: renderStatement(.selectExpression(withID: expressionUUID))) else {
-                throw Error.invalidExpressionID(expressionUUID)
+                throw CatalogError.expressionID(expressionUUID)
             }
             
             let entities = try db.translationEntities(statement: renderStatement(.selectTranslationsFor(expressionEntity.id)))
             return try entities.map({ try $0.translation(with: expressionEntity.uuid) })
         case TranslationQuery.havingOnly(let expressionId, let language), GenericTranslationQuery.havingOnly(let expressionId, let language):
             guard let expressionEntity = try db.expressionEntity(statement: renderStatement(.selectExpression(withID: expressionId))) else {
-                throw Error.invalidExpressionID(expressionId)
+                throw CatalogError.expressionID(expressionId)
             }
             
             let entities = try db.translationEntities(statement: renderStatement(.selectTranslationsHavingOnly(expressionEntity.id, languageCode: language)))
             return try entities.map({ try $0.translation(with: expressionEntity.uuid) })
         case TranslationQuery.having(let expressionId, let language, let script, let region), GenericTranslationQuery.having(let expressionId, let language, let script, let region):
             guard let expressionEntity = try db.expressionEntity(statement: renderStatement(.selectExpression(withID: expressionId))) else {
-                throw Error.invalidExpressionID(expressionId)
+                throw CatalogError.expressionID(expressionId)
             }
             
             let entities = try db.translationEntities(statement: renderStatement(.selectTranslationsFor(expressionEntity.id, languageCode: language, scriptCode: script, regionCode: region)))
             return try entities.map({ try $0.translation(with: expressionEntity.uuid) })
         default:
-            throw Error.unhandledQuery(query)
+            throw CatalogError.unhandledQuery(query)
         }
     }
     
@@ -379,11 +379,11 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             entity = _entity
         case TranslationQuery.id(let uuid), GenericTranslationQuery.id(let uuid):
             guard let _entity = try db.translationEntity(statement: renderStatement(.selectTranslation(withID: uuid))) else {
-                throw Error.invalidTranslationID(uuid)
+                throw CatalogError.translationID(uuid)
             }
             entity = _entity
         default:
-            throw Error.unhandledQuery(query)
+            throw CatalogError.unhandledQuery(query)
         }
         
         guard let expressionEntity = try db.expressionEntity(statement: renderStatement(.selectExpression(withID: entity.expressionID))) else {
@@ -410,7 +410,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
         }
         
         guard let expression = try db.expressionEntity(statement: renderStatement(.selectExpression(withID: translation.expressionID))) else {
-            throw Error.invalidExpressionID(translation.expressionID)
+            throw CatalogError.expressionID(translation.expressionID)
         }
         
         var id = translation.id
@@ -428,7 +428,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
     
     public func updateTranslation(_ id: TranslationCatalog.Translation.ID, action: CatalogUpdate) throws {
         guard let entity = try? db.translationEntity(statement: renderStatement(.selectTranslation(withID: id))) else {
-            throw Error.invalidTranslationID(id)
+            throw CatalogError.translationID(id)
         }
         
         switch action {
@@ -463,7 +463,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
     
     public func deleteTranslation(_ id: TranslationCatalog.Translation.ID) throws {
         guard let entity = try? db.translationEntity(statement: renderStatement(.selectTranslation(withID: id))) else {
-            throw Error.invalidTranslationID(id)
+            throw CatalogError.translationID(id)
         }
         
         try db.doWithTransaction {
@@ -490,7 +490,7 @@ private extension SQLiteCatalog {
         // Create & Link
         let uuid = try createExpression(expression)
         guard let entity = try db.expressionEntity(statement: renderStatement(.selectExpression(withID: uuid))) else {
-            throw Error.invalidExpressionID(uuid)
+            throw CatalogError.expressionID(uuid)
         }
         
         try linkProject(projectID, expressionID: entity.id)
