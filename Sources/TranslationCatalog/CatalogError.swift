@@ -4,4 +4,5 @@ public enum CatalogError: Error {
     case projectID(Project.ID)
     case translationID(Translation.ID)
     case unhandledQuery(CatalogQuery)
+    case unhandledUpdate(CatalogUpdate)
 }

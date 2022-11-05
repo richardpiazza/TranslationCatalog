@@ -109,12 +109,14 @@ extension Catalog {
         }
         
         private func exportAndroid(_ expressions: [Expression]) {
-            let xml = XML.make(with: expressions)
+            let sorted = expressions.sorted(by: { $0.key < $1.key})
+            let xml = XML.make(with: sorted)
             print(xml.render(indentedBy: .spaces(2)))
         }
         
         private func exportApple(_ expressions: [Expression]) {
-            expressions.forEach { (expression) in
+            let sorted = expressions.sorted(by: { $0.key < $1.key})
+            sorted.forEach { (expression) in
                 guard let translation = expression.translations.first else {
                     return
                 }
