@@ -7,11 +7,6 @@ import TranslationCatalog
 extension Catalog {
     struct Export: CatalogCommand {
         
-        enum Format: String, ExpressibleByArgument {
-            case android
-            case apple
-        }
-        
         static var configuration: CommandConfiguration = .init(
             commandName: "export",
             abstract: "Export a translation file using the catalog.",
@@ -27,8 +22,8 @@ extension Catalog {
             helpNames: .shortAndLong
         )
         
-        @Argument(help: "The export format")
-        var format: Format = .android
+        @Argument(help: "The export format [android, apple, json]")
+        var format: Catalog.Format
         
         @Argument(help: "The language code to use for the strings.")
         var language: LanguageCode
@@ -42,6 +37,9 @@ extension Catalog {
         @Option(help: "Identifier of the project for which to limit results.")
         var projectId: Project.ID?
         
+        @Flag(help: "Indicates if a fallback translation should be used when no matching option is found.")
+        var fallback: Bool = false
+        
         @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
         var storage: Catalog.Storage = .default
         
@@ -54,26 +52,7 @@ extension Catalog {
             var expressions: [Expression]
             var expressionIds: [Expression.ID]
             
-            switch format {
-            case .android:
-                if let id = projectId {
-                    expressions = try catalog.expressions(matching: GenericExpressionQuery.projectID(id))
-                    let withLanguage = try catalog.expressions(matching: GenericExpressionQuery.translationsHaving(language, script, region))
-                    expressions.removeAll { expression in
-                        !withLanguage.contains(where: { $0.id == expression.id })
-                    }
-                } else {
-                    expressions = try catalog.expressions(matching: GenericExpressionQuery.translationsHaving(language, script, region))
-                }
-                
-                expressionIds = expressions.map { $0.id }
-                
-                try expressionIds.enumerated().forEach { (index, id) in
-                    expressions[index].translations = try catalog.translations(matching: GenericTranslationQuery.having(id, language, script, region))
-                }
-                
-                exportAndroid(expressions)
-            case .apple:
+            if format == .apple || fallback {
                 if let id = projectId {
                     expressions = try catalog.expressions(matching: GenericExpressionQuery.projectID(id))
                     let withLanguage = try catalog.expressions(matching: GenericExpressionQuery.translationsHaving(language, nil, nil))
@@ -103,8 +82,31 @@ extension Catalog {
                     let defaultTranslations = try catalog.translations(matching: GenericTranslationQuery.having(id, defaultLanguage, nil, nil))
                     expressions[index].translations = defaultTranslations
                 }
+            } else {
+                if let id = projectId {
+                    expressions = try catalog.expressions(matching: GenericExpressionQuery.projectID(id))
+                    let withLanguage = try catalog.expressions(matching: GenericExpressionQuery.translationsHaving(language, script, region))
+                    expressions.removeAll { expression in
+                        !withLanguage.contains(where: { $0.id == expression.id })
+                    }
+                } else {
+                    expressions = try catalog.expressions(matching: GenericExpressionQuery.translationsHaving(language, script, region))
+                }
                 
+                expressionIds = expressions.map { $0.id }
+                
+                try expressionIds.enumerated().forEach { (index, id) in
+                    expressions[index].translations = try catalog.translations(matching: GenericTranslationQuery.having(id, language, script, region))
+                }
+            }
+            
+            switch format {
+            case .android:
+                exportAndroid(expressions)
+            case .apple:
                 exportApple(expressions)
+            case .json:
+                try exportJson(expressions)
             }
         }
         
@@ -123,6 +125,20 @@ extension Catalog {
                 
                 print("\"\(expression.key)\" = \"\(translation.value)\";")
             }
+        }
+        
+        private func exportJson(_ expressions: [Expression]) throws {
+            let sequence = expressions.map { [$0.key: $0.translations.first?.value ?? ""] }
+            let dictionary = sequence.reduce(into: Dictionary<String, String>()) { partialResult, pair in
+                partialResult[pair.keys.first!] = pair.values.first!
+            }
+            
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = [.sortedKeys, .prettyPrinted]
+            
+            let data = try encoder.encode(dictionary)
+            let json = String(data: data, encoding: .utf8) ?? ""
+            print(json)
         }
     }
 }

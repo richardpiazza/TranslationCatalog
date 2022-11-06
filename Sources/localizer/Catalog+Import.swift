@@ -7,22 +7,6 @@ import TranslationCatalogSQLite
 extension Catalog {
     struct Import: CatalogCommand {
         
-        enum Format: String, ExpressibleByArgument {
-            case android
-            case apple
-            
-            init?(extension: String) {
-                switch `extension`.lowercased() {
-                case "xml":
-                    self = .android
-                case "strings":
-                    self = .apple
-                default:
-                    return nil
-                }
-            }
-        }
-        
         static var configuration: CommandConfiguration = .init(
             commandName: "import",
             abstract: "Imports a translation file into the catalog.",
@@ -42,8 +26,8 @@ extension Catalog {
         @Argument(help: "The path to the file being imported")
         var filename: String
         
-        @Option(help: "The source of the file 'android' or 'apple'.")
-        var format: Format?
+        @Option(help: "The source of the file 'android', 'apple', 'json'.")
+        var format: Catalog.Format?
         
         @Option(help: "The script code for the translations in the imported file.")
         var script: ScriptCode?
@@ -82,6 +66,10 @@ extension Catalog {
                 expressions = android.expressions(defaultLanguage: defaultLanguage, language: language, script: script, region: region)
             case .apple:
                 let dictionary = try Dictionary(contentsOf: fileURL)
+                expressions = dictionary.expressions(defaultLanguage: defaultLanguage, language: language, script: script, region: region)
+            case .json:
+                let data = try Data(contentsOf: fileURL)
+                let dictionary = try JSONDecoder().decode([String: String].self, from: data)
                 expressions = dictionary.expressions(defaultLanguage: defaultLanguage, language: language, script: script, region: region)
             }
             

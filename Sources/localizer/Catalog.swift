@@ -13,6 +13,25 @@ struct Catalog: ParsableCommand {
         static var `default`: Storage = .sqlite
     }
     
+    enum Format: String, ExpressibleByArgument {
+        case android
+        case apple
+        case json
+        
+        init?(extension: String) {
+            switch `extension`.lowercased() {
+            case "xml":
+                self = .android
+            case "strings":
+                self = .apple
+            case "json":
+                self = .json
+            default:
+                return nil
+            }
+        }
+    }
+    
     static var configuration: CommandConfiguration = .init(
         commandName: "catalog",
         abstract: "Interact with the translation catalog.",

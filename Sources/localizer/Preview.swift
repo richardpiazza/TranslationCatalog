@@ -4,11 +4,6 @@ import TranslationCatalog
 
 struct Preview: ParsableCommand {
     
-    enum Source: String, ExpressibleByArgument {
-        case android
-        case apple
-    }
-    
     static var configuration: CommandConfiguration = .init(
         commandName: "preview",
         abstract: "Displays the localizations found in a translation file.",
@@ -20,8 +15,8 @@ struct Preview: ParsableCommand {
         helpNames: .shortAndLong
     )
     
-    @Argument(help: "The source of the file 'android' or 'apple'.")
-    var source: Source
+    @Argument(help: "The source of the file 'android', 'apple', 'json'.")
+    var format: Catalog.Format
     
     @Argument(help: "The path to the file being imported")
     var input: String
@@ -36,12 +31,16 @@ struct Preview: ParsableCommand {
         let url = try FileManager.default.url(for: input)
         
         let expressions: [Expression]
-        switch source {
+        switch format {
         case .android:
             let android = try StringsXml.make(contentsOf: url)
             expressions = android.expressions(language: .default, script: nil, region: nil)
         case .apple:
             let dictionary = try Dictionary(contentsOf: url)
+            expressions = dictionary.expressions(language: .default, script: nil, region: nil)
+        case .json:
+            let data = try Data(contentsOf: url)
+            let dictionary = try JSONDecoder().decode([String: String].self, from: data)
             expressions = dictionary.expressions(language: .default, script: nil, region: nil)
         }
         
