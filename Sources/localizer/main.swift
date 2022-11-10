@@ -7,10 +7,12 @@ struct Command: ParsableCommand {
     static var configuration: CommandConfiguration = {
         return .init(
             commandName: "localizer",
-            abstract: "Android 'strings.xml' & Apple 'Localizable.strings' utility.",
+            abstract: "Utility for interacting with Android 'strings.xml', Apple 'Localizable.strings', and Web '*.json' localization files.",
+            usage: nil,
             discussion: """
             Default Language Code: \(LanguageCode.default.rawValue)
             Default Region Code: \(RegionCode.default.rawValue)
+            Default Storage: \(Catalog.Storage.default.rawValue)
             """,
             version: "1.0.0",
             shouldDisplay: true,

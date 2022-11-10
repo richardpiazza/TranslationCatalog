@@ -2,13 +2,13 @@ import ArgumentParser
 import Foundation
 import LocaleSupport
 import TranslationCatalog
-import TranslationCatalogSQLite
 
 extension Catalog {
     struct Insert: ParsableCommand {
         static var configuration: CommandConfiguration = .init(
             commandName: "insert",
             abstract: "Adds a single entity to the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,
@@ -29,6 +29,7 @@ extension Catalog.Insert {
         static var configuration: CommandConfiguration = .init(
             commandName: "project",
             abstract: "Add a Project to the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,
@@ -39,6 +40,9 @@ extension Catalog.Insert {
         
         @Argument(help: "Name that identifies a collection of expressions.")
         var name: String
+        
+        @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
+        var storage: Catalog.Storage = .default
         
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
@@ -52,7 +56,7 @@ extension Catalog.Insert {
         func run() throws {
             print("Inserting Project '\(name)'…")
             
-            let catalog = try SQLiteCatalog(url: try catalogURL())
+            let catalog = try catalog(forStorage: storage)
             
             let entity = Project(uuid: .zero, name: name, expressions: [])
             let id = try catalog.createProject(entity)
@@ -65,6 +69,7 @@ extension Catalog.Insert {
         static var configuration: CommandConfiguration = .init(
             commandName: "expression",
             abstract: "Add an Expression to the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,
@@ -88,6 +93,9 @@ extension Catalog.Insert {
         @Option(help: "Optional grouping identifier.")
         var feature: String?
         
+        @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
+        var storage: Catalog.Storage = .default
+        
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
         
@@ -102,7 +110,7 @@ extension Catalog.Insert {
         }
         
         func run() throws {
-            let catalog = try SQLiteCatalog(url: try catalogURL())
+            let catalog = try catalog(forStorage: storage)
             
             let expression = Expression(
                 uuid: .zero,
@@ -126,6 +134,7 @@ extension Catalog.Insert {
         static var configuration: CommandConfiguration = .init(
             commandName: "translation",
             abstract: "Add a Translation to the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,
@@ -149,11 +158,14 @@ extension Catalog.Insert {
         @Option(help: "Region code specifier.")
         var region: RegionCode?
         
+        @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
+        var storage: Catalog.Storage = .default
+        
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
         
         func run() throws {
-            let catalog = try SQLiteCatalog(url: try catalogURL())
+            let catalog = try catalog(forStorage: storage)
             
             let translation = Translation(
                 uuid: .zero,

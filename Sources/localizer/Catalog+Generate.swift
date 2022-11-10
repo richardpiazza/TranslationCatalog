@@ -3,6 +3,7 @@ import Foundation
 import Plot
 import TranslationCatalog
 import TranslationCatalogSQLite
+import TranslationCatalogFilesystem
 
 extension Catalog {
     struct Generate: CatalogCommand {
@@ -15,6 +16,7 @@ extension Catalog {
         static var configuration: CommandConfiguration = .init(
             commandName: "generate",
             abstract: "Generate a viewable document using the strings catalog.",
+            usage: nil,
             discussion: """
             Available formats: \(Format.allCases.map{ $0.rawValue }.joined(separator: " "))
             """,
@@ -28,12 +30,25 @@ extension Catalog {
         @Argument(help: "The export format")
         var format: Format
         
+        @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
+        var storage: Catalog.Storage = .default
+        
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
         
         func run() throws {
-            let catalog = try SQLiteCatalog(url: try catalogURL())
-            let expressions = try catalog.expressions(matching: SQLiteCatalog.ExpressionQuery.hierarchy).sorted(by: { $0.name < $1.name })
+            let url = try catalogURL(forStorage: storage)
+            
+            let expressions: [Expression]
+            
+            switch storage {
+            case .sqlite:
+                let catalog = try SQLiteCatalog(url: url)
+                expressions = try catalog.expressions(matching: SQLiteCatalog.ExpressionQuery.hierarchy).sorted(by: { $0.name < $1.name })
+            case .filesystem:
+                let catalog = try FilesystemCatalog(url: url)
+                expressions = try catalog.expressions().sorted(by: { $0.name < $1.name })
+            }
             
             switch format {
             case .markdown:

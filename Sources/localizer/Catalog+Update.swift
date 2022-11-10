@@ -2,13 +2,13 @@ import ArgumentParser
 import Foundation
 import LocaleSupport
 import TranslationCatalog
-import TranslationCatalogSQLite
 
 extension Catalog {
     struct Update: ParsableCommand {
         static var configuration: CommandConfiguration = .init(
             commandName: "update",
             abstract: "Update a single entity in the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,
@@ -29,6 +29,7 @@ extension Catalog.Update {
         static var configuration: CommandConfiguration = .init(
             commandName: "project",
             abstract: "Update a Project in the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,
@@ -49,6 +50,9 @@ extension Catalog.Update {
         @Option(help: "Remove an expression from a project.")
         var unlinkExpression: Expression.ID?
         
+        @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
+        var storage: Catalog.Storage = .default
+        
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
         
@@ -64,12 +68,7 @@ extension Catalog.Update {
         }
         
         func run() throws {
-            let catalog = try SQLiteCatalog(url: try catalogURL())
-            if noisy {
-                catalog.statementHook = { (sql) in
-                    print("======SQL======\n\(sql)\n======___======\n")
-                }
-            }
+            let catalog = try catalog(forStorage: storage, debug: noisy)
             
             let project = try catalog.project(id)
             
@@ -97,6 +96,7 @@ extension Catalog.Update {
         static var configuration: CommandConfiguration = .init(
             commandName: "expression",
             abstract: "Update an Expression in the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,
@@ -129,6 +129,9 @@ extension Catalog.Update {
         @Option(help: "Remove the expression from a project.")
         var unlinkProject: Project.ID?
         
+        @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
+        var storage: Catalog.Storage = .default
+        
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
         
@@ -150,12 +153,7 @@ extension Catalog.Update {
         }
         
         func run() throws {
-            let catalog = try SQLiteCatalog(url: try catalogURL())
-            if noisy {
-                catalog.statementHook = { (sql) in
-                    print("======SQL======\n\(sql)\n======___======\n")
-                }
-            }
+            let catalog = try catalog(forStorage: storage, debug: noisy)
             
             let expression = try catalog.expression(id)
             
@@ -198,6 +196,7 @@ extension Catalog.Update {
         static var configuration: CommandConfiguration = .init(
             commandName: "translation",
             abstract: "Update a Translation in the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,
@@ -227,6 +226,9 @@ extension Catalog.Update {
         @Flag(help: "Forcefully drop the 'RegionCode'. Does nothing when 'region' value provided.")
         var dropRegion: Bool = false
         
+        @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
+        var storage: Catalog.Storage = .default
+        
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
         
@@ -234,12 +236,7 @@ extension Catalog.Update {
         var noisy: Bool = false
         
         func run() throws {
-            let catalog = try SQLiteCatalog(url: try catalogURL())
-            if noisy {
-                catalog.statementHook = { (sql) in
-                    print("======SQL======\n\(sql)\n======___======\n")
-                }
-            }
+            let catalog = try catalog(forStorage: storage, debug: noisy)
             
             let translation = try catalog.translation(id)
             

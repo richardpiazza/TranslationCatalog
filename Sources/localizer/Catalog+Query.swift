@@ -1,6 +1,5 @@
 import ArgumentParser
 import TranslationCatalog
-import TranslationCatalogSQLite
 import Foundation
 
 extension Catalog {
@@ -8,6 +7,7 @@ extension Catalog {
         static var configuration: CommandConfiguration = .init(
             commandName: "query",
             abstract: "Perform queries against the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,
@@ -27,6 +27,7 @@ extension Catalog.Query {
         static var configuration: CommandConfiguration = .init(
             commandName: "project",
             abstract: "Query for projects in the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,
@@ -37,6 +38,9 @@ extension Catalog.Query {
         
         @Option(help: "Partial name search")
         var named: String?
+        
+        @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
+        var storage: Catalog.Storage = .default
         
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
@@ -53,12 +57,7 @@ extension Catalog.Query {
         }
         
         func run() throws {
-            let catalog = try SQLiteCatalog(url: try catalogURL())
-            if noisy {
-                catalog.statementHook = { (sql) in
-                    print("======SQL======\n\(sql)\n======___======\n")
-                }
-            }
+            let catalog = try catalog(forStorage: storage, debug: noisy)
             
             var projects: [Project] = []
             
@@ -82,6 +81,7 @@ extension Catalog.Query {
         static var configuration: CommandConfiguration = .init(
             commandName: "expression",
             abstract: "Query for expressions in the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,
@@ -95,6 +95,9 @@ extension Catalog.Query {
         
         @Option(help: "A descriptive human-readable identification.")
         var named: String?
+        
+        @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
+        var storage: Catalog.Storage = .default
         
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
@@ -111,12 +114,7 @@ extension Catalog.Query {
         }
         
         func run() throws {
-            let catalog = try SQLiteCatalog(url: try catalogURL())
-            if noisy {
-                catalog.statementHook = { (sql) in
-                    print("======SQL======\n\(sql)\n======___======\n")
-                }
-            }
+            let catalog = try catalog(forStorage: storage, debug: noisy)
             
             var expressions: [Expression] = []
             

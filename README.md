@@ -4,7 +4,7 @@ Swift toolkit for managing app localization &amp; internationalization.
 
 <p>
   <img src="https://github.com/richardpiazza/TranslationCatalog/workflows/Swift/badge.svg?branch=main" />
-  <img src="https://img.shields.io/badge/Swift-5.3-orange.svg" />
+  <img src="https://img.shields.io/badge/Swift-5.6-orange.svg" />
   <a href="https://twitter.com/richardpiazza">
     <img src="https://img.shields.io/badge/twitter-@richardpiazza-blue.svg?style=flat" alt="Twitter: @richardpiazza" />
   </a>
@@ -35,25 +35,21 @@ import TranslationCatalog
 
 This toolkit is comprised of several components:
 
-* **TranslationCatalog**: Entity definitions for a lightweight catalog that can persist and retrieve translations.
-* **TranslationCatalogSQLite**: A cross-platform SQLite implementation of the _Translation Catalog_.
-* **localizer**: A swift command line that can interact with a catalog along with importing, exporting, and documenting localizations.
+### TranslationCatalog
 
-### TranslationCatalog Module
+Entity definitions for a lightweight catalog that can persist and retrieve translations.
 
-#### `Catalog`
+### TranslationCatalogFilesystem
 
-<info needed>
+A cross-platform implementation of the _Translation Catalog_ that uses directories and JSON documents.
 
-### TranslationCatalogSQLite Module
+### TranslationCatalogSQLite
 
-#### `Statement`
+A cross-platform implementation of the _Translation Catalog_ that is backed by a SQLite store.
 
-<info needed>
+### `localizer`
 
-#### `localizer` Executable
-
-<info needed>
+A swift command line that can interact with a catalog along with importing, exporting, and documenting localizations.
 
 ## Contribution
 
