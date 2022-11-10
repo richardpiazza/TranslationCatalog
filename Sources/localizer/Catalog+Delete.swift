@@ -7,6 +7,7 @@ extension Catalog {
         static var configuration: CommandConfiguration = .init(
             commandName: "delete",
             abstract: "Remove a single entity in the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,
@@ -27,6 +28,7 @@ extension Catalog.Delete {
         static var configuration: CommandConfiguration = .init(
             commandName: "project",
             abstract: "Delete a Project from the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,
@@ -65,6 +67,7 @@ extension Catalog.Delete {
         static var configuration: CommandConfiguration = .init(
             commandName: "expression",
             abstract: "Delete a Expression from the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,
@@ -93,6 +96,7 @@ extension Catalog.Delete {
         static var configuration: CommandConfiguration = .init(
             commandName: "translation",
             abstract: "Delete a Translation from the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,

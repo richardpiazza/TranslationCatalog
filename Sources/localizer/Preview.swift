@@ -7,6 +7,7 @@ struct Preview: ParsableCommand {
     static var configuration: CommandConfiguration = .init(
         commandName: "preview",
         abstract: "Displays the localizations found in a translation file.",
+        usage: nil,
         discussion: "",
         version: "1.0.0",
         shouldDisplay: true,

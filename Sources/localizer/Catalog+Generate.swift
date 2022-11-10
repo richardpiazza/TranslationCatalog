@@ -16,6 +16,7 @@ extension Catalog {
         static var configuration: CommandConfiguration = .init(
             commandName: "generate",
             abstract: "Generate a viewable document using the strings catalog.",
+            usage: nil,
             discussion: """
             Available formats: \(Format.allCases.map{ $0.rawValue }.joined(separator: " "))
             """,

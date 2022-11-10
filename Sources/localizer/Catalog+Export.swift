@@ -10,6 +10,7 @@ extension Catalog {
         static var configuration: CommandConfiguration = .init(
             commandName: "export",
             abstract: "Export a translation file using the catalog.",
+            usage: nil,
             discussion: """
             iOS Localization should contain all keys (expressions) for a given language. There is no native fallback
             mechanism to a 'base' language. (i.e. en-GB > en). Given this functionality, when exporting the 'apple'

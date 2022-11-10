@@ -35,6 +35,7 @@ struct Catalog: ParsableCommand {
     static var configuration: CommandConfiguration = .init(
         commandName: "catalog",
         abstract: "Interact with the translation catalog.",
+        usage: nil,
         discussion: "",
         version: "1.0.0",
         shouldDisplay: true,

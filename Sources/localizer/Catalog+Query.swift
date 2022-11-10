@@ -7,6 +7,7 @@ extension Catalog {
         static var configuration: CommandConfiguration = .init(
             commandName: "query",
             abstract: "Perform queries against the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,
@@ -26,6 +27,7 @@ extension Catalog.Query {
         static var configuration: CommandConfiguration = .init(
             commandName: "project",
             abstract: "Query for projects in the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,
@@ -79,6 +81,7 @@ extension Catalog.Query {
         static var configuration: CommandConfiguration = .init(
             commandName: "expression",
             abstract: "Query for expressions in the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,

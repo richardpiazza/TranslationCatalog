@@ -8,6 +8,7 @@ extension Catalog {
         static var configuration: CommandConfiguration = .init(
             commandName: "insert",
             abstract: "Adds a single entity to the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,
@@ -28,6 +29,7 @@ extension Catalog.Insert {
         static var configuration: CommandConfiguration = .init(
             commandName: "project",
             abstract: "Add a Project to the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,
@@ -67,6 +69,7 @@ extension Catalog.Insert {
         static var configuration: CommandConfiguration = .init(
             commandName: "expression",
             abstract: "Add an Expression to the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,
@@ -131,6 +134,7 @@ extension Catalog.Insert {
         static var configuration: CommandConfiguration = .init(
             commandName: "translation",
             abstract: "Add a Translation to the catalog.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,

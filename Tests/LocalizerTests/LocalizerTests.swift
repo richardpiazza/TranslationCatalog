@@ -7,10 +7,12 @@ final class LocalizerTests: _LocalizerTestCase {
         process.waitUntilExit()
         
         XCTAssertEqual(output, """
-        OVERVIEW: Android 'strings.xml' & Apple 'Localizable.strings' utility.
+        OVERVIEW: Utility for interacting with Android 'strings.xml', Apple
+        'Localizable.strings', and Web '*.json' localization files.
 
         Default Language Code: en
         Default Region Code: US
+        Default Storage: sqlite
 
         USAGE: localizer <subcommand>
 

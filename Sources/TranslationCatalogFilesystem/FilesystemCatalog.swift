@@ -84,7 +84,17 @@ public class FilesystemCatalog: Catalog {
     }
     
     public func projects(matching query: CatalogQuery) throws -> [Project] {
-        throw CatalogError.unhandledQuery(query)
+        let documents: [ProjectDocument]
+        
+        switch query {
+        case GenericProjectQuery.named(let name):
+            documents = projectDocuments
+                .filter { $0.name.lowercased().contains(name.lowercased()) }
+        default:
+            throw CatalogError.unhandledQuery(query)
+        }
+        
+        return documents.map { Project(document: $0, expressions: []) }
     }
     
     public func project(_ id: Project.ID) throws -> Project {
@@ -126,7 +136,11 @@ public class FilesystemCatalog: Catalog {
         }
         
         let expressionIds = try project.expressions.map {
-            try createExpression($0)
+            do {
+                return try createExpression($0)
+            } catch CatalogError.expressionID {
+                return $0.id
+            }
         }
         
         let id = project.id != .zero ? project.id : UUID()
@@ -187,7 +201,7 @@ public class FilesystemCatalog: Catalog {
             return try project(projectId).expressions
         case GenericExpressionQuery.key(let key):
             return try expressionDocuments
-                .filter { $0.key == key }
+                .filter { $0.key.lowercased().contains(key.lowercased()) }
                 .map { document in
                     let translations = try document.translationIds.map {
                         try translation($0)
@@ -197,7 +211,7 @@ public class FilesystemCatalog: Catalog {
                 }
         case GenericExpressionQuery.named(let name):
             return try expressionDocuments
-                .filter { $0.name == name }
+                .filter { $0.name.lowercased().contains(name.lowercased()) }
                 .map { document in
                     let translations = try document.translationIds.map {
                         try translation($0)
@@ -210,17 +224,13 @@ public class FilesystemCatalog: Catalog {
             var expressions = try self.expressions()
             var index = expressions.count - 1
             while index >= 0 {
-                var expression = expressions[index]
-                expression.translations.removeAll(where: {
-                    $0.languageCode != languageCode &&
-                    $0.scriptCode != nil &&
-                    $0.regionCode != nil
-                })
-                
-                if expression.translations.isEmpty {
+                let expression = expressions[index]
+                if !expression.translations.contains(where: {
+                    $0.languageCode == languageCode &&
+                    $0.scriptCode == nil &&
+                    $0.regionCode == nil
+                }) {
                     expressions.remove(at: index)
-                } else {
-                    expressions[index] = expression
                 }
                 
                 index -= 1
@@ -231,17 +241,13 @@ public class FilesystemCatalog: Catalog {
             var expressions = try self.expressions()
             var index = expressions.count - 1
             while index >= 0 {
-                var expression = expressions[index]
-                expression.translations.removeAll(where: {
-                    $0.languageCode != languageCode &&
-                    $0.scriptCode != scriptCode &&
-                    $0.regionCode != regionCode
-                })
-                
-                if expression.translations.isEmpty {
+                let expression = expressions[index]
+                if !expression.translations.contains(where: {
+                    $0.languageCode == languageCode &&
+                    $0.scriptCode == scriptCode &&
+                    $0.regionCode == regionCode
+                }) {
                     expressions.remove(at: index)
-                } else {
-                    expressions[index] = expression
                 }
                 
                 index -= 1

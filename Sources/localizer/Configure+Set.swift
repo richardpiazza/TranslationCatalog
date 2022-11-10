@@ -8,6 +8,7 @@ extension Configure {
         static var configuration: CommandConfiguration = .init(
             commandName: "set",
             abstract: "Sets configuration parameters.",
+            usage: nil,
             discussion: "",
             version: "1.0.0",
             shouldDisplay: true,

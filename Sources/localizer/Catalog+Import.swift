@@ -10,6 +10,7 @@ extension Catalog {
         static var configuration: CommandConfiguration = .init(
             commandName: "import",
             abstract: "Imports a translation file into the catalog.",
+            usage: nil,
             discussion: """
             
             """,

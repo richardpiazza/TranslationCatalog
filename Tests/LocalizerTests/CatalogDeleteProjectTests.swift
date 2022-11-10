@@ -14,10 +14,12 @@ final class CatalogDeleteProjectTests: _LocalizerTestCase {
         default:
             XCTAssertEqual(error, """
             Error: Missing expected argument '<id>'
-            Usage: localizer catalog delete project <id> [--path <path>] [--debug]
+            Help:  <id>  Unique ID of the Project.
+            Usage: localizer catalog delete project <id> [--storage <storage>] [--path <path>] [--debug]
               See 'localizer catalog delete project --help' for more information.
             
             """)
+            
         }
     }
     
@@ -30,7 +32,7 @@ final class CatalogDeleteProjectTests: _LocalizerTestCase {
         case 0:
             let output = try XCTUnwrap(self.output)
             XCTAssertTrue(output.contains("OVERVIEW: Delete a Project from the catalog."))
-            XCTAssertTrue(output.contains("USAGE: localizer catalog delete project <id> [--path <path>] [--debug]"))
+            XCTAssertTrue(output.contains("USAGE: localizer catalog delete project <id> [--storage <storage>] [--path <path>] [--debug]"))
             XCTAssertTrue(output.contains("ARGUMENTS:"))
             XCTAssertTrue(output.contains("OPTIONS:"))
         default:
@@ -49,7 +51,8 @@ final class CatalogDeleteProjectTests: _LocalizerTestCase {
         default:
             XCTAssertEqual(error, """
             Error: The value '123ABC' is invalid for '<id>'
-            Usage: localizer catalog delete project <id> [--path <path>] [--debug]
+            Help:  <id>  Unique ID of the Project.
+            Usage: localizer catalog delete project <id> [--storage <storage>] [--path <path>] [--debug]
               See 'localizer catalog delete project --help' for more information.
             
             """)
@@ -67,7 +70,7 @@ final class CatalogDeleteProjectTests: _LocalizerTestCase {
         default:
             XCTAssertEqual(error, """
             Error: Unknown Project '399150E5-6709-4CA8-AE54-C665EC3D1916'.
-            Usage: project <id> [--path <path>] [--debug]
+            Usage: project <id> [--storage <storage>] [--path <path>] [--debug]
               See 'project --help' for more information.
             
             """)
@@ -95,7 +98,7 @@ final class CatalogDeleteProjectTests: _LocalizerTestCase {
             """)
             XCTAssertEqual(error, """
             Error: Unknown Project '399150E5-6709-4CA8-AE54-C665EC3D1916'.
-            Usage: project <id> [--path <path>] [--debug]
+            Usage: project <id> [--storage <storage>] [--path <path>] [--debug]
               See 'project --help' for more information.
             
             """)

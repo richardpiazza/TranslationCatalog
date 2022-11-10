@@ -8,6 +8,7 @@ struct Command: ParsableCommand {
         return .init(
             commandName: "localizer",
             abstract: "Utility for interacting with Android 'strings.xml', Apple 'Localizable.strings', and Web '*.json' localization files.",
+            usage: nil,
             discussion: """
             Default Language Code: \(LanguageCode.default.rawValue)
             Default Region Code: \(RegionCode.default.rawValue)
