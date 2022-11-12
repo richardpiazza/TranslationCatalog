@@ -45,9 +45,15 @@ public class FilesystemCatalog: Catalog {
         projectsDirectory = directory.appendingPathComponent("Projects", isDirectory: true)
         #endif
         
-        try fileManager.createDirectory(at: translationsDirectory, withIntermediateDirectories: true)
-        try fileManager.createDirectory(at: expressionsDirectory, withIntermediateDirectories: true)
-        try fileManager.createDirectory(at: projectsDirectory, withIntermediateDirectories: true)
+        if !fileManager.fileExists(atPath: translationsDirectory.path) {
+            try fileManager.createDirectory(at: translationsDirectory, withIntermediateDirectories: true)
+        }
+        if !fileManager.fileExists(atPath: expressionsDirectory.path) {
+            try fileManager.createDirectory(at: expressionsDirectory, withIntermediateDirectories: true)
+        }
+        if !fileManager.fileExists(atPath: projectsDirectory.path) {
+            try fileManager.createDirectory(at: projectsDirectory, withIntermediateDirectories: true)
+        }
         
         let translationUrls = try fileManager.contentsOfDirectory(at: translationsDirectory, includingPropertiesForKeys: nil)
         try translationUrls.forEach {
