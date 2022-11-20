@@ -9,8 +9,6 @@ struct ExpressionDocument: Document {
     var defaultLanguage: LanguageCode
     var context: String?
     var feature: String?
-    @available(*, deprecated)
-    var translationIds: [TranslationDocument.ID]
 }
 
 extension Expression {

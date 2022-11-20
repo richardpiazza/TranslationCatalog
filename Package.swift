@@ -84,7 +84,8 @@ let package = Package(
             name: "LocalizerTests",
             dependencies: ["localizer"],
             resources: [
-                .process("Resources")
+                .process("Resources"),
+                .copy("StructuredResources"),
             ]
         ),
         .testTarget(

@@ -12,7 +12,7 @@ final class CatalogExportTests: XCTestCase {
         try localizer.run()
         
         XCTAssertEqual(localizer.output, """
-        "APPLICATION_NAME" = "Ligua";
+        "APPLICATION_NAME" = "Lingua";
         "GREETING" = "Hello World!";
         "PLATFORM_ANDROID" = "Android";
         "PLATFORM_APPLE" = "Apple";
@@ -29,7 +29,7 @@ final class CatalogExportTests: XCTestCase {
         try localizer.run()
         
         XCTAssertEqual(localizer.output, """
-        "APPLICATION_NAME" = "Ligua";
+        "APPLICATION_NAME" = "Lingua";
         "GREETING" = "Hola Mundo!";
         "HIDDEN_MESSAGE" = "solo en español";
         "PLATFORM_ANDROID" = "Android";
@@ -50,7 +50,7 @@ final class CatalogExportTests: XCTestCase {
         <?xml version="1.0" encoding="UTF-8"?>
         
           <resources xmlns:tools="http://schemas.android.com/tools">
-            <string name="APPLICATION_NAME">Ligua</string>
+            <string name="APPLICATION_NAME">Lingua</string>
             <string name="GREETING">Hello World!</string>
             <string name="PLATFORM_ANDROID">Android</string>
             <string name="PLATFORM_APPLE">Apple</string>
@@ -89,7 +89,7 @@ final class CatalogExportTests: XCTestCase {
         <?xml version="1.0" encoding="UTF-8"?>
         
           <resources xmlns:tools="http://schemas.android.com/tools">
-            <string name="APPLICATION_NAME">Ligua</string>
+            <string name="APPLICATION_NAME">Lingua</string>
             <string name="GREETING">Hola Mundo!</string>
             <string name="HIDDEN_MESSAGE">solo en español</string>
             <string name="PLATFORM_ANDROID">Android</string>
@@ -109,7 +109,7 @@ final class CatalogExportTests: XCTestCase {
         
         XCTAssertEqual(localizer.output, """
         {
-          "APPLICATION_NAME" : "Ligua",
+          "APPLICATION_NAME" : "Lingua",
           "GREETING" : "Hello World!",
           "PLATFORM_ANDROID" : "Android",
           "PLATFORM_APPLE" : "Apple",
@@ -144,7 +144,7 @@ final class CatalogExportTests: XCTestCase {
         
         XCTAssertEqual(localizer.output, """
         {
-          "APPLICATION_NAME" : "Ligua",
+          "APPLICATION_NAME" : "Lingua",
           "GREETING" : "Hola Mundo!",
           "HIDDEN_MESSAGE" : "solo en español",
           "PLATFORM_ANDROID" : "Android",
@@ -158,15 +158,18 @@ final class CatalogExportTests: XCTestCase {
     // MARK: - Filesystem
     
     func testFilesystemAppleEnglish() throws {
-        let resource = try XCTUnwrap(Bundle.module.url(forResource: "test_multi_language", withExtension: "sqlite"))
-        let directory = resource.deletingLastPathComponent().appendingPathComponent("MultiLanguageCatalog")
+        let resource = try XCTUnwrap(Bundle.module.resourceURL)
+        let directory = resource
+            .appendingPathComponent("StructuredResources")
+            .appendingPathComponent("MultiLanguageCatalog")
+        
         let localizer = Process.LocalizerProcess()
-        print(directory.path)
+        
         localizer.arguments = ["catalog", "export", "apple", "en", "--storage" , "filesystem", "--path", directory.path]
         try localizer.run()
         
         XCTAssertEqual(localizer.output, """
-        "APPLICATION_NAME" = "Ligua";
+        "APPLICATION_NAME" = "Lingua";
         "GREETING" = "Hello World!";
         "PLATFORM_ANDROID" = "Android";
         "PLATFORM_APPLE" = "Apple";

@@ -1,8 +1,8 @@
 {
 	"context" : "Expression with translations for each language in the catalog.",
-	"default_language" : "en",
+	"defaultLanguage" : "en",
 	"feature": "All-Platforms",
+	"id" : "7227F3FB-6D25-47C9-83F1-8E042C7E20EC",
 	"key" : "GREETING",
-	"name" : "Greeting",
-	"uuid" : "7227F3FB-6D25-47C9-83F1-8E042C7E20EC"
+	"name" : "Greeting"
 }
