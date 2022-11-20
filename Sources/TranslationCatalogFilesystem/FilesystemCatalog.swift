@@ -192,10 +192,12 @@ public class FilesystemCatalog: Catalog {
     // MARK: - Expression
     
     public func expressions() throws -> [Expression] {
-        try expressionDocuments.map { document in
-            let translations = try document.translationIds.map {
-                try translation($0)
-            }
+        expressionDocuments.map { document in
+            let translations = translationDocuments
+                .filter { $0.expressionID == document.id }
+                .map {
+                    Translation(document: $0)
+                }
             
             return Expression(document: document, translations: translations)
         }
@@ -206,22 +208,26 @@ public class FilesystemCatalog: Catalog {
         case GenericExpressionQuery.projectID(let projectId):
             return try project(projectId).expressions
         case GenericExpressionQuery.key(let key):
-            return try expressionDocuments
+            return expressionDocuments
                 .filter { $0.key.lowercased().contains(key.lowercased()) }
                 .map { document in
-                    let translations = try document.translationIds.map {
-                        try translation($0)
-                    }
+                    let translations = translationDocuments
+                        .filter { $0.expressionID == document.id }
+                        .map {
+                            Translation(document: $0)
+                        }
                     
                     return Expression(document: document, translations: translations)
                 }
         case GenericExpressionQuery.named(let name):
-            return try expressionDocuments
+            return expressionDocuments
                 .filter { $0.name.lowercased().contains(name.lowercased()) }
                 .map { document in
-                    let translations = try document.translationIds.map {
-                        try translation($0)
-                    }
+                    let translations = translationDocuments
+                        .filter { $0.expressionID == document.id }
+                        .map {
+                            Translation(document: $0)
+                        }
                     
                     return Expression(document: document, translations: translations)
                 }
@@ -288,9 +294,11 @@ public class FilesystemCatalog: Catalog {
             throw CatalogError.unhandledQuery(query)
         }
         
-        let translations = try document.translationIds.map {
-            try translation($0)
-        }
+        let translations = translationDocuments
+            .filter { $0.expressionID == document.id }
+            .map {
+                Translation(document: $0)
+            }
         
         return Expression(document: document, translations: translations)
     }
@@ -314,7 +322,7 @@ public class FilesystemCatalog: Catalog {
             )
         }
         
-        let translationIds = try translations.map {
+        let _ = try translations.map {
             try createTranslation($0)
         }
         
@@ -324,8 +332,7 @@ public class FilesystemCatalog: Catalog {
             name: expression.name,
             defaultLanguage: expression.defaultLanguage,
             context: expression.context,
-            feature: expression.feature,
-            translationIds: translationIds
+            feature: expression.feature
         )
         
         try document.write(to: expressionsDirectory, using: encoder)
@@ -497,12 +504,6 @@ public class FilesystemCatalog: Catalog {
     public func deleteTranslation(_ id: Translation.ID) throws {
         guard let index = translationDocuments.firstIndex(where: { $0.id == id }) else {
             throw CatalogError.translationID(id)
-        }
-        
-        let expressionId = translationDocuments[index].expressionID
-        if let expressionIndex = expressionDocuments.firstIndex(where: { $0.id == expressionId }) {
-            expressionDocuments[expressionIndex].translationIds.removeAll(where: { $0 == id })
-            try expressionDocuments[expressionIndex].write(to: expressionsDirectory, using: encoder)
         }
         
         try translationDocuments[index].remove(from: translationsDirectory)
