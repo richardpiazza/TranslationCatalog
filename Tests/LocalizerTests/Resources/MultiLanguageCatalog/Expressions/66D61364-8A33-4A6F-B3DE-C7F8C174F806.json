@@ -1,0 +1,8 @@
+{
+	"context" : "Platform identifier in 'en' only.",
+	"default_language" : "en",
+	"feature": "Web-Only",
+	"key" : "PLATFORM_WEB",
+	"name" : "Platform - Web",
+	"uuid" : "66D61364-8A33-4A6F-B3DE-C7F8C174F806"
+}

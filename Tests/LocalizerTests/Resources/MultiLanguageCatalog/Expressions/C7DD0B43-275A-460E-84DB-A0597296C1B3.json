@@ -1,0 +1,8 @@
+{
+	"context" : "Expression with 'es' translation only, no default language translations.",
+	"default_language" : "en",
+	"feature": "All-Platforms, 'es' Only",
+	"key" : "HIDDEN_MESSAGE",
+	"name" : "Hidden_Message",
+	"uuid" : "C7DD0B43-275A-460E-84DB-A0597296C1B3"
+}

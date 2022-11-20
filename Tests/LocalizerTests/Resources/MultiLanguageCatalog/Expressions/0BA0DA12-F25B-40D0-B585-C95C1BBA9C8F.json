@@ -1,0 +1,8 @@
+{
+	"context" : "This expression has a single 'en' translation.",
+	"default_language" : "en",
+	"feature": "All-Platforms",
+	"key" : "APPLICATION_NAME",
+	"name" : "Application Name",
+	"uuid" : "0BA0DA12-F25B-40D0-B585-C95C1BBA9C8F"
+}

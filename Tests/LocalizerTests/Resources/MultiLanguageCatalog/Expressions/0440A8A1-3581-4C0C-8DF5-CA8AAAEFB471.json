@@ -1,0 +1,8 @@
+{
+	"context" : "Platform identifier in 'en' only.",
+	"default_language" : "en",
+	"feature": "Apple Only",
+	"key" : "PLATFORM_APPLE",
+	"name" : "Platform - Apple",
+	"uuid" : "0440A8A1-3581-4C0C-8DF5-CA8AAAEFB471"
+}

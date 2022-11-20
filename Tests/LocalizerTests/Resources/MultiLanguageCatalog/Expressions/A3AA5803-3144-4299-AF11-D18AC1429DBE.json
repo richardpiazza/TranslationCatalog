@@ -1,0 +1,8 @@
+{
+	"context" : "Platform identifier in 'en' only.",
+	"default_language" : "en",
+	"feature": "Android-Only",
+	"key" : "PLATFORM_ANDROID",
+	"name" : "Platform - Android",
+	"uuid" : "A3AA5803-3144-4299-AF11-D18AC1429DBE"
+}
