@@ -29,7 +29,7 @@ public class FilesystemCatalog: Catalog {
         
         directory = url
         
-        #if swift(>=5.7.1)
+        #if swift(>=5.7.1) && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS))
         if #available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *) {
             translationsDirectory = directory.appending(path: "Translations", directoryHint: .isDirectory)
             expressionsDirectory = directory.appending(path: "Expressions", directoryHint: .isDirectory)

@@ -13,7 +13,7 @@ final class FilesystemEmptyCatalogTests: XCTestCase {
     /// URL for the catalog used during this run.
     private lazy var url: URL = {
         let directory = URL(fileURLWithPath: fileManager.currentDirectoryPath, isDirectory: true)
-        #if swift(>=5.7.1)
+        #if swift(>=5.7.1) && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS))
         if #available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *) {
             return directory.appending(path: executionId.uuidString, directoryHint: .isDirectory)
         } else {
