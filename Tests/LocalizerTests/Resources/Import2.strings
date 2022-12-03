@@ -1,0 +1,7 @@
+/*
+ A series of localizations (en). Imported second, has some of the same keys.
+ */
+
+"TITLE" = "Title";
+"GIVEN_NAME" = "Given Name";
+"FAMILY_NAME" = "Family Name";
