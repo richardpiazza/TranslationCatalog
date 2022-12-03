@@ -5,29 +5,37 @@ import TranslationCatalog
 public extension SQLiteCatalog {
     
     enum Error: Swift.Error {
+        case invalidPrimaryKey(Int)
+        case invalidStringValue(String)
+        
+        @available(*, deprecated, renamed: "CatalogError.unhandledUpdate()")
         case invalidAction(CatalogUpdate)
         @available(*, deprecated, renamed: "CatalogError.badQuery()")
         case invalidQuery(CatalogQuery)
-        case invalidPrimaryKey(Int)
         @available(*, deprecated, renamed: "CatalogError.projectID()")
         case invalidProjectID(Project.ID)
         @available(*, deprecated, renamed: "CatalogError.expressionID()")
         case invalidExpressionID(Expression.ID)
         @available(*, deprecated, renamed: "CatalogError.translationID()")
         case invalidTranslationID(TranslationCatalog.Translation.ID)
-        case invalidStringValue(String)
+        @available(*, deprecated, renamed: "CatalogError.expressionExistingWithID()")
         case existingExpressionWithID(Expression.ID)
+        @available(*, deprecated, renamed: "CatalogError.expressionExistingWithKey()")
         case existingExpressionWithKey(String)
+        @available(*, deprecated, renamed: "CatalogError.translationExistingWithID()")
         case existingTranslationWithID(TranslationCatalog.Translation.ID)
+        @available(*, deprecated, renamed: "CatalogError.unhandledUpdate()")
         case unhandledAction(CatalogUpdate)
+        @available(*, deprecated, renamed: "CatalogError.dataTypeConversion()")
+        case unhandledConversion
         @available(*, deprecated, renamed: "CatalogError.unhandledQuery()")
         case unhandledQuery(CatalogQuery)
-        case unhandledConversion
     }
     
     enum ProjectQuery: CatalogQuery {
         case hierarchy
         case primaryKey(Int)
+        
         @available(*, deprecated, renamed: "GenericProjectQuery.id")
         case id(Project.ID)
         @available(*, deprecated, renamed: "GenericProjectQuery.named")
@@ -37,6 +45,7 @@ public extension SQLiteCatalog {
     enum ExpressionQuery: CatalogQuery {
         case hierarchy
         case primaryKey(Int)
+        
         @available(*, deprecated, renamed: "GenericExpressionQuery.id")
         case id(Expression.ID)
         @available(*, deprecated, renamed: "GenericExpressionQuery.projectID")
@@ -55,6 +64,7 @@ public extension SQLiteCatalog {
     
     enum TranslationQuery: CatalogQuery {
         case primaryKey(Int)
+        
         @available(*, deprecated, renamed: "GenericTranslationQuery.id")
         case id(TranslationCatalog.Translation.ID)
         @available(*, deprecated, renamed: "GenericTranslationQuery.expressionID")

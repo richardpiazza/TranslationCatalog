@@ -44,10 +44,10 @@ extension ExpressionEntity {
     
     func expression(with translations: [TranslationCatalog.Translation] = []) throws -> Expression {
         guard let id = UUID(uuidString: uuid) else {
-            throw SQLiteCatalog.Error.unhandledConversion
+            throw CatalogError.dataTypeConversion("Invalid UUID '\(uuid)'")
         }
         guard let languageCode = LanguageCode(rawValue: defaultLanguage) else {
-            throw SQLiteCatalog.Error.unhandledConversion
+            throw CatalogError.dataTypeConversion("Invalid LangaugeCode '\(defaultLanguage)'")
         }
         
         return Expression(uuid: id, key: key, name: name, defaultLanguage: languageCode, context: context, feature: feature, translations: translations)

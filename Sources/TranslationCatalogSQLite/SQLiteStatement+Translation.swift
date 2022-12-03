@@ -151,6 +151,39 @@ extension SQLiteStatement {
         )
     }
     
+    static func selectTranslationsHaving(_ expressionID: Int, languageCode: LanguageCode, scriptCode: ScriptCode?, regionCode: RegionCode?) -> Self {
+        .init(
+            .SELECT(
+                .column(TranslationEntity.id),
+                .column(TranslationEntity.uuid),
+                .column(TranslationEntity.expressionID),
+                .column(TranslationEntity.language),
+                .column(TranslationEntity.script),
+                .column(TranslationEntity.region),
+                .column(TranslationEntity.value)
+            ),
+            .FROM(
+                .TABLE(TranslationEntity.self)
+            ),
+            .WHERE(
+                .AND(
+                    .column(TranslationEntity.expressionID, op: .equal, value: expressionID),
+                    .column(TranslationEntity.language, op: .equal, value: languageCode.rawValue),
+                    .unwrap(scriptCode, transform: {
+                        .column(TranslationEntity.script, op: .equal, value: $0.rawValue)
+                    }, else: {
+                        .logical(op: .isNull, segments: [Segment<WhereContext>.column(TranslationEntity.script)])
+                    }()),
+                    .unwrap(regionCode, transform: {
+                        .column(TranslationEntity.region, op: .equal, value: $0.rawValue)
+                    }, else: {
+                        .logical(op: .isNull, segments: [Segment<WhereContext>.column(TranslationEntity.region)])
+                    }())
+                )
+            )
+        )
+    }
+    
     static func insertTranslation(_ translation: TranslationEntity) -> Self {
         .init(
             .INSERT_INTO(

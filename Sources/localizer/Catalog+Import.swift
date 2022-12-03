@@ -86,9 +86,6 @@ extension Catalog {
             } catch CatalogError.expressionExistingWithKey(let key, let existing) {
                 print("Existing Expression Key '\(key)'")
                 importTranslations(expression.replacingId(existing.id), into: catalog)
-            } catch SQLiteCatalog.Error.existingExpressionWithKey {
-                print("Existing Expression Key '\(expression.key)'")
-                importTranslations(expression, into: catalog)
             } catch {
                 print("Import Failure: \(expression); \(error.localizedDescription)")
             }

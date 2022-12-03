@@ -43,19 +43,19 @@ extension TranslationEntity {
     
     func translation(with expressionID: String) throws -> TranslationCatalog.Translation {
         guard let id = UUID(uuidString: uuid) else {
-            throw SQLiteCatalog.Error.unhandledConversion
+            throw CatalogError.dataTypeConversion("Invalid UUID '\(uuid)'")
         }
         guard let foreignID = UUID(uuidString: expressionID) else {
-            throw SQLiteCatalog.Error.unhandledConversion
+            throw CatalogError.dataTypeConversion("Invalid UUID '\(expressionID)'")
         }
         guard let languageCode = LanguageCode(rawValue: language) else {
-            throw SQLiteCatalog.Error.unhandledConversion
+            throw CatalogError.dataTypeConversion("Invalid LanguageCode '\(language)'")
         }
         
         let scriptCode: ScriptCode?
         if let script = script {
             guard let code = ScriptCode(rawValue: script) else {
-                throw SQLiteCatalog.Error.unhandledConversion
+                throw CatalogError.dataTypeConversion("Invalid ScriptCode '\(script)'")
             }
             scriptCode = code
         } else {
@@ -65,7 +65,7 @@ extension TranslationEntity {
         let regionCode: RegionCode?
         if let region = region {
             guard let code = RegionCode(rawValue: region) else {
-                throw SQLiteCatalog.Error.unhandledConversion
+                throw CatalogError.dataTypeConversion("Invalid RegionCode '\(region)'")
             }
             regionCode = code
         } else {

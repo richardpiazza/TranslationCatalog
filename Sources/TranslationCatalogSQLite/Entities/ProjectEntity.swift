@@ -27,7 +27,7 @@ extension ProjectEntity {
     
     func project(with expressions: [Expression] = []) throws -> Project {
         guard let id = UUID(uuidString: uuid) else {
-            throw SQLiteCatalog.Error.unhandledConversion
+            throw CatalogError.dataTypeConversion("Invalid UUID '\(uuid)'")
         }
         
         return Project(uuid: id, name: name, expressions: expressions)
