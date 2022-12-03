@@ -131,7 +131,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             
             try unlinkProject(entity.id, expressionID: expression.id)
         default:
-            throw Error.unhandledAction(action)
+            throw CatalogError.unhandledUpdate(action)
         }
     }
     
@@ -227,12 +227,12 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
     @discardableResult public func createExpression(_ expression: Expression) throws -> Expression.ID {
         if expression.id != .zero {
             if let existing = try? self.expression(expression.id) {
-                throw Error.existingExpressionWithID(existing.id)
+                throw CatalogError.expressionExistingWithID(existing.id, existing)
             }
         }
         
-        if let existingKey = try? db.expressionEntity(statement: renderStatement(.selectExpression(withKey: expression.key))) {
-            throw Error.existingExpressionWithKey(existingKey.key)
+        if let existing = try? db.expressionEntity(statement: renderStatement(.selectExpression(withKey: expression.key))) {
+            throw CatalogError.expressionExistingWithKey(expression.key, (try? existing.expression()) ?? expression)
         }
         
         var id = expression.id
@@ -301,7 +301,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             
             try unlinkProject(project.id, expressionID: entity.id)
         default:
-            throw Error.unhandledAction(action)
+            throw CatalogError.unhandledUpdate(action)
         }
     }
     
@@ -382,6 +382,16 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
                 throw CatalogError.translationID(uuid)
             }
             entity = _entity
+        case GenericTranslationQuery.having(let expressionId, let languageCode, let scriptCode, let regionCode):
+            guard let expression = try db.expressionEntity(statement: renderStatement(.selectExpression(withID: expressionId))) else {
+                throw CatalogError.expressionID(expressionId)
+            }
+            
+            guard let _entity = try db.translationEntity(statement: renderStatement(.selectTranslationsHaving(expression.id, languageCode: languageCode, scriptCode: scriptCode, regionCode: regionCode))) else {
+                throw CatalogError.badQuery(query)
+            }
+            
+            entity = _entity
         default:
             throw CatalogError.unhandledQuery(query)
         }
@@ -405,12 +415,17 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
     @discardableResult public func createTranslation(_ translation: TranslationCatalog.Translation) throws -> TranslationCatalog.Translation.ID {
         if translation.id != .zero {
             if let existing = try? self.translation(translation.id) {
-                throw Error.existingTranslationWithID(existing.id)
+                throw CatalogError.translationExistingWithID(existing.id, existing)
             }
         }
         
         guard let expression = try db.expressionEntity(statement: renderStatement(.selectExpression(withID: translation.expressionID))) else {
             throw CatalogError.expressionID(translation.expressionID)
+        }
+        
+        let query = GenericTranslationQuery.having(translation.expressionID, translation.languageCode, translation.scriptCode, translation.regionCode)
+        if let existing = try? self.translation(matching: query) {
+            throw CatalogError.translationExistingWithValue(translation.value, existing)
         }
         
         var id = translation.id
@@ -457,7 +472,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             
             try db.execute(statement: renderStatement(.updateTranslation(entity.id, value: value)))
         default:
-            throw Error.unhandledAction(action)
+            throw CatalogError.unhandledUpdate(action)
         }
     }
     

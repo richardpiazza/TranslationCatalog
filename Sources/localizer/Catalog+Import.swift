@@ -74,17 +74,20 @@ extension Catalog {
                 expressions = dictionary.expressions(defaultLanguage: defaultLanguage, language: language, script: script, region: region)
             }
             
-            expressions.forEach({
-                importExpression($0, into: catalog)
-            })
+            expressions
+                .sorted(by: { $0.name < $1.name })
+                .forEach {
+                    importExpression($0, into: catalog)
+                }
         }
         
         private func importExpression(_ expression: Expression, into catalog: TranslationCatalog.Catalog) {
             do {
                 try catalog.createExpression(expression)
                 print("Imported Expression '\(expression.name)'")
-            } catch SQLiteCatalog.Error.existingExpressionWithKey {
-                importTranslations(expression, into: catalog)
+            } catch CatalogError.expressionExistingWithKey(let key, let existing) {
+                print("Existing Expression Key '\(key)'")
+                importTranslations(expression.replacingId(existing.id), into: catalog)
             } catch {
                 print("Import Failure: \(expression); \(error.localizedDescription)")
             }
@@ -95,17 +98,22 @@ extension Catalog {
                 return
             }
             
-            expression.translations.forEach { translation in
-                var t = translation
-                t.expressionID = id
-                importTranslation(t, into: catalog)
-            }
+            expression
+                .translations
+                .sorted(by: { $0.value < $1.value })
+                .forEach { translation in
+                    var t = translation
+                    t.expressionID = id
+                    importTranslation(t, into: catalog)
+                }
         }
         
         private func importTranslation(_ translation: TranslationCatalog.Translation, into catalog: TranslationCatalog.Catalog) {
             do {
                 try catalog.createTranslation(translation)
                 print("Imported Translation '\(translation.value)'")
+            } catch CatalogError.translationExistingWithValue {
+                print("Existing Translation Value '\(translation.value)'")
             } catch {
                 print("Import Failure: \(translation); \(error.localizedDescription)")
             }

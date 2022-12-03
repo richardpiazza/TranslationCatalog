@@ -29,7 +29,7 @@ public class FilesystemCatalog: Catalog {
         
         directory = url
         
-        #if swift(>=5.7.1)
+        #if swift(>=5.7.1) && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS))
         if #available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *) {
             translationsDirectory = directory.appending(path: "Translations", directoryHint: .isDirectory)
             expressionsDirectory = directory.appending(path: "Expressions", directoryHint: .isDirectory)
@@ -310,6 +310,10 @@ public class FilesystemCatalog: Catalog {
             }
         }
         
+        if let existing = try? self.expression(matching: GenericExpressionQuery.key(expression.key)) {
+            throw CatalogError.expressionExistingWithKey(expression.key, existing)
+        }
+        
         let id = expression.id != .zero ? expression.id : UUID()
         let translations = expression.translations.map {
             Translation(
@@ -453,6 +457,17 @@ public class FilesystemCatalog: Catalog {
             }
             
             return Translation(document: document)
+        case GenericTranslationQuery.having(let expressionId, let languageCode, let scriptCode, let regionCode):
+            guard let document = translationDocuments.first(where: {
+                $0.expressionID == expressionId &&
+                $0.languageCode == languageCode &&
+                $0.scriptCode == scriptCode &&
+                $0.regionCode == regionCode
+            }) else {
+                throw CatalogError.badQuery(query)
+            }
+            
+            return Translation(document: document)
         default:
             throw CatalogError.unhandledQuery(query)
         }
@@ -463,6 +478,11 @@ public class FilesystemCatalog: Catalog {
             if let existing = try? self.translation(translation.id) {
                 throw CatalogError.translationID(existing.id)
             }
+        }
+        
+        let query = GenericTranslationQuery.having(translation.expressionID, translation.languageCode, translation.scriptCode, translation.regionCode)
+        if let existing = try? self.translation(matching: query) {
+            throw CatalogError.translationExistingWithValue(translation.value, existing)
         }
         
         let id = translation.id != .zero ? translation.id : UUID()
