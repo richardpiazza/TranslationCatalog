@@ -21,19 +21,19 @@
     {
       "identity" : "perfect-crud",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/PerfectlySoft/Perfect-CRUD.git",
+      "location" : "https://github.com/richardpiazza/Perfect-CRUD",
       "state" : {
-        "revision" : "71c445eaaa94e5ce634aa11a6a1aa6544e786307",
-        "version" : "2.0.0"
+        "revision" : "9e8165db6164cb6fcc7740694192626cf4ffafcc",
+        "version" : "2.1.0"
       }
     },
     {
       "identity" : "perfect-sqlite",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/PerfectlySoft/Perfect-SQLite.git",
+      "location" : "https://github.com/richardpiazza/Perfect-SQLite.git",
       "state" : {
-        "revision" : "43c0e16cfce1dada7914d8334e43ffa887e66f8e",
-        "version" : "5.0.0"
+        "revision" : "3740d1ea1e519584c3d665831968c4d7e086edb7",
+        "version" : "5.1.1"
       }
     },
     {
