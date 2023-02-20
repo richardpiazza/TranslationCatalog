@@ -37,11 +37,11 @@ let package = Package(
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/richardpiazza/LocaleSupport.git", .upToNextMajor(from: "0.4.2")),
         .package(url: "https://github.com/richardpiazza/Statement.git", .upToNextMajor(from: "0.7.1")),
+        .package(url: "https://github.com/richardpiazza/Perfect-SQLite.git", .upToNextMajor(from: "5.1.1")),
         .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMajor(from: "1.2.0")),
         .package(url: "https://github.com/MaxDesiatov/XMLCoder.git", .upToNextMajor(from: "0.15.0")),
         .package(url: "https://github.com/JohnSundell/Plot.git", .upToNextMajor(from: "0.11.0")),
         .package(url: "https://github.com/alexisakers/HTMLString.git", .upToNextMajor(from: "6.0.0")),
-        .package(url: "https://github.com/PerfectlySoft/Perfect-SQLite.git", .upToNextMajor(from: "5.0.0")),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
