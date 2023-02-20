@@ -1,79 +1,77 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "HTMLString",
-        "repositoryURL": "https://github.com/alexisakers/HTMLString.git",
-        "state": {
-          "branch": null,
-          "revision": "04613a3b0f40a91e554b5174c0a10657f1a26357",
-          "version": "6.0.1"
-        }
-      },
-      {
-        "package": "LocaleSupport",
-        "repositoryURL": "https://github.com/richardpiazza/LocaleSupport.git",
-        "state": {
-          "branch": null,
-          "revision": "a6eff5f3cc22fde3ac4ace4ace4774a9b5b898c5",
-          "version": "0.4.1"
-        }
-      },
-      {
-        "package": "PerfectCRUD",
-        "repositoryURL": "https://github.com/PerfectlySoft/Perfect-CRUD.git",
-        "state": {
-          "branch": null,
-          "revision": "71c445eaaa94e5ce634aa11a6a1aa6544e786307",
-          "version": "2.0.0"
-        }
-      },
-      {
-        "package": "PerfectSQLite",
-        "repositoryURL": "https://github.com/PerfectlySoft/Perfect-SQLite.git",
-        "state": {
-          "branch": null,
-          "revision": "43c0e16cfce1dada7914d8334e43ffa887e66f8e",
-          "version": "5.0.0"
-        }
-      },
-      {
-        "package": "Plot",
-        "repositoryURL": "https://github.com/JohnSundell/Plot.git",
-        "state": {
-          "branch": null,
-          "revision": "b358860fe565eb53e98b1f5807eb5939c8124547",
-          "version": "0.11.0"
-        }
-      },
-      {
-        "package": "Statement",
-        "repositoryURL": "https://github.com/richardpiazza/Statement.git",
-        "state": {
-          "branch": null,
-          "revision": "cad6e6081c678b19b8140ad2afb8e5465eb99e97",
-          "version": "0.7.1"
-        }
-      },
-      {
-        "package": "swift-argument-parser",
-        "repositoryURL": "https://github.com/apple/swift-argument-parser",
-        "state": {
-          "branch": null,
-          "revision": "fddd1c00396eed152c45a46bea9f47b98e59301d",
-          "version": "1.2.0"
-        }
-      },
-      {
-        "package": "XMLCoder",
-        "repositoryURL": "https://github.com/MaxDesiatov/XMLCoder.git",
-        "state": {
-          "branch": null,
-          "revision": "ca932442d7481700f5434a7b138c47dd42d9902b",
-          "version": "0.14.0"
-        }
+  "pins" : [
+    {
+      "identity" : "htmlstring",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/alexisakers/HTMLString.git",
+      "state" : {
+        "revision" : "04613a3b0f40a91e554b5174c0a10657f1a26357",
+        "version" : "6.0.1"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "localesupport",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/richardpiazza/LocaleSupport.git",
+      "state" : {
+        "revision" : "e1c4fa509a2040a071db9e59a151300f4abc4b36",
+        "version" : "0.4.2"
+      }
+    },
+    {
+      "identity" : "perfect-crud",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/PerfectlySoft/Perfect-CRUD.git",
+      "state" : {
+        "revision" : "71c445eaaa94e5ce634aa11a6a1aa6544e786307",
+        "version" : "2.0.0"
+      }
+    },
+    {
+      "identity" : "perfect-sqlite",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/PerfectlySoft/Perfect-SQLite.git",
+      "state" : {
+        "revision" : "43c0e16cfce1dada7914d8334e43ffa887e66f8e",
+        "version" : "5.0.0"
+      }
+    },
+    {
+      "identity" : "plot",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/JohnSundell/Plot.git",
+      "state" : {
+        "revision" : "b358860fe565eb53e98b1f5807eb5939c8124547",
+        "version" : "0.11.0"
+      }
+    },
+    {
+      "identity" : "statement",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/richardpiazza/Statement.git",
+      "state" : {
+        "revision" : "cad6e6081c678b19b8140ad2afb8e5465eb99e97",
+        "version" : "0.7.1"
+      }
+    },
+    {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-argument-parser.git",
+      "state" : {
+        "revision" : "fee6933f37fde9a5e12a1e4aeaa93fe60116ff2a",
+        "version" : "1.2.2"
+      }
+    },
+    {
+      "identity" : "xmlcoder",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/MaxDesiatov/XMLCoder.git",
+      "state" : {
+        "revision" : "c438dad94f6a243b411b70a4b4bac54595064808",
+        "version" : "0.15.0"
+      }
+    }
+  ],
+  "version" : 2
 }
