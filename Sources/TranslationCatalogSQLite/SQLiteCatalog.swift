@@ -425,7 +425,12 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
         
         let query = GenericTranslationQuery.having(translation.expressionID, translation.languageCode, translation.scriptCode, translation.regionCode)
         if let existing = try? self.translation(matching: query) {
-            throw CatalogError.translationExistingWithValue(translation.value, existing)
+            if existing.value == translation.value {
+                throw CatalogError.translationExistingWithValue(translation.value, existing)
+            } else {
+                try updateTranslation(existing.id, action: GenericTranslationUpdate.value(translation.value))
+                return existing.id
+            }
         }
         
         var id = translation.id
