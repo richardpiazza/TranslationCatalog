@@ -34,7 +34,7 @@ public struct Expression {
 }
 
 extension Expression: Codable {}
-extension Expression: Equatable {}
+extension Expression: Hashable {}
 extension Expression: Identifiable {
     public var id: UUID { uuid }
 }
