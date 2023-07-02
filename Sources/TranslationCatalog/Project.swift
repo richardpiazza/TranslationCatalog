@@ -17,7 +17,7 @@ public struct Project {
 }
 
 extension Project: Codable {}
-extension Project: Equatable {}
+extension Project: Hashable {}
 extension Project: Identifiable {
     public var id: UUID { uuid }
 }

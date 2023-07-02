@@ -27,7 +27,7 @@ public struct Translation {
 }
 
 extension Translation: Codable {}
-extension Translation: Equatable {}
+extension Translation: Hashable {}
 extension Translation: Identifiable {
     public var id: UUID { uuid }
 }
