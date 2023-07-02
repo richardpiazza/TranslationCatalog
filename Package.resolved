@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/richardpiazza/LocaleSupport.git",
       "state" : {
-        "branch" : "feature/hashable",
-        "revision" : "c2f8c70a4efc3fd23551c42909fd77b5fba18f98"
+        "revision" : "fafb099846e906731cd4ec6a1e1e358274c52a91",
+        "version" : "0.4.3"
       }
     },
     {

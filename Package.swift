@@ -35,7 +35,7 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/richardpiazza/LocaleSupport.git", .branch("feature/hashable")),
+        .package(url: "https://github.com/richardpiazza/LocaleSupport.git", .upToNextMajor(from: "0.4.3")),
         .package(url: "https://github.com/richardpiazza/Statement.git", .upToNextMajor(from: "0.7.1")),
         .package(url: "https://github.com/richardpiazza/Perfect-SQLite.git", .upToNextMajor(from: "5.1.1")),
         .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMajor(from: "1.2.0")),
