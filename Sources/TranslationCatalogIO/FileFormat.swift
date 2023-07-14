@@ -1,3 +1,4 @@
+/// Known/handled file types of expression/translation lists.
 public enum FileFormat: String, CaseIterable {
     /// Android-compatible XML format
     case androidXML = "xml"

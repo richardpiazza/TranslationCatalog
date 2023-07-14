@@ -49,7 +49,7 @@ extension Catalog {
         
         func run() async throws {
             let catalog = try catalog(forStorage: storage)
-            let data = try TranslationEncoder.encodeTranslations(
+            let expressions = try queryExpressions(
                 from: catalog,
                 fileFormat: format,
                 fallbackToDefaultLanguage: fallback,
@@ -58,9 +58,73 @@ extension Catalog {
                 regionCode: region,
                 projectId: projectId
             )
+            let data = try ExpressionEncoder.encodeTranslations(for: expressions, fileFormat: format)
             let output = String(data: data, encoding: .utf8) ?? ""
             
             print(output)
+        }
+        
+        func queryExpressions(
+            from catalog: TranslationCatalog.Catalog,
+            fileFormat: FileFormat,
+            fallbackToDefaultLanguage: Bool,
+            languageCode: LanguageCode,
+            scriptCode: ScriptCode?,
+            regionCode: RegionCode?,
+            projectId: Project.ID?
+        ) throws -> [Expression] {
+            var expressions: [Expression]
+            var expressionIds: [Expression.ID]
+            
+            if fileFormat == .appleStrings || fallbackToDefaultLanguage {
+                if let id = projectId {
+                    expressions = try catalog.expressions(matching: GenericExpressionQuery.projectID(id))
+                    let withLanguage = try catalog.expressions(matching: GenericExpressionQuery.translationsHaving(languageCode, nil, nil))
+                    expressions.removeAll { expression in
+                        !withLanguage.contains(where: { $0.id == expression.id })
+                    }
+                } else {
+                    expressions = try catalog.expressions()
+                }
+                
+                expressionIds = expressions.map { $0.id }
+                
+                for (index, id) in expressionIds.enumerated() {
+                    let preferredTranslations = try catalog.translations(matching: GenericTranslationQuery.having(id, languageCode, scriptCode, regionCode))
+                    if !preferredTranslations.isEmpty {
+                        expressions[index].translations = preferredTranslations
+                        continue
+                    }
+                    
+                    let fallbackTranslations = try catalog.translations(matching: GenericTranslationQuery.having(id, languageCode, nil, nil))
+                    if !fallbackTranslations.isEmpty {
+                        expressions[index].translations = fallbackTranslations
+                        continue
+                    }
+                    
+                    let defaultLanguage = expressions[index].defaultLanguage
+                    let defaultTranslations = try catalog.translations(matching: GenericTranslationQuery.having(id, defaultLanguage, nil, nil))
+                    expressions[index].translations = defaultTranslations
+                }
+            } else {
+                if let id = projectId {
+                    expressions = try catalog.expressions(matching: GenericExpressionQuery.projectID(id))
+                    let withLanguage = try catalog.expressions(matching: GenericExpressionQuery.translationsHaving(languageCode, scriptCode, regionCode))
+                    expressions.removeAll { expression in
+                        !withLanguage.contains(where: { $0.id == expression.id })
+                    }
+                } else {
+                    expressions = try catalog.expressions(matching: GenericExpressionQuery.translationsHaving(languageCode, scriptCode, regionCode))
+                }
+                
+                expressionIds = expressions.map { $0.id }
+                
+                try expressionIds.enumerated().forEach { (index, id) in
+                    expressions[index].translations = try catalog.translations(matching: GenericTranslationQuery.having(id, languageCode, scriptCode, regionCode))
+                }
+            }
+            
+            return expressions
         }
     }
 }

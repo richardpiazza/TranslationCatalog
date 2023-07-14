@@ -70,7 +70,7 @@ extension Catalog {
                 regionCode: region
             )
             
-            let importer = TranslationImporter(catalog: catalog)
+            let importer = ExpressionImporter(catalog: catalog)
             let stream = importer.importTranslations(from: expressions)
             for try await operation in stream {
                 print(operation.description)

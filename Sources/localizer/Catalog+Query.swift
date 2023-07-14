@@ -69,7 +69,7 @@ extension Catalog.Query {
             }
             
             let table = try MarkdownTable(
-                projects,
+                content: projects,
                 paths: [\.id.uuidString, \.name],
                 headers: ["Project.ID", "Name"]
             )
@@ -129,7 +129,7 @@ extension Catalog.Query {
             }
             
             let table = try MarkdownTable(
-                expressions,
+                content: expressions,
                 paths: [\.id.uuidString, \.key, \.name, \.defaultLanguage.rawValue, \.context, \.feature],
                 headers: ["Expression.ID", "Key", "Name", "Default Language", "Context", "Feature"]
             )

@@ -15,6 +15,8 @@ public class MarkdownTable<T: Collection>: CustomStringConvertible {
     private let dash = "-"
     private let newLine = "\n"
     
+    public var description: String { render() }
+    
     public init(paths: [PartialKeyPath<T.Element>], headers: [String]) throws {
         guard paths.count == headers.count else {
             throw HeaderPathCountMismatch()
@@ -25,7 +27,7 @@ public class MarkdownTable<T: Collection>: CustomStringConvertible {
         self.columnLengths = headers.map { $0.count }
     }
     
-    public convenience init(_ content: T, paths: [PartialKeyPath<T.Element>], headers: [String]) throws {
+    public convenience init(content: T, paths: [PartialKeyPath<T.Element>], headers: [String]) throws {
         try self.init(paths: paths, headers: headers)
         for element in content {
             addRow(element)
@@ -71,7 +73,7 @@ public class MarkdownTable<T: Collection>: CustomStringConvertible {
         }
     }
     
-    public var description: String {
+    public func render() -> String {
         var output = ""
         output.append(prefix)
         output.append(headers.enumerated().map({ $0.element.padding(toLength: columnLengths[$0.offset], withPad: space, startingAt: 0)}).joined(separator: join))

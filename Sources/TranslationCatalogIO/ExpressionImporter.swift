@@ -3,14 +3,40 @@ import AsyncPlus
 import LocaleSupport
 import TranslationCatalog
 
-public class TranslationImporter {
+public class ExpressionImporter {
+    
+    public enum Operation: CustomStringConvertible {
+        case createdExpression(Expression)
+        case skippedExpression(Expression)
+        case failedExpression(Expression, Error)
+        case createdTranslation(Translation)
+        case skippedTranslation(Translation)
+        case failedTranslation(Translation, Error)
+        
+        public var description: String {
+            switch self {
+            case .createdExpression(let expression):
+                return "Expression Created '\(expression.name)'"
+            case .skippedExpression(let expression):
+                return "Expression Exists with Key '\(expression.key)'; checking translations…"
+            case .failedExpression(let expression, let error):
+                return "Expression Failure '\(expression.key)'; \(error.localizedDescription)"
+            case .createdTranslation(let translation):
+                return "Translation Created '\(translation.value)'"
+            case .skippedTranslation(let translation):
+                return "Translation Skipped '\(translation.value)'"
+            case .failedTranslation(let translation, let error):
+                return "Translation Failure '\(translation.value)'; \(error.localizedDescription)"
+            }
+        }
+    }
     
     private let catalog: Catalog
     
-    private var sequence: PassthroughAsyncThrowingSequence<CatalogIOOperation>?
-    var stream: AsyncThrowingStream<CatalogIOOperation, Error> {
+    private var sequence: PassthroughAsyncThrowingSequence<Operation>?
+    var stream: AsyncThrowingStream<Operation, Error> {
         sequence?.finish()
-        let sequence = PassthroughAsyncThrowingSequence<CatalogIOOperation>()
+        let sequence = PassthroughAsyncThrowingSequence<Operation>()
         self.sequence = sequence
         return sequence.stream
     }
@@ -21,7 +47,7 @@ public class TranslationImporter {
     
     public func importTranslations(
         from expressions: [Expression]
-    ) -> AsyncThrowingStream<CatalogIOOperation, Error> {
+    ) -> AsyncThrowingStream<Operation, Error> {
         defer {
             expressions
                 .sorted(by: { $0.name < $1.name })
@@ -35,7 +61,7 @@ public class TranslationImporter {
         return stream
     }
     
-    private func importExpression(_ expression: Expression, into catalog: TranslationCatalog.Catalog) {
+    private func importExpression(_ expression: Expression, into catalog: Catalog) {
         do {
             try catalog.createExpression(expression)
             sequence?.yield(.createdExpression(expression))
@@ -47,7 +73,7 @@ public class TranslationImporter {
         }
     }
     
-    private func importTranslations(_ expression: Expression, into catalog: TranslationCatalog.Catalog) {
+    private func importTranslations(_ expression: Expression, into catalog: Catalog) {
         guard let id = try? catalog.expression(matching: GenericExpressionQuery.key(expression.key)).id else {
             return
         }
@@ -62,7 +88,7 @@ public class TranslationImporter {
             }
     }
     
-    private func importTranslation(_ translation: TranslationCatalog.Translation, into catalog: TranslationCatalog.Catalog) {
+    private func importTranslation(_ translation: Translation, into catalog: Catalog) {
         do {
             try catalog.createTranslation(translation)
             sequence?.yield(.createdTranslation(translation))

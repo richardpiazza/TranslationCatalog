@@ -1,11 +1,22 @@
 import TranslationCatalog
 import Plot
 
+/// Utility for rendering expressions in multiple formats.
 public struct ExpressionRenderer {
     
     private init() {}
     
-    public static func render(expressions: [Expression], renderFormat: RenderFormat) throws -> String {
+    /// Create a string representation of a rendered `Expression` document.
+    ///
+    /// - throws: `Error`
+    /// - parameters:
+    ///   - expressions: The collection of `Expression` which should be rendered into the document.
+    ///   - renderFormat: The output format for the document.
+    /// - returns: String representation of the requested text document.
+    public static func render(
+        expressions: [Expression],
+        renderFormat: RenderFormat
+    ) throws -> String {
         switch renderFormat {
         case .html:
             let html = HTML.make(with: expressions)
