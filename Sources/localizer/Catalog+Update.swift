@@ -4,7 +4,7 @@ import LocaleSupport
 import TranslationCatalog
 
 extension Catalog {
-    struct Update: ParsableCommand {
+    struct Update: AsyncParsableCommand {
         static var configuration: CommandConfiguration = .init(
             commandName: "update",
             abstract: "Update a single entity in the catalog.",
@@ -67,7 +67,7 @@ extension Catalog.Update {
             }
         }
         
-        func run() throws {
+        func run() async throws {
             let catalog = try catalog(forStorage: storage, debug: noisy)
             
             let project = try catalog.project(id)
@@ -152,7 +152,7 @@ extension Catalog.Update {
             }
         }
         
-        func run() throws {
+        func run() async throws {
             let catalog = try catalog(forStorage: storage, debug: noisy)
             
             let expression = try catalog.expression(id)
@@ -235,7 +235,7 @@ extension Catalog.Update {
         @Flag(help: "Outputs detailed execution")
         var noisy: Bool = false
         
-        func run() throws {
+        func run() async throws {
             let catalog = try catalog(forStorage: storage, debug: noisy)
             
             let translation = try catalog.translation(id)

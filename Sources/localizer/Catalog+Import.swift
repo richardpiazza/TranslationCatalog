@@ -2,6 +2,7 @@ import Foundation
 import ArgumentParser
 import LocaleSupport
 import TranslationCatalog
+import TranslationCatalogIO
 import TranslationCatalogSQLite
 
 extension Catalog {
@@ -27,8 +28,8 @@ extension Catalog {
         @Argument(help: "The path to the file being imported")
         var filename: String
         
-        @Option(help: "The source of the file 'android', 'apple', 'json'.")
-        var format: Catalog.Format?
+        @Option(help: "The source of the file 'android-xml', 'apple-strings', 'json'.")
+        var format: FileFormat?
         
         @Option(help: "The script code for the translations in the imported file.")
         var script: ScriptCode?
@@ -51,71 +52,28 @@ extension Catalog {
             }
         }
         
-        func run() throws {
+        func run() async throws {
             let fileURL = try FileManager.default.url(for: filename)
-            let _format = format ?? Format(extension:  fileURL.pathExtension)
+            let _format = format ?? FileFormat(fileExtension:  fileURL.pathExtension)
             guard let fileFormat = _format else {
                 throw ValidationError("Import format could not be determined. Use '--format' to specify.")
             }
             
             let catalog = try catalog(forStorage: storage)
+            let data = try Data(contentsOf: fileURL)
+            let expressions = try ExpressionDecoder.decodeExpressions(
+                from: data,
+                fileFormat: fileFormat,
+                defaultLanguage: defaultLanguage,
+                languageCode: language,
+                scriptCode: script,
+                regionCode: region
+            )
             
-            let expressions: [Expression]
-            switch fileFormat {
-            case .android:
-                let android = try StringsXml.make(contentsOf: fileURL)
-                expressions = android.expressions(defaultLanguage: defaultLanguage, language: language, script: script, region: region)
-            case .apple:
-                let dictionary = try Dictionary(contentsOf: fileURL)
-                expressions = dictionary.expressions(defaultLanguage: defaultLanguage, language: language, script: script, region: region)
-            case .json:
-                let data = try Data(contentsOf: fileURL)
-                let dictionary = try JSONDecoder().decode([String: String].self, from: data)
-                expressions = dictionary.expressions(defaultLanguage: defaultLanguage, language: language, script: script, region: region)
-            }
-            
-            expressions
-                .sorted(by: { $0.name < $1.name })
-                .forEach {
-                    importExpression($0, into: catalog)
-                }
-        }
-        
-        private func importExpression(_ expression: Expression, into catalog: TranslationCatalog.Catalog) {
-            do {
-                try catalog.createExpression(expression)
-                print("Imported Expression '\(expression.name)'")
-            } catch CatalogError.expressionExistingWithKey(let key, let existing) {
-                print("Existing Expression Key '\(key)'")
-                importTranslations(expression.replacingId(existing.id), into: catalog)
-            } catch {
-                print("Import Failure: \(expression); \(error.localizedDescription)")
-            }
-        }
-        
-        private func importTranslations(_ expression: Expression, into catalog: TranslationCatalog.Catalog) {
-            guard let id = try? catalog.expression(matching: GenericExpressionQuery.key(expression.key)).id else {
-                return
-            }
-            
-            expression
-                .translations
-                .sorted(by: { $0.value < $1.value })
-                .forEach { translation in
-                    var t = translation
-                    t.expressionID = id
-                    importTranslation(t, into: catalog)
-                }
-        }
-        
-        private func importTranslation(_ translation: TranslationCatalog.Translation, into catalog: TranslationCatalog.Catalog) {
-            do {
-                try catalog.createTranslation(translation)
-                print("Imported Translation '\(translation.value)'")
-            } catch CatalogError.translationExistingWithValue {
-                print("Existing Translation Value '\(translation.value)'")
-            } catch {
-                print("Import Failure: \(translation); \(error.localizedDescription)")
+            let importer = TranslationImporter(catalog: catalog)
+            let stream = importer.importTranslations(from: expressions)
+            for try await operation in stream {
+                print(operation.description)
             }
         }
     }

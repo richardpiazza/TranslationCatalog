@@ -4,7 +4,7 @@ import TranslationCatalog
 import TranslationCatalogSQLite
 import TranslationCatalogFilesystem
 
-struct Catalog: ParsableCommand {
+struct Catalog: AsyncParsableCommand {
     
     enum Storage: String, CaseIterable, Codable, ExpressibleByArgument {
         case sqlite
@@ -13,6 +13,7 @@ struct Catalog: ParsableCommand {
         static var `default`: Storage = .sqlite
     }
     
+    @available(*, deprecated, renamed: "TranslationCatalogIO.FileFormat")
     enum Format: String, ExpressibleByArgument {
         case android
         case apple
@@ -53,7 +54,7 @@ struct Catalog: ParsableCommand {
     )
 }
 
-protocol CatalogCommand: ParsableCommand {
+protocol CatalogCommand: AsyncParsableCommand {
     var storage: Catalog.Storage { get }
     var path: String? { get }
 }

@@ -3,7 +3,7 @@ import ArgumentParser
 import Foundation
 
 extension Configure {
-    struct Set: ParsableCommand {
+    struct Set: AsyncParsableCommand {
         
         static var configuration: CommandConfiguration = .init(
             commandName: "set",
@@ -26,7 +26,7 @@ extension Configure {
         @Option(help: "")
         var defaultStorage: Catalog.Storage?
         
-        func run() throws {
+        func run() async throws {
             var config = Configuration.`default`
             
             if let language = defaultLanguage {

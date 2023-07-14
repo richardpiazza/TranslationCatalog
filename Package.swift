@@ -17,15 +17,12 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "TranslationCatalog",
-            targets: ["TranslationCatalog"]
-        ),
-        .library(
-            name: "TranslationCatalogSQLite",
-            targets: ["TranslationCatalogSQLite"]
-        ),
-        .library(
-            name: "TranslationCatalogFilesystem",
-            targets: ["TranslationCatalogFilesystem"]
+            targets: [
+                "TranslationCatalog",
+                "TranslationCatalogIO",
+                "TranslationCatalogSQLite",
+                "TranslationCatalogFilesystem"
+            ]
         ),
         .executable(
             name: "localizer",
@@ -36,6 +33,7 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/richardpiazza/LocaleSupport.git", .upToNextMajor(from: "0.4.3")),
+        .package(url: "https://github.com/richardpiazza/AsyncPlus.git", .upToNextMinor(from: "0.1.0")),
         .package(url: "https://github.com/richardpiazza/Statement.git", .upToNextMajor(from: "0.7.1")),
         .package(url: "https://github.com/richardpiazza/Perfect-SQLite.git", .upToNextMajor(from: "5.1.1")),
         .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMajor(from: "1.2.0")),
@@ -49,6 +47,16 @@ let package = Package(
         .target(
             name: "TranslationCatalog",
             dependencies: ["LocaleSupport"]
+        ),
+        .target(
+            name: "TranslationCatalogIO",
+            dependencies: [
+                "TranslationCatalog",
+                "AsyncPlus",
+                "XMLCoder",
+                "Plot",
+                "HTMLString",
+            ]
         ),
         .target(
             name: "TranslationCatalogSQLite",
@@ -72,12 +80,10 @@ let package = Package(
             dependencies: [
                 "LocaleSupport",
                 "TranslationCatalog",
+                "TranslationCatalogIO",
                 "TranslationCatalogSQLite",
                 "TranslationCatalogFilesystem",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
-                "XMLCoder",
-                "Plot",
-                "HTMLString",
             ]
         ),
         .testTarget(
@@ -93,6 +99,7 @@ let package = Package(
             dependencies: [
                 "LocaleSupport",
                 "TranslationCatalog",
+                "TranslationCatalogIO",
                 "TranslationCatalogFilesystem",
                 "TranslationCatalogSQLite",
             ]

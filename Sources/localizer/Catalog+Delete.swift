@@ -3,7 +3,7 @@ import Foundation
 import TranslationCatalog
 
 extension Catalog {
-    struct Delete: ParsableCommand {
+    struct Delete: AsyncParsableCommand {
         static var configuration: CommandConfiguration = .init(
             commandName: "delete",
             abstract: "Remove a single entity in the catalog.",
@@ -49,7 +49,7 @@ extension Catalog.Delete {
         @Flag(help: "Outputs additional details about the execution of the command.")
         var debug: Bool = false
         
-        func run() throws {
+        func run() async throws {
             let catalog = try catalog(forStorage: storage, debug: debug)
             
             guard let project = try? catalog.project(id) else {
@@ -85,7 +85,7 @@ extension Catalog.Delete {
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
         
-        func run() throws {
+        func run() async throws {
             let catalog = try catalog(forStorage: storage)
             try catalog.deleteExpression(id)
         }
@@ -114,7 +114,7 @@ extension Catalog.Delete {
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
         
-        func run() throws {
+        func run() async throws {
             let catalog = try catalog(forStorage: storage)
             try catalog.deleteTranslation(id)
         }

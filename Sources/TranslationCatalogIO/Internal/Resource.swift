@@ -2,16 +2,16 @@ import XMLCoder
 import LocaleSupport
 import TranslationCatalog
 
-public struct Resource: Decodable, DynamicNodeDecoding {
+struct Resource: Decodable, DynamicNodeDecoding {
     enum CodingKeys: String, CodingKey {
         case name
         case value = ""
     }
     
-    public var name: String
-    public var value: String
+    var name: String
+    var value: String
     
-    public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
+    static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
         switch key {
         case CodingKeys.name:
             return .attribute
@@ -23,7 +23,7 @@ public struct Resource: Decodable, DynamicNodeDecoding {
     }
 }
 
-public extension Resource {
+extension Resource {
     func expression(
         uuid: Expression.ID,
         defaultLanguage: LanguageCode = .default,

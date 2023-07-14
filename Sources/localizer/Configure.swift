@@ -1,7 +1,7 @@
 import ArgumentParser
 import Foundation
 
-struct Configure: ParsableCommand {
+struct Configure: AsyncParsableCommand {
     
     static var configuration: CommandConfiguration = .init(
         commandName: "configure",
