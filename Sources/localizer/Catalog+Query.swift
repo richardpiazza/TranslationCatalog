@@ -1,9 +1,10 @@
+import Foundation
 import ArgumentParser
 import TranslationCatalog
-import Foundation
+import TranslationCatalogIO
 
 extension Catalog {
-    struct Query: ParsableCommand {
+    struct Query: AsyncParsableCommand {
         static var configuration: CommandConfiguration = .init(
             commandName: "query",
             abstract: "Perform queries against the catalog.",
@@ -56,7 +57,7 @@ extension Catalog.Query {
             }
         }
         
-        func run() throws {
+        func run() async throws {
             let catalog = try catalog(forStorage: storage, debug: noisy)
             
             var projects: [Project] = []
@@ -67,10 +68,11 @@ extension Catalog.Query {
                 projects = try catalog.projects()
             }
             
-            var table = MarkdownTable("Project.ID", "Name")
-            projects.forEach {
-                table.addContent($0.id.uuidString, $0.name)
-            }
+            let table = try MarkdownTable(
+                content: projects,
+                paths: [\.id.uuidString, \.name],
+                headers: ["Project.ID", "Name"]
+            )
             
             print(table)
         }
@@ -113,7 +115,7 @@ extension Catalog.Query {
             }
         }
         
-        func run() throws {
+        func run() async throws {
             let catalog = try catalog(forStorage: storage, debug: noisy)
             
             var expressions: [Expression] = []
@@ -126,10 +128,12 @@ extension Catalog.Query {
                 expressions = try catalog.expressions()
             }
             
-            var table = MarkdownTable("Expression.ID", "Key", "Name", "Default Language", "Context", "Feature")
-            expressions.forEach {
-                table.addContent($0.id.uuidString, $0.key, $0.name, $0.defaultLanguage.rawValue, ($0.context ?? ""), ($0.feature ?? ""))
-            }
+            let table = try MarkdownTable(
+                content: expressions,
+                paths: [\.id.uuidString, \.key, \.name, \.defaultLanguage.rawValue, \.context, \.feature],
+                headers: ["Expression.ID", "Key", "Name", "Default Language", "Context", "Feature"]
+            )
+            
             print(table)
         }
     }

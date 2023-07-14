@@ -1,10 +1,10 @@
 import ArgumentParser
 import LocaleSupport
 
-try Configuration.load(.default)
-
-struct Command: ParsableCommand {
+@main struct Command: AsyncParsableCommand {
     static var configuration: CommandConfiguration = {
+        try? Configuration.load(.default)
+        
         return .init(
             commandName: "localizer",
             abstract: "Utility for interacting with Android 'strings.xml', Apple 'Localizable.strings', and Web '*.json' localization files.",
@@ -27,5 +27,3 @@ struct Command: ParsableCommand {
             helpNames: [.short, .long])
     }()
 }
-
-Command.main()

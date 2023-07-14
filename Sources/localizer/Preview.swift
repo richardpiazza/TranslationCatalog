@@ -1,8 +1,9 @@
 import ArgumentParser
 import Foundation
 import TranslationCatalog
+import TranslationCatalogIO
 
-struct Preview: ParsableCommand {
+struct Preview: AsyncParsableCommand {
     
     static var configuration: CommandConfiguration = .init(
         commandName: "preview",
@@ -16,8 +17,8 @@ struct Preview: ParsableCommand {
         helpNames: .shortAndLong
     )
     
-    @Argument(help: "The source of the file 'android', 'apple', 'json'.")
-    var format: Catalog.Format
+    @Argument(help: "The source of the file 'android-xml', 'apple-strings', 'json'.")
+    var format: FileFormat
     
     @Argument(help: "The path to the file being imported")
     var input: String
@@ -28,22 +29,10 @@ struct Preview: ParsableCommand {
         }
     }
     
-    func run() throws {
+    func run() async throws {
         let url = try FileManager.default.url(for: input)
-        
-        let expressions: [Expression]
-        switch format {
-        case .android:
-            let android = try StringsXml.make(contentsOf: url)
-            expressions = android.expressions(language: .default, script: nil, region: nil)
-        case .apple:
-            let dictionary = try Dictionary(contentsOf: url)
-            expressions = dictionary.expressions(language: .default, script: nil, region: nil)
-        case .json:
-            let data = try Data(contentsOf: url)
-            let dictionary = try JSONDecoder().decode([String: String].self, from: data)
-            expressions = dictionary.expressions(language: .default, script: nil, region: nil)
-        }
+        let data = try Data(contentsOf: url)
+        let expressions = try ExpressionDecoder.decodeExpressions(from: data, fileFormat: format, defaultLanguage: .default, languageCode: .default, scriptCode: nil, regionCode: nil)
         
         expressions.sorted(by: { $0.name < $1.name }).forEach { (expression) in
             switch expression.translations.count {

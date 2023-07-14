@@ -2,7 +2,7 @@ import ArgumentParser
 import Foundation
 
 extension Configure {
-    struct Get: ParsableCommand {
+    struct Get: AsyncParsableCommand {
         
         static var configuration: CommandConfiguration = .init(
             commandName: "get",
@@ -16,7 +16,7 @@ extension Configure {
             helpNames: .shortAndLong
         )
         
-        func run() throws {
+        func run() async throws {
             print(Configuration.`default`.description)
         }
     }

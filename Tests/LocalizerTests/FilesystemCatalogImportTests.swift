@@ -12,9 +12,9 @@ final class FilesystemCatalogImportTests: FilesystemTestCase {
         try localizer.run()
         
         XCTAssertEqual(localizer.output, """
-        Imported Expression 'FIRST_NAME'
-        Imported Expression 'LAST_NAME'
-        Imported Expression 'TITLE'
+        Expression Created 'FIRST_NAME'
+        Expression Created 'LAST_NAME'
+        Expression Created 'TITLE'
         
         """)
         
@@ -23,12 +23,12 @@ final class FilesystemCatalogImportTests: FilesystemTestCase {
         try localizer.run()
         
         XCTAssertEqual(localizer.output, """
-        Existing Expression Key 'FIRST_NAME'
-        Existing Translation Value 'First Name'
-        Existing Expression Key 'LAST_NAME'
-        Existing Translation Value 'Last Name'
-        Existing Expression Key 'TITLE'
-        Existing Translation Value 'Title'
+        Expression Exists with Key \'FIRST_NAME\'; checking translations…
+        Translation Skipped \'First Name\'
+        Expression Exists with Key \'LAST_NAME\'; checking translations…
+        Translation Skipped \'Last Name\'
+        Expression Exists with Key \'TITLE\'; checking translations…
+        Translation Skipped \'Title\'
         
         """)
     }
@@ -43,9 +43,9 @@ final class FilesystemCatalogImportTests: FilesystemTestCase {
         try localizer.run()
         
         XCTAssertEqual(localizer.output, """
-        Imported Expression 'FIRST_NAME'
-        Imported Expression 'LAST_NAME'
-        Imported Expression 'TITLE'
+        Expression Created 'FIRST_NAME'
+        Expression Created 'LAST_NAME'
+        Expression Created 'TITLE'
         
         """)
         
@@ -57,10 +57,10 @@ final class FilesystemCatalogImportTests: FilesystemTestCase {
         try localizer.run()
         
         XCTAssertEqual(localizer.output, """
-        Imported Expression 'FAMILY_NAME'
-        Imported Expression 'GIVEN_NAME'
-        Existing Expression Key 'TITLE'
-        Existing Translation Value 'Title'
+        Expression Created 'FAMILY_NAME'
+        Expression Created 'GIVEN_NAME'
+        Expression Exists with Key 'TITLE'; checking translations…
+        Translation Skipped 'Title'
         
         """)
     }

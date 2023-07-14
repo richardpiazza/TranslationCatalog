@@ -51,6 +51,11 @@ A cross-platform implementation of the _Translation Catalog_ that is backed by a
 
 A swift command line that can interact with a catalog along with importing, exporting, and documenting localizations.
 
+## Helpful Information
+
+* [Apple String Format Specifiers](https://developer.apple.com/library/archive/documentation/CoreFoundation/Conceptual/CFStrings/formatSpecifiers.html#//apple_ref/doc/uid/TP40004265)
+* [IEEE printf Specification](https://pubs.opengroup.org/onlinepubs/009695399/functions/printf.html)
+
 ## Contribution
 
 Contributions to **LocaleSupport** are welcomed and encouraged!

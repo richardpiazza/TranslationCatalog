@@ -1,4 +1,5 @@
 import TranslationCatalog
+import Plot
 
 extension Expression {
     func replacingId(_ id: Expression.ID) -> Expression {
@@ -12,19 +13,6 @@ extension Expression {
             context: context,
             feature: feature,
             translations: translations
-        )
-    }
-}
-
-extension Translation {
-    func replacingExpressionId(_ id: Expression.ID) -> Translation {
-        return Translation(
-            uuid: uuid,
-            expressionID: id,
-            languageCode: languageCode,
-            scriptCode: scriptCode,
-            regionCode: regionCode,
-            value: value
         )
     }
 }
