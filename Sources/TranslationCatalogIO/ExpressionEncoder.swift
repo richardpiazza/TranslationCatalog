@@ -13,7 +13,7 @@ public struct ExpressionEncoder {
     /// - throws: `Error`
     /// - parameters:
     ///   - expressions: The `Expression`s with `Translation`(s) to be encoded.
-    ///   - fileFormat: Format in which the `data` should be interpretted.
+    ///   - fileFormat: Format in which the `data` should be interpreted.
     /// - returns: The encoded translations in the request format.
     public static func encodeTranslations(
         for expressions: [Expression],
