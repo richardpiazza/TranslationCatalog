@@ -11,4 +11,10 @@ final class XMLEscapingTests: XCTestCase {
         XCTAssertEqual("Spartacus > I".simpleAndroidXMLEscaped(), "Spartacus &gt; I")
         XCTAssertEqual("Spartacus is me".simpleAndroidXMLEscaped(), "Spartacus&#160;is&#160;me")
     }
+    
+    func testMultipleReplacements() {
+        XCTAssertFalse("I'm heading to the store.".hasMultipleReplacements)
+        XCTAssertFalse("I'm heading to %@.".hasMultipleReplacements)
+        XCTAssertTrue("I'm heading to %@ to buy %@.".hasMultipleReplacements)
+    }
 }
