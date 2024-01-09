@@ -9,6 +9,11 @@ extension XML {
                 .forEach(expressions) {
                     .element(named: "string", nodes: [
                         .attribute(named: "name", value: $0.key),
+                        .attribute(
+                            named: "formatted",
+                            value: $0.translations.first?.value.hasMultipleReplacements == true ? "false" : "",
+                            ignoreIfValueIsEmpty: true
+                        ),
                         .text(($0.translations.first?.value ?? "").simpleAndroidXMLEscaped())
                     ])
                 }
@@ -35,5 +40,25 @@ internal extension String {
         }
         
         return updated
+    }
+    
+    var hasMultipleReplacements: Bool {
+        numberOfInstances("%@") > 1
+    }
+    
+    func numberOfInstances(_ substring: String) -> Int {
+        guard !isEmpty else {
+            return 0
+        }
+        
+        var count = 0
+        
+        var range: Range<String.Index>?
+        while let match = self.range(of: substring, options: [], range: range) {
+            count += 1
+            range = Range(uncheckedBounds: (lower: match.upperBound, upper: endIndex))
+        }
+        
+        return count
     }
 }
