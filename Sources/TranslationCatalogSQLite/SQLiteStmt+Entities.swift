@@ -1,9 +1,31 @@
 import Foundation
-import PerfectSQLite
 import LocaleSupport
 import TranslationCatalog
+import SQLite
 
-extension SQLiteStmt {
+extension Statement.Element {
+    func isNull(position: Int) -> Bool {
+        self[position] == nil
+    }
+    
+    func columnText(position: Int) -> String {
+        guard let value = self[position] as? String else {
+            fatalError()
+        }
+        
+        return value
+    }
+    
+    func columnInt(position: Int) -> Int {
+        guard let value = self[position] as? Int64 else {
+            fatalError()
+        }
+        
+        return Int(value)
+    }
+}
+
+extension Statement.Element {
     func optional<T>(position: Int) -> T? {
         guard !isNull(position: position) else {
             return nil

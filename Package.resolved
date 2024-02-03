@@ -28,24 +28,6 @@
       }
     },
     {
-      "identity" : "perfect-crud",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/richardpiazza/Perfect-CRUD",
-      "state" : {
-        "revision" : "9e8165db6164cb6fcc7740694192626cf4ffafcc",
-        "version" : "2.1.0"
-      }
-    },
-    {
-      "identity" : "perfect-sqlite",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/richardpiazza/Perfect-SQLite.git",
-      "state" : {
-        "revision" : "3740d1ea1e519584c3d665831968c4d7e086edb7",
-        "version" : "5.1.1"
-      }
-    },
-    {
       "identity" : "plot",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/JohnSundell/Plot.git",
@@ -55,12 +37,21 @@
       }
     },
     {
+      "identity" : "sqlite.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/stephencelis/SQLite.swift.git",
+      "state" : {
+        "revision" : "7a2e3cd27de56f6d396e84f63beefd0267b55ccb",
+        "version" : "0.14.1"
+      }
+    },
+    {
       "identity" : "statement",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/richardpiazza/Statement.git",
       "state" : {
-        "revision" : "cad6e6081c678b19b8140ad2afb8e5465eb99e97",
-        "version" : "0.7.1"
+        "revision" : "1123b422e028cec9da56b9e7c83b8f1b63d2b7e2",
+        "version" : "0.7.2"
       }
     },
     {

@@ -1,10 +1,10 @@
-import PerfectSQLite
+import Foundation
 import StatementSQLite
 import TranslationCatalog
-import Foundation
+import SQLite
 
 // MARK: - Schema Version
-extension SQLite {
+extension Connection {
     enum SchemaVersion: Int {
         case undefined = 0
         case v1 = 1
@@ -22,13 +22,11 @@ extension SQLite {
         let sql = "PRAGMA user_version;"
         
         do {
-            try forEachRow(
-                statement: sql,
-                handleRow: { (statement, index) in
-                    if let version = SchemaVersion(rawValue: statement.columnInt(position: 0)) {
-                        schemaVersion = version
-                    }
-                })
+            for row in try run(sql) {
+                if let version = SchemaVersion(rawValue: row.columnInt(position: 0)) {
+                    schemaVersion = version
+                }
+            }
         } catch {
             print(error)
         }
@@ -43,7 +41,7 @@ extension SQLite {
 }
 
 // MARK: - Migration
-extension SQLite {
+extension Connection {
     enum Error: Swift.Error {
         case migration(from: Int, to: Int)
     }
@@ -59,9 +57,9 @@ extension SQLite {
         let sql = "SELECT name FROM sqlite_master WHERE type='table';"
         
         do {
-            try forEachRow(statement: sql, handleRow: { (statement, index) in
-                names.append(statement.columnText(position: 0))
-            })
+            for row in try run(sql) {
+                names.append(row.columnText(position: 0))
+            }
         } catch {
             print(error)
         }
@@ -71,15 +69,15 @@ extension SQLite {
     
     private func setSchemaVersion(_ version: SchemaVersion) throws {
         let sql = "PRAGMA user_version = \(version.rawValue);"
-        try execute(statement: sql)
+        try run(sql)
     }
     
     private func createSchema(_ version: SchemaVersion) throws {
-        try doWithTransaction {
-            try execute(statement: SQLiteStatement.createProjectEntity.render())
-            try execute(statement: SQLiteStatement.createExpressionEntity.render())
-            try execute(statement: SQLiteStatement.createTranslationEntity.render())
-            try execute(statement: SQLiteStatement.createProjectExpressionEntity.render())
+        try transaction {
+            try run(SQLiteStatement.createProjectEntity.render())
+            try run(SQLiteStatement.createExpressionEntity.render())
+            try run(SQLiteStatement.createTranslationEntity.render())
+            try run(SQLiteStatement.createProjectExpressionEntity.render())
             try setSchemaVersion(version)
         }
     }
@@ -106,16 +104,16 @@ extension SQLite {
             }
         case .v1:
             print("Migrating schema from '\(from.rawValue)' to '\(to.rawValue)'.")
-            try doWithTransaction {
-                try execute(statement: SQLiteStatement.translationTable_addScriptCode.render())
+            try transaction {
+                try run(SQLiteStatement.translationTable_addScriptCode.render())
                 try setSchemaVersion(.v2)
             }
         case .v2:
             print("Migrating schema from '\(from.rawValue)' to '\(to.rawValue)'.")
-            try doWithTransaction {
+            try transaction {
                 try addSchemaV3Fields()
-                try execute(statement: SQLiteStatement.createProjectEntity.render())
-                try execute(statement: SQLiteStatement.createProjectExpressionEntity.render())
+                try run(SQLiteStatement.createProjectEntity.render())
+                try run(SQLiteStatement.createProjectExpressionEntity.render())
                 try addExpressionKeyUsingName()
                 try addUUIDsToMissingExpressions()
                 try addUUIDsToMissingTranslations()
@@ -133,17 +131,17 @@ extension SQLite {
     }
     
     private func addSchemaV3Fields() throws {
-        try execute(statement: "ALTER TABLE expression RENAME COLUMN comment TO context;")
-        try execute(statement: "ALTER TABLE expression ADD COLUMN uuid TEXT;")
-        try execute(statement: "ALTER TABLE translation ADD COLUMN uuid TEXT;")
-        try execute(statement: "ALTER TABLE expression ADD COLUMN key TEXT;")
+        try run("ALTER TABLE expression RENAME COLUMN comment TO context;")
+        try run("ALTER TABLE expression ADD COLUMN uuid TEXT;")
+        try run("ALTER TABLE translation ADD COLUMN uuid TEXT;")
+        try run("ALTER TABLE expression ADD COLUMN key TEXT;")
     }
     
     private func addExpressionKeyUsingName() throws {
         let entities = try expressionEntities(statement: SQLiteStatement.selectAllFromExpression.render())
         let needsUpdate = entities.filter({ $0.key.isEmpty })
         try needsUpdate.forEach { entity in
-            try execute(statement: "UPDATE expression SET key = '\(entity.name)' WHERE id = \(entity.id) LIMIT 1;")
+            try run("UPDATE expression SET key = '\(entity.name)' WHERE id = \(entity.id) LIMIT 1;")
         }
     }
     
@@ -151,7 +149,7 @@ extension SQLite {
         let entities = try expressionEntities(statement: SQLiteStatement.selectAllFromExpression.render())
         let needsUpdate = entities.filter({ $0.uuid.isEmpty })
         try needsUpdate.forEach { entity in
-            try execute(statement: """
+            try run("""
             UPDATE expression
             SET uuid = '\(UUID().uuidString)'
             WHERE id = \(entity.id)
@@ -164,7 +162,7 @@ extension SQLite {
         let entities = try translationEntities(statement: SQLiteStatement.selectAllFromTranslation.render())
         let needsUpdate = entities.filter({ $0.uuid.isEmpty })
         try needsUpdate.forEach { entity in
-            try execute(statement: """
+            try run("""
             UPDATE translation
             SET uuid = '\(UUID().uuidString)'
             WHERE id = \(entity.id)
