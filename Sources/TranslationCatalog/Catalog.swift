@@ -4,7 +4,6 @@ import LocaleSupport
 /// Interface providing storage and retrieval of the `Expression`s and associated `Translation`s.
 public protocol Catalog {
     // MARK: - Project
-    
     /// Retrieve all `Project`s in the catalog.
     func projects() throws -> [Project]
     /// Retrieve all `Project`s that match the provided query parameters
@@ -75,4 +74,7 @@ public protocol Catalog {
     ///
     /// - parameter id: The unique identifier for the `Translation`.
     func deleteTranslation(_ id: Translation.ID) throws
+    
+    // MARK: - Metadata
+    func localeIdentifiers() throws -> Set<Locale.Identifier>
 }

@@ -68,6 +68,10 @@ final class SQLiteQueryCatalogTests: XCTestCase {
         try catalog.assertQueryTranslationId()
     }
     
+    func testMetadataQueries() throws {
+        try catalog.assertLocaleIdentifiers()
+    }
+    
     func testQueryProjectsHierarchy() throws {
         let projects = try catalog.projects(matching: SQLiteCatalog.ProjectQuery.hierarchy)
         XCTAssertEqual(projects.count, 3)
@@ -109,4 +113,6 @@ final class SQLiteQueryCatalogTests: XCTestCase {
         let translation = try catalog.translation(matching: SQLiteCatalog.TranslationQuery.primaryKey(9))
         XCTAssertEqual(translation.regionCode, .BR)
     }
+    
+    
 }

@@ -31,16 +31,4 @@ extension Translation: Hashable {}
 extension Translation: Identifiable {
     public var id: UUID { uuid }
 }
-
-public extension Translation {
-    var localeIdentifier: Locale.Identifier {
-        var output = languageCode.rawValue
-        if let scriptCode = self.scriptCode {
-            output += "-\(scriptCode.rawValue)"
-        }
-        if let regionCode = self.regionCode {
-            output += "_\(regionCode.rawValue)"
-        }
-        return output
-    }
-}
+extension Translation: LocaleRepresentable {}

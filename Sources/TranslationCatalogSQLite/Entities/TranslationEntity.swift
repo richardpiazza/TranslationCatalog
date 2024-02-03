@@ -48,30 +48,41 @@ extension TranslationEntity {
         guard let foreignID = UUID(uuidString: expressionID) else {
             throw CatalogError.dataTypeConversion("Invalid UUID '\(expressionID)'")
         }
-        guard let languageCode = LanguageCode(rawValue: language) else {
-            throw CatalogError.dataTypeConversion("Invalid LanguageCode '\(language)'")
-        }
-        
-        let scriptCode: ScriptCode?
-        if let script = script {
-            guard let code = ScriptCode(rawValue: script) else {
-                throw CatalogError.dataTypeConversion("Invalid ScriptCode '\(script)'")
-            }
-            scriptCode = code
-        } else {
-            scriptCode = nil
-        }
-        
-        let regionCode: RegionCode?
-        if let region = region {
-            guard let code = RegionCode(rawValue: region) else {
-                throw CatalogError.dataTypeConversion("Invalid RegionCode '\(region)'")
-            }
-            regionCode = code
-        } else {
-            regionCode = nil
-        }
         
         return TranslationCatalog.Translation(uuid: id, expressionID: foreignID, languageCode: languageCode, scriptCode: scriptCode, regionCode: regionCode, value: value)
+    }
+}
+
+extension TranslationEntity: LocaleRepresentable {
+    var languageCode: LanguageCode {
+        guard let language = LanguageCode(rawValue: language) else {
+            fatalError("Invalid LanguageCode '\(language)'")
+        }
+        
+        return language
+    }
+    
+    var scriptCode: ScriptCode? {
+        guard let script = self.script else {
+            return nil
+        }
+        
+        guard let code = ScriptCode(rawValue: script) else {
+            return nil
+        }
+        
+        return code
+    }
+    
+    var regionCode: RegionCode? {
+        guard let region = self.region else {
+            return nil
+        }
+        
+        guard let code = RegionCode(rawValue: region) else {
+            return nil
+        }
+        
+        return code
     }
 }

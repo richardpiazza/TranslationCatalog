@@ -23,3 +23,5 @@ extension Translation {
         )
     }
 }
+
+extension TranslationDocument: LocaleRepresentable {}

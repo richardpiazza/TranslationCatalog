@@ -72,4 +72,8 @@ final class FilesystemQueryCatalogTests: XCTestCase {
         try catalog.assertQueryTranslationsHavingOnly()
         try catalog.assertQueryTranslationId()
     }
+    
+    func testMetadataQueries() throws {
+        try catalog.assertLocaleIdentifiers()
+    }
 }
