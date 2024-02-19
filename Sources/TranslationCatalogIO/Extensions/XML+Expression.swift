@@ -4,14 +4,8 @@ import TranslationCatalog
 import Plot
 
 extension XML {
-    static func make(with expressions: [Expression], localeIdentifier: Locale.Identifier?) -> Self {
-        let filtered = expressions.compactMap { expression -> Expression? in
-            if expression.translation(with: localeIdentifier) != nil {
-                return expression
-            } else {
-                return nil
-            }
-        }
+    static func make(with expressions: [Expression], localeIdentifier: Locale.Identifier?, defaultOrFirst: Bool) -> Self {
+        let filtered = expressions.compactMap(localeIdentifier: localeIdentifier, defaultOrFirst: defaultOrFirst)
         
         return XML(
             .element(named: "resources", nodes: [
@@ -21,10 +15,10 @@ extension XML {
                         .attribute(named: "name", value: $0.key),
                         .attribute(
                             named: "formatted",
-                            value: $0.translation(with: localeIdentifier)?.value.hasMultipleReplacements == true ? "false" : "",
+                            value: $0.translations.first?.value.hasMultipleReplacements == true ? "false" : "",
                             ignoreIfValueIsEmpty: true
                         ),
-                        .text(($0.translation(with: localeIdentifier)?.value ?? "").simpleAndroidXMLEscaped())
+                        .text(($0.translations.first?.value ?? "").simpleAndroidXMLEscaped())
                     ])
                 }
             ])

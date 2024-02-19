@@ -49,21 +49,46 @@ extension Catalog {
         
         func run() async throws {
             let catalog = try catalog(forStorage: storage)
-            let expressions = try queryExpressions(
-                from: catalog,
+            let expressions = try queryExpressions(from: catalog, using: storage, projectId: projectId)
+            let defaultOrFirst = (format == .appleStrings || fallback) ? true : false
+            let data = try ExpressionEncoder.encodeTranslations(
+                for: expressions,
                 fileFormat: format,
-                fallbackToDefaultLanguage: fallback,
-                languageCode: language,
-                scriptCode: script,
-                regionCode: region,
-                projectId: projectId
+                localeIdentifier: localeIdentifier,
+                defaultOrFirst: defaultOrFirst
             )
-            let data = try ExpressionEncoder.encodeTranslations(for: expressions, fileFormat: format)
             let output = String(data: data, encoding: .utf8) ?? ""
             
             print(output)
         }
         
+        func queryExpressions(
+            from catalog: TranslationCatalog.Catalog,
+            using storage: Storage,
+            projectId: Project.ID?
+        ) throws -> [Expression] {
+            var expressions: [Expression]
+            if let id = projectId {
+                expressions = try catalog.expressions(matching: GenericExpressionQuery.projectID(id))
+            } else {
+                expressions = try catalog.expressions()
+            }
+            
+            if storage == .filesystem {
+                return expressions
+            }
+            
+            let enumerated = expressions.enumerated()
+            for (index, expression) in enumerated {
+                expressions[index].translations = try catalog.translations(
+                    matching: GenericTranslationQuery.expressionID(expression.id)
+                )
+            }
+            
+            return expressions
+        }
+        
+        @available(*, deprecated)
         func queryExpressions(
             from catalog: TranslationCatalog.Catalog,
             fileFormat: FileFormat,
@@ -127,4 +152,10 @@ extension Catalog {
             return expressions
         }
     }
+}
+
+extension Catalog.Export: LocaleRepresentable {
+    var languageCode: LocaleSupport.LanguageCode { language }
+    var scriptCode: LocaleSupport.ScriptCode? { script }
+    var regionCode: LocaleSupport.RegionCode? { region }
 }
