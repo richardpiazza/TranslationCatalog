@@ -1,20 +1,30 @@
+import Foundation
+import LocaleSupport
 import TranslationCatalog
 import Plot
 
 extension XML {
-    static func make(with expressions: [Expression]) -> Self {
+    static func make(with expressions: [Expression], localeIdentifier: Locale.Identifier?) -> Self {
+        let filtered = expressions.compactMap { expression -> Expression? in
+            if expression.translation(with: localeIdentifier) != nil {
+                return expression
+            } else {
+                return nil
+            }
+        }
+        
         return XML(
             .element(named: "resources", nodes: [
                 .attribute(named: "xmlns:tools", value: "http://schemas.android.com/tools"),
-                .forEach(expressions) {
+                .forEach(filtered) {
                     .element(named: "string", nodes: [
                         .attribute(named: "name", value: $0.key),
                         .attribute(
                             named: "formatted",
-                            value: $0.translations.first?.value.hasMultipleReplacements == true ? "false" : "",
+                            value: $0.translation(with: localeIdentifier)?.value.hasMultipleReplacements == true ? "false" : "",
                             ignoreIfValueIsEmpty: true
                         ),
-                        .text(($0.translations.first?.value ?? "").simpleAndroidXMLEscaped())
+                        .text(($0.translation(with: localeIdentifier)?.value ?? "").simpleAndroidXMLEscaped())
                     ])
                 }
             ])

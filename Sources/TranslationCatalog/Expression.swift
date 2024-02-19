@@ -38,3 +38,25 @@ extension Expression: Hashable {}
 extension Expression: Identifiable {
     public var id: UUID { uuid }
 }
+
+public extension Expression {
+    /// The `Translation` that matches the `defaultLanguage` code of this instance.
+    var defaultTranslation: Translation? {
+        translations.first(where: { $0.languageCode == defaultLanguage })
+    }
+    
+    /// The `Translation` that matches the provided `Locale.Identifier`.
+    func translation(with identifier: Locale.Identifier?) -> Translation? {
+        translations.first(where: { $0.localeIdentifier == identifier })
+    }
+    
+    /// The `Translation` matching the `Locale.Identifier` or `defaultTranslation` if no matches found.
+    func translationOrDefault(with identifier: Locale.Identifier?) -> Translation? {
+        translation(with: identifier) ?? defaultTranslation
+    }
+    
+    /// The `Translation` that best matches the provided identifier, default if none, or first in the collection.
+    func translationOrDefaultOrFirst(with identifier: Locale.Identifier?) -> Translation? {
+        translationOrDefault(with: identifier) ?? translations.first
+    }
+}
