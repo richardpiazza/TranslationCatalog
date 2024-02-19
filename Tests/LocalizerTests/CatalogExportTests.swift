@@ -14,6 +14,7 @@ final class CatalogExportTests: XCTestCase {
         XCTAssertEqual(localizer.output, """
         "APPLICATION_NAME" = "Lingua";
         "GREETING" = "Hello World!";
+        "HIDDEN_MESSAGE" = "solo en español";
         "PLATFORM_ANDROID" = "Android";
         "PLATFORM_APPLE" = "Apple";
         "PLATFORM_WEB" = "Web";
@@ -46,6 +47,7 @@ final class CatalogExportTests: XCTestCase {
         localizer.arguments = ["catalog", "export", "android", "en", "--path", resource.path]
         try localizer.run()
         
+        // TODO: Should this produce a line for 'HIDDEN_MESSAGE' in 'default language' instance?
         XCTAssertEqual(localizer.output, """
         <?xml version="1.0" encoding="UTF-8"?>
         
@@ -107,6 +109,7 @@ final class CatalogExportTests: XCTestCase {
         localizer.arguments = ["catalog", "export", "json", "en", "--path", resource.path]
         try localizer.run()
         
+        // TODO: Should this produce a line for 'HIDDEN_MESSAGE' in 'default language' instance?
         XCTAssertEqual(localizer.output, """
         {
           "APPLICATION_NAME" : "Lingua",
@@ -171,6 +174,7 @@ final class CatalogExportTests: XCTestCase {
         XCTAssertEqual(localizer.output, """
         "APPLICATION_NAME" = "Lingua";
         "GREETING" = "Hello World!";
+        "HIDDEN_MESSAGE" = "solo en español";
         "PLATFORM_ANDROID" = "Android";
         "PLATFORM_APPLE" = "Apple";
         "PLATFORM_WEB" = "Web";
@@ -211,6 +215,7 @@ final class CatalogExportTests: XCTestCase {
         localizer.arguments = ["catalog", "export", "android", "en", "--storage", "filesystem", "--path", directory.path]
         try localizer.run()
         
+        // TODO: Should this produce a line for 'HIDDEN_MESSAGE' in 'default language' instance?
         XCTAssertEqual(localizer.output, """
         <?xml version="1.0" encoding="UTF-8"?>
         
@@ -284,6 +289,7 @@ final class CatalogExportTests: XCTestCase {
         localizer.arguments = ["catalog", "export", "json", "en", "--storage", "filesystem", "--path", directory.path]
         try localizer.run()
         
+        // TODO: Should this produce a line for 'HIDDEN_MESSAGE' in 'default language' instance?
         XCTAssertEqual(localizer.output, """
         {
           "APPLICATION_NAME" : "Lingua",
