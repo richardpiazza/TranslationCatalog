@@ -486,6 +486,12 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             try db.run(renderStatement(.deleteTranslation(entity.id)))
         }
     }
+    
+    // MARK: - Metadata
+    public func localeIdentifiers() throws -> Set<Locale.Identifier> {
+        let translationEntities = try db.translationEntities(statement: renderStatement(.selectAllFromTranslation))
+        return Set(translationEntities.map(\.localeIdentifier))
+    }
 }
 
 private extension SQLiteCatalog {

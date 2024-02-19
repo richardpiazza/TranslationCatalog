@@ -534,4 +534,10 @@ public class FilesystemCatalog: Catalog {
         try translationDocuments[index].remove(from: translationsDirectory)
         translationDocuments.remove(at: index)
     }
+    
+    // MARK: - Metadata
+    
+    public func localeIdentifiers() throws -> Set<Locale.Identifier> {
+        Set(translationDocuments.map(\.localeIdentifier))
+    }
 }

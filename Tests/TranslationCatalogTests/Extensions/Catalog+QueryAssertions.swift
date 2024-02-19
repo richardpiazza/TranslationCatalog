@@ -118,6 +118,19 @@ extension Catalog {
         let translation = try self.translation(.translation8)
         XCTAssertEqual(translation.localeIdentifier, "zh-Hans")
     }
+    
+    func assertLocaleIdentifiers() throws {
+        let localeIdentifiers = try self.localeIdentifiers()
+        XCTAssertEqual(localeIdentifiers.count, 6)
+        XCTAssertEqual(localeIdentifiers.sorted(), [
+            "en",
+            "es",
+            "fr",
+            "fr_CA",
+            "pt_BR",
+            "zh-Hans"
+        ])
+    }
 }
 
 struct CatalogData {
