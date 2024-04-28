@@ -36,6 +36,7 @@ let package = Package(
         .package(url: "https://github.com/richardpiazza/AsyncPlus.git", .upToNextMinor(from: "0.3.2")),
         .package(url: "https://github.com/richardpiazza/Statement.git", .upToNextMajor(from: "0.7.2")),
         .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMajor(from: "1.2.0")),
+        .package(url: "https://github.com/apple/swift-syntax.git", .upToNextMajor(from: "509.0.0")),
         .package(url: "https://github.com/CoreOffice/XMLCoder.git", .upToNextMajor(from: "0.15.0")),
         .package(url: "https://github.com/JohnSundell/Plot.git", .upToNextMajor(from: "0.11.0")),
         .package(url: "https://github.com/alexisakers/HTMLString.git", .upToNextMajor(from: "6.0.0")),
@@ -52,6 +53,7 @@ let package = Package(
             name: "TranslationCatalogIO",
             dependencies: [
                 "TranslationCatalog",
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "AsyncPlus", package: "AsyncPlus"),
                 .product(name: "XMLCoder", package: "XMLCoder"),
                 .product(name: "Plot", package: "Plot"),
