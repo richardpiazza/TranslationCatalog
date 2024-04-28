@@ -21,7 +21,8 @@ import LocaleSupport
                 Catalog.self,
                 Catalog.Import.self,
                 Catalog.Export.self,
-                Configure.self
+                Configure.self,
+                Syntax.self
             ],
             defaultSubcommand: nil,
             helpNames: [.short, .long])
