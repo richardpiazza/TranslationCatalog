@@ -12,7 +12,7 @@ public struct ExpressionDecoder {
     /// - throws: `Error`
     /// - parameters:
     ///   - data: `Data`, typically from reading a file.
-    ///   - fileFormat: Format in which the `data` should be interpretted.
+    ///   - fileFormat: Format in which the `data` should be interpreted.
     ///   - defaultLanguage: The default `LanguageCode` applied to any new `Expression`.
     ///   - languageCode: The `LanguageCode` to associate with the `Translation` strings in the file.
     ///   - scriptCode: The `ScriptCode` associated with the files values.
