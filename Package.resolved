@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/richardpiazza/LocaleSupport.git",
       "state" : {
-        "revision" : "fafb099846e906731cd4ec6a1e1e358274c52a91",
-        "version" : "0.4.3"
+        "revision" : "c2dc014d8ae8befc54a79f34dce7d23f3d6bef91",
+        "version" : "0.5.0"
       }
     },
     {
@@ -61,6 +61,15 @@
       "state" : {
         "revision" : "fddd1c00396eed152c45a46bea9f47b98e59301d",
         "version" : "1.2.0"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-syntax.git",
+      "state" : {
+        "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
+        "version" : "509.1.1"
       }
     },
     {

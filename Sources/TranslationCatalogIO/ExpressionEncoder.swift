@@ -86,3 +86,41 @@ public struct ExpressionEncoder {
         return try encoder.encode(dictionary)
     }
 }
+
+import SwiftSyntax
+import SwiftSyntaxBuilder
+
+public extension ExpressionRenderer {
+    static func generateLocalizedStringConvertibleEnum(
+        for expressions: [Expression]
+    ) throws -> Data {
+        let sorted = expressions.sorted(by: { $0.key < $1.key})
+        for expression in sorted {
+            if let translation = expression.defaultTranslation {
+                
+            } else {
+                
+            }
+        }
+        
+        
+        
+        let sourceFile = SourceFileSyntax(
+            CodeBlockItemListSyntax(
+                CodeBlockItemSyntax(
+                    EnumDeclSyntax(
+                        name: TokenSyntax(.stringSegment("Strings"), presence: .present),
+                        memberBlock: MemberBlockSyntax(
+                            members: MemberBlockItemListSyntax(
+                                [
+                                ]
+                            )
+                        )
+                    )
+                )
+            )
+        )
+        
+        return Data()
+    }
+}
