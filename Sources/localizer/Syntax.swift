@@ -15,64 +15,43 @@ struct Syntax: AsyncParsableCommand {
                 ImportDeclSyntax(
                     path: ImportPathComponentListSyntax {
                         ImportPathComponentSyntax(name: TokenSyntax("LocaleSupport"))
-                    },
-                    trailingTrivia: .newlines(2)
+                    }
                 )
                 
                 EnumDeclSyntax(
+                    leadingTrivia: .newlines(2),
                     name: TokenSyntax("Strings"),
                     inheritanceClause: InheritanceClauseSyntax(
                         inheritedTypes: InheritedTypeListSyntax {
-                            InheritedTypeSyntax(
-                                type: TypeSyntax("String")
-                            )
-                            InheritedTypeSyntax(
-                                type: TypeSyntax("LocalizedStringConvertible")
-                            )
-                        }
-                    ),
-                    memberBlock: MemberBlockSyntax(
-                        members: MemberBlockItemListSyntax {
-                            EnumCaseDeclSyntax {
-                                EnumCaseElementListSyntax {
-                                    EnumCaseElementSyntax(
-                                        name: TokenSyntax("something"),
-                                        rawValue: InitializerClauseSyntax(
-                                            value: StringLiteralExprSyntax(
-                                                content: "Have a nice day!"
-                                            )
-                                        )
-                                    )
-                                }
-                            }
-                            
-                            VariableDeclSyntax(
-                                leadingTrivia:  .newlines(2),
-                                bindingSpecifier: TokenSyntax("var")
-                            ) {
-                                PatternBindingSyntax(
-                                    pattern: IdentifierPatternSyntax(
-                                        identifier: TokenSyntax("prefix")
-                                    ),
-                                    typeAnnotation: TypeAnnotationSyntax(
-                                        type: OptionalTypeSyntax(
-                                            wrappedType: IdentifierTypeSyntax(
-                                                name: TokenSyntax("String")
-                                            )
-                                        )
-                                    ),
-                                    accessorBlock: AccessorBlockSyntax(
-                                        accessors: .getter(CodeBlockItemListSyntax {
-                                            StringLiteralExprSyntax(
-                                                content: "anything"
-                                            )
-                                        })
-                                    )
-                                )
-                            }
+                            InheritedTypeSyntax(type: TypeSyntax("String"))
+                            InheritedTypeSyntax(type: TypeSyntax("LocalizedStringConvertible"))
                         }
                     )
-                )
+                ) {
+                    EnumCaseDeclSyntax {
+                        EnumCaseElementListSyntax {
+                            EnumCaseElementSyntax(
+                                name: TokenSyntax("something"),
+                                rawValue: InitializerClauseSyntax(value: StringLiteralExprSyntax(content: "Have a nice day!"))
+                            )
+                        }
+                    }
+                    
+                    VariableDeclSyntax(
+                        leadingTrivia:  .newlines(2),
+                        bindingSpecifier: TokenSyntax("var")
+                    ) {
+                        PatternBindingSyntax(
+                            pattern: IdentifierPatternSyntax(identifier: TokenSyntax("prefix")),
+                            typeAnnotation: TypeAnnotationSyntax(
+                                type: OptionalTypeSyntax(wrappedType: IdentifierTypeSyntax(name: TokenSyntax("String")))
+                            ),
+                            accessorBlock: AccessorBlockSyntax(
+                                accessors: .getter(CodeBlockItemListSyntax { StringLiteralExprSyntax(content: "anything") })
+                            )
+                        )
+                    }
+                }
             }
         }
         
