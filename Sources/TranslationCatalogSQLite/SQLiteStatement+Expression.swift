@@ -164,7 +164,7 @@ extension SQLiteStatement {
         )
     }
     
-    static func selectExpression(withID id: Expression.ID) -> Self {
+    static func selectExpression(withID id: TranslationCatalog.Expression.ID) -> Self {
         .init(
             .SELECT(
                 .column(ExpressionEntity.id),

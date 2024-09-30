@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/richardpiazza/AsyncPlus.git",
       "state" : {
-        "revision" : "be7aad849d2ead0196aee1c296f52ef2e016fcf5",
-        "version" : "0.1.0"
+        "revision" : "ab486f6744539f8814296cc85a7cc317f165dfc0",
+        "version" : "0.3.2"
       }
     },
     {
@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/richardpiazza/LocaleSupport.git",
       "state" : {
-        "revision" : "fafb099846e906731cd4ec6a1e1e358274c52a91",
-        "version" : "0.4.3"
+        "revision" : "c2dc014d8ae8befc54a79f34dce7d23f3d6bef91",
+        "version" : "0.5.0"
       }
     },
     {

@@ -25,7 +25,7 @@ struct StringsXml: Decodable, DynamicNodeDecoding {
 }
 
 extension StringsXml {
-    func expressions(defaultLanguage: LanguageCode = .default, language: LanguageCode, script: ScriptCode?, region: RegionCode?) -> [Expression] {
+    func expressions(defaultLanguage: LanguageCode = .default, language: LanguageCode, script: ScriptCode?, region: RegionCode?) -> [TranslationCatalog.Expression] {
         return resources.map { $0.expression(uuid: .zero, defaultLanguage: defaultLanguage, language: language, script: script, region: region) }
     }
 }

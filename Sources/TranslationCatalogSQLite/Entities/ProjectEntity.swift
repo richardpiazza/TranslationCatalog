@@ -25,7 +25,7 @@ extension ProjectEntity {
         name = project.name
     }
     
-    func project(with expressions: [Expression] = []) throws -> Project {
+    func project(with expressions: [TranslationCatalog.Expression] = []) throws -> Project {
         guard let id = UUID(uuidString: uuid) else {
             throw CatalogError.dataTypeConversion("Invalid UUID '\(uuid)'")
         }
