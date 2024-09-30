@@ -9,7 +9,7 @@ struct ProjectDocument: Document {
 }
 
 extension Project {
-    init(document: ProjectDocument, expressions: [Expression]) {
+    init(document: ProjectDocument, expressions: [TranslationCatalog.Expression]) {
         self.init(
             uuid: document.id,
             name: document.name,

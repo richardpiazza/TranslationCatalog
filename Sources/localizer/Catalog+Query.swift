@@ -118,7 +118,7 @@ extension Catalog.Query {
         func run() async throws {
             let catalog = try catalog(forStorage: storage, debug: noisy)
             
-            var expressions: [Expression] = []
+            var expressions: [TranslationCatalog.Expression] = []
             
             if let key = self.key {
                 expressions = try catalog.expressions(matching: GenericExpressionQuery.key(key))

@@ -6,9 +6,9 @@ import TranslationCatalog
 public class ExpressionImporter {
     
     public enum Operation: CustomStringConvertible {
-        case createdExpression(Expression)
-        case skippedExpression(Expression)
-        case failedExpression(Expression, Error)
+        case createdExpression(TranslationCatalog.Expression)
+        case skippedExpression(TranslationCatalog.Expression)
+        case failedExpression(TranslationCatalog.Expression, Error)
         case createdTranslation(Translation)
         case skippedTranslation(Translation)
         case failedTranslation(Translation, Error)
@@ -46,7 +46,7 @@ public class ExpressionImporter {
     }
     
     public func importTranslations(
-        from expressions: [Expression]
+        from expressions: [TranslationCatalog.Expression]
     ) -> AsyncThrowingStream<Operation, Error> {
         defer {
             expressions
@@ -61,7 +61,7 @@ public class ExpressionImporter {
         return stream
     }
     
-    private func importExpression(_ expression: Expression, into catalog: Catalog) {
+    private func importExpression(_ expression: TranslationCatalog.Expression, into catalog: Catalog) {
         do {
             try catalog.createExpression(expression)
             sequence?.yield(.createdExpression(expression))
@@ -73,7 +73,7 @@ public class ExpressionImporter {
         }
     }
     
-    private func importTranslations(_ expression: Expression, into catalog: Catalog) {
+    private func importTranslations(_ expression: TranslationCatalog.Expression, into catalog: Catalog) {
         guard let id = try? catalog.expression(matching: GenericExpressionQuery.key(expression.key)).id else {
             return
         }

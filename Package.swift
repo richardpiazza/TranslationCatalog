@@ -32,8 +32,8 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/richardpiazza/LocaleSupport.git", .upToNextMajor(from: "0.4.3")),
-        .package(url: "https://github.com/richardpiazza/AsyncPlus.git", .upToNextMinor(from: "0.1.0")),
+        .package(url: "https://github.com/richardpiazza/LocaleSupport.git", .upToNextMajor(from: "0.5.0")),
+        .package(url: "https://github.com/richardpiazza/AsyncPlus.git", .upToNextMinor(from: "0.3.2")),
         .package(url: "https://github.com/richardpiazza/Statement.git", .upToNextMajor(from: "0.7.2")),
         .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMajor(from: "1.2.0")),
         .package(url: "https://github.com/CoreOffice/XMLCoder.git", .upToNextMajor(from: "0.15.0")),

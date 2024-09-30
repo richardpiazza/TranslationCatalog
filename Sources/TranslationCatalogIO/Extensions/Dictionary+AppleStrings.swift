@@ -59,9 +59,9 @@ extension Dictionary where Key == String, Value == String {
         language: LanguageCode,
         script: ScriptCode? = nil,
         region: RegionCode? = nil
-    ) -> [Expression] {
-        return self.map { (key, value) -> Expression in
-            return Expression(
+    ) -> [TranslationCatalog.Expression] {
+        return self.map { (key, value) -> TranslationCatalog.Expression in
+            return TranslationCatalog.Expression(
                 uuid: .zero,
                 key: key,
                 name: key,

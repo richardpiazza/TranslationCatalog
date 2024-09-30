@@ -15,11 +15,11 @@ public extension SQLiteCatalog {
         @available(*, deprecated, renamed: "CatalogError.projectID()")
         case invalidProjectID(Project.ID)
         @available(*, deprecated, renamed: "CatalogError.expressionID()")
-        case invalidExpressionID(Expression.ID)
+        case invalidExpressionID(TranslationCatalog.Expression.ID)
         @available(*, deprecated, renamed: "CatalogError.translationID()")
         case invalidTranslationID(TranslationCatalog.Translation.ID)
         @available(*, deprecated, renamed: "CatalogError.expressionExistingWithID()")
-        case existingExpressionWithID(Expression.ID)
+        case existingExpressionWithID(TranslationCatalog.Expression.ID)
         @available(*, deprecated, renamed: "CatalogError.expressionExistingWithKey()")
         case existingExpressionWithKey(String)
         @available(*, deprecated, renamed: "CatalogError.translationExistingWithID()")
@@ -47,7 +47,7 @@ public extension SQLiteCatalog {
         case primaryKey(Int)
         
         @available(*, deprecated, renamed: "GenericExpressionQuery.id")
-        case id(Expression.ID)
+        case id(TranslationCatalog.Expression.ID)
         @available(*, deprecated, renamed: "GenericExpressionQuery.projectID")
         case projectID(Project.ID)
         @available(*, deprecated, renamed: "GenericExpressionQuery.key")
@@ -68,22 +68,22 @@ public extension SQLiteCatalog {
         @available(*, deprecated, renamed: "GenericTranslationQuery.id")
         case id(TranslationCatalog.Translation.ID)
         @available(*, deprecated, renamed: "GenericTranslationQuery.expressionID")
-        case expressionID(Expression.ID)
+        case expressionID(TranslationCatalog.Expression.ID)
         /// Translations that match all of the provided parameters
         @available(*, deprecated, renamed: "GenericTranslationQuery.having")
-        case having(Expression.ID, LanguageCode, ScriptCode?, RegionCode?)
+        case having(TranslationCatalog.Expression.ID, LanguageCode, ScriptCode?, RegionCode?)
         /// Translations that match only the given parameters (Script == Null & Region == Null)
         @available(*, deprecated, renamed: "GenericTranslationQuery.havingOnly")
-        case havingOnly(Expression.ID, LanguageCode)
+        case havingOnly(TranslationCatalog.Expression.ID, LanguageCode)
     }
     
     enum ProjectUpdate: CatalogUpdate {
         @available(*, deprecated, renamed: "GenericProjectUpdate.name")
         case name(String)
         @available(*, deprecated, renamed: "GenericProjectUpdate.linkExpression")
-        case linkExpression(Expression.ID)
+        case linkExpression(TranslationCatalog.Expression.ID)
         @available(*, deprecated, renamed: "GenericProjectUpdate.unlinkExpression")
-        case unlinkExpression(Expression.ID)
+        case unlinkExpression(TranslationCatalog.Expression.ID)
     }
     
     enum ExpressionUpdate: CatalogUpdate {

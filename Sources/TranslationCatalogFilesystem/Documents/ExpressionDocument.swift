@@ -11,7 +11,7 @@ struct ExpressionDocument: Document {
     var feature: String?
 }
 
-extension Expression {
+extension TranslationCatalog.Expression {
     init(document: ExpressionDocument, translations: [Translation]) {
         self.init(
             uuid: document.id,

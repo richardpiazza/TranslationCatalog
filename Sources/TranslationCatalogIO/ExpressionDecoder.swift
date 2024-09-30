@@ -25,8 +25,8 @@ public struct ExpressionDecoder {
         languageCode: LanguageCode,
         scriptCode: ScriptCode?,
         regionCode: RegionCode?
-    ) throws -> [Expression] {
-        let expressions: [Expression]
+    ) throws -> [TranslationCatalog.Expression] {
+        let expressions: [TranslationCatalog.Expression]
         
         switch fileFormat {
         case .androidXML:

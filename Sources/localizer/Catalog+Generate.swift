@@ -34,7 +34,7 @@ extension Catalog {
         func run() async throws {
             let url = try catalogURL(forStorage: storage)
             
-            let expressions: [Expression]
+            let expressions: [TranslationCatalog.Expression]
             
             switch storage {
             case .sqlite:

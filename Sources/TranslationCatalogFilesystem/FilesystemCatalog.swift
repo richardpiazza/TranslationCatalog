@@ -191,7 +191,7 @@ public class FilesystemCatalog: Catalog {
     
     // MARK: - Expression
     
-    public func expressions() throws -> [Expression] {
+    public func expressions() throws -> [TranslationCatalog.Expression] {
         expressionDocuments.map { document in
             let translations = translationDocuments
                 .filter { $0.expressionID == document.id }
@@ -203,7 +203,7 @@ public class FilesystemCatalog: Catalog {
         }
     }
     
-    public func expressions(matching query: CatalogQuery) throws -> [Expression] {
+    public func expressions(matching query: CatalogQuery) throws -> [TranslationCatalog.Expression] {
         switch query {
         case GenericExpressionQuery.projectID(let projectId):
             return try project(projectId).expressions
@@ -270,11 +270,11 @@ public class FilesystemCatalog: Catalog {
         }
     }
     
-    public func expression(_ id: Expression.ID) throws -> Expression {
+    public func expression(_ id: TranslationCatalog.Expression.ID) throws -> TranslationCatalog.Expression {
         try expression(matching: GenericExpressionQuery.id(id))
     }
     
-    public func expression(matching query: CatalogQuery) throws -> Expression {
+    public func expression(matching query: CatalogQuery) throws -> TranslationCatalog.Expression {
         let document: ExpressionDocument
         
         switch query {
@@ -303,7 +303,7 @@ public class FilesystemCatalog: Catalog {
         return Expression(document: document, translations: translations)
     }
     
-    public func createExpression(_ expression: Expression) throws -> Expression.ID {
+    public func createExpression(_ expression: TranslationCatalog.Expression) throws -> TranslationCatalog.Expression.ID {
         if expression.id != .zero {
             if let existing = try? self.expression(expression.id) {
                 throw CatalogError.expressionID(existing.id)
@@ -344,7 +344,7 @@ public class FilesystemCatalog: Catalog {
         return id
     }
     
-    public func updateExpression(_ id: Expression.ID, action: CatalogUpdate) throws {
+    public func updateExpression(_ id: TranslationCatalog.Expression.ID, action: CatalogUpdate) throws {
         guard let index = expressionDocuments.firstIndex(where: { $0.id == id }) else {
             throw CatalogError.expressionID(id)
         }
@@ -367,7 +367,7 @@ public class FilesystemCatalog: Catalog {
         try expressionDocuments[index].write(to: expressionsDirectory, using: encoder)
     }
     
-    public func deleteExpression(_ id: Expression.ID) throws {
+    public func deleteExpression(_ id: TranslationCatalog.Expression.ID) throws {
         guard let index = expressionDocuments.firstIndex(where: { $0.id == id }) else {
             throw CatalogError.expressionID(id)
         }

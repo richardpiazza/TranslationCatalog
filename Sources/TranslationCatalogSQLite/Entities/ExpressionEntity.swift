@@ -33,7 +33,7 @@ extension ExpressionEntity {
     static var context: Attribute { entity["context"]! }
     static var feature: Attribute { entity["feature"]! }
     
-    init(_ expression: Expression) {
+    init(_ expression: TranslationCatalog.Expression) {
         uuid = expression.uuid.uuidString
         key = expression.key
         name = expression.name
@@ -42,7 +42,7 @@ extension ExpressionEntity {
         feature = expression.feature
     }
     
-    func expression(with translations: [TranslationCatalog.Translation] = []) throws -> Expression {
+    func expression(with translations: [TranslationCatalog.Translation] = []) throws -> TranslationCatalog.Expression {
         guard let id = UUID(uuidString: uuid) else {
             throw CatalogError.dataTypeConversion("Invalid UUID '\(uuid)'")
         }
