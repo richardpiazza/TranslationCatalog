@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/richardpiazza/AsyncPlus.git",
       "state" : {
-        "revision" : "be7aad849d2ead0196aee1c296f52ef2e016fcf5",
-        "version" : "0.1.0"
+        "revision" : "ab486f6744539f8814296cc85a7cc317f165dfc0",
+        "version" : "0.3.2"
       }
     },
     {

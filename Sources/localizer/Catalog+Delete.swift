@@ -77,7 +77,7 @@ extension Catalog.Delete {
         )
         
         @Argument(help: "Unique ID of the Expression.")
-        var id: Expression.ID
+        var id: TranslationCatalog.Expression.ID
         
         @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
         var storage: Catalog.Storage = .default

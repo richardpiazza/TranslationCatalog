@@ -17,7 +17,7 @@ public struct ExpressionEncoder {
     /// - returns: The encoded translations in the request format.
     @available(*, deprecated, renamed: "encodeTranslations(for:fileFormat:localeIdentifier:defaultOrFirst:)")
     public static func encodeTranslations(
-        for expressions: [Expression],
+        for expressions: [TranslationCatalog.Expression],
         fileFormat: FileFormat
     ) throws -> Data {
         return try encodeTranslations(for: expressions, fileFormat: fileFormat, localeIdentifier: nil, defaultOrFirst: false)
@@ -33,7 +33,7 @@ public struct ExpressionEncoder {
     ///   - defaultOrFirst: Indicates a _default_ or _first_ translation is used when a locale-specific one is not found.
     /// - returns: The encoded translations in the request format.
     public static func encodeTranslations(
-        for expressions: [Expression],
+        for expressions: [TranslationCatalog.Expression],
         fileFormat: FileFormat,
         localeIdentifier: Locale.Identifier?,
         defaultOrFirst: Bool
@@ -48,14 +48,14 @@ public struct ExpressionEncoder {
         }
     }
     
-    private static func exportAndroid(_ expressions: [Expression], localeIdentifier: Locale.Identifier?, defaultOrFirst: Bool) -> Data {
+    private static func exportAndroid(_ expressions: [TranslationCatalog.Expression], localeIdentifier: Locale.Identifier?, defaultOrFirst: Bool) -> Data {
         let sorted = expressions.sorted(by: { $0.key < $1.key})
         let xml = XML.make(with: sorted, localeIdentifier: localeIdentifier, defaultOrFirst: defaultOrFirst)
         let raw = xml.render(indentedBy: .spaces(2))
         return raw.data(using: .utf8) ?? Data()
     }
     
-    private static func exportApple(_ expressions: [Expression], localeIdentifier: Locale.Identifier?, defaultOrFirst: Bool) -> Data {
+    private static func exportApple(_ expressions: [TranslationCatalog.Expression], localeIdentifier: Locale.Identifier?, defaultOrFirst: Bool) -> Data {
         let sorted = expressions.sorted(by: { $0.key < $1.key})
         var output: [String] = []
         
@@ -73,7 +73,7 @@ public struct ExpressionEncoder {
             .data(using: .utf8) ?? Data()
     }
     
-    private static func exportJson(_ expressions: [Expression], localeIdentifier: Locale.Identifier?, defaultOrFirst: Bool) throws -> Data {
+    private static func exportJson(_ expressions: [TranslationCatalog.Expression], localeIdentifier: Locale.Identifier?, defaultOrFirst: Bool) throws -> Data {
         let filtered = expressions.compactMap(localeIdentifier: localeIdentifier, defaultOrFirst: defaultOrFirst)
         let sequence = filtered.map { [$0.key: $0.translations.first?.value ?? ""] }
         let dictionary = sequence.reduce(into: Dictionary<String, String>()) { partialResult, pair in

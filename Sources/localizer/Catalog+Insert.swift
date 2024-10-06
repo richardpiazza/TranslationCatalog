@@ -144,7 +144,7 @@ extension Catalog.Insert {
         )
         
         @Argument(help: "ID of the Expression to which this translation links.")
-        var expression: Expression.ID
+        var expression: TranslationCatalog.Expression.ID
         
         @Argument(help: "Language of the translation.")
         var language: LanguageCode

@@ -45,10 +45,10 @@ extension Catalog.Update {
         var name: String?
         
         @Option(help: "Adds an expression to a project.")
-        var linkExpression: Expression.ID?
+        var linkExpression: TranslationCatalog.Expression.ID?
         
         @Option(help: "Remove an expression from a project.")
-        var unlinkExpression: Expression.ID?
+        var unlinkExpression: TranslationCatalog.Expression.ID?
         
         @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
         var storage: Catalog.Storage = .default
@@ -106,7 +106,7 @@ extension Catalog.Update {
         )
         
         @Argument(help: "Unique ID of the Expression.")
-        var id: Expression.ID
+        var id: TranslationCatalog.Expression.ID
         
         @Option(help: "Unique key that identifies the expression in translation files.")
         var key: String?

@@ -3,8 +3,8 @@ import LocaleSupport
 import TranslationCatalog
 import Plot
 
-extension Expression {
-    func replacingId(_ id: Expression.ID) -> Expression {
+extension TranslationCatalog.Expression {
+    func replacingId(_ id: TranslationCatalog.Expression.ID) -> TranslationCatalog.Expression {
         let translations = self.translations.map { $0.replacingExpressionId(id) }
         
         return Expression(
@@ -19,9 +19,9 @@ extension Expression {
     }
 }
 
-extension Array where Element == Expression {
-    func compactMap(localeIdentifier: Locale.Identifier?, defaultOrFirst: Bool) -> [Expression] {
-        self.compactMap { expression -> Expression? in
+extension Array where Element == TranslationCatalog.Expression {
+    func compactMap(localeIdentifier: Locale.Identifier?, defaultOrFirst: Bool) -> [TranslationCatalog.Expression] {
+        self.compactMap { expression -> TranslationCatalog.Expression? in
             let translation = defaultOrFirst ? expression.translationOrDefaultOrFirst(with: localeIdentifier) : expression.translation(with: localeIdentifier)
             guard let translation = translation else {
                 return nil

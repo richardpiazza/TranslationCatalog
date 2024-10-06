@@ -66,8 +66,8 @@ extension Catalog {
             from catalog: TranslationCatalog.Catalog,
             using storage: Storage,
             projectId: Project.ID?
-        ) throws -> [Expression] {
-            var expressions: [Expression]
+        ) throws -> [TranslationCatalog.Expression] {
+            var expressions: [TranslationCatalog.Expression]
             if let id = projectId {
                 expressions = try catalog.expressions(matching: GenericExpressionQuery.projectID(id))
             } else {
@@ -97,9 +97,9 @@ extension Catalog {
             scriptCode: ScriptCode?,
             regionCode: RegionCode?,
             projectId: Project.ID?
-        ) throws -> [Expression] {
-            var expressions: [Expression]
-            var expressionIds: [Expression.ID]
+        ) throws -> [TranslationCatalog.Expression] {
+            var expressions: [TranslationCatalog.Expression]
+            var expressionIds: [TranslationCatalog.Expression.ID]
             
             if fileFormat == .appleStrings || fallbackToDefaultLanguage {
                 if let id = projectId {
