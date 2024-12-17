@@ -1,5 +1,5 @@
 import TranslationCatalogIO
 import ArgumentParser
 
-extension RenderFormat: ExpressibleByArgument {
+extension RenderFormat: @retroactive ExpressibleByArgument {
 }

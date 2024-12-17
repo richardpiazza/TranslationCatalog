@@ -9,7 +9,6 @@ extension XML {
         
         return XML(
             .element(named: "resources", nodes: [
-                .attribute(named: "xmlns:tools", value: "http://schemas.android.com/tools"),
                 .forEach(filtered) {
                     .element(named: "string", nodes: [
                         .attribute(named: "name", value: $0.key),
@@ -27,14 +26,29 @@ extension XML {
 }
 
 internal extension String {
+    func simpleAppleDictionaryEscaped() -> String {
+        let replacements: [(Character, String)] = [
+            (#"""#, #"\""#),
+            ("\u{00a0}", "\\U00A0") // Non-Breaking Space
+        ]
+        
+        var updated = self
+        
+        for (character, replacement) in replacements {
+            updated = updated.replacingOccurrences(of: String(describing: character), with: replacement, range: nil)
+        }
+        
+        return updated
+    }
+    
     func simpleAndroidXMLEscaped() -> String {
         let replacements: [(Character, String)] = [
             ("&", "&amp;"),
-//            ("\"", "&quot;"),
+            (#"""#, #"\""#),
             ("'", "\\'"),
             ("<", "&lt;"),
             (">", "&gt;"),
-            (" ", "&#160;") // NBSP
+            (" ", "&#160;") // Non-Breaking Space
         ]
         
         var updated = self

@@ -65,7 +65,7 @@ public struct ExpressionEncoder {
                 return
             }
             
-            output.append("\"\(expression.key)\" = \"\(translation.value)\";")
+            output.append("\"\(expression.key)\" = \"\(translation.value.simpleAppleDictionaryEscaped())\";")
         }
         
         return output
