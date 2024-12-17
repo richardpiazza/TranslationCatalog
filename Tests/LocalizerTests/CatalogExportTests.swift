@@ -51,7 +51,7 @@ final class CatalogExportTests: XCTestCase {
         XCTAssertEqual(localizer.output, """
         <?xml version="1.0" encoding="UTF-8"?>
         
-          <resources xmlns:tools="http://schemas.android.com/tools">
+          <resources>
             <string name="APPLICATION_NAME">Lingua</string>
             <string name="GREETING">Hello World!</string>
             <string name="PLATFORM_ANDROID">Android</string>
@@ -72,7 +72,7 @@ final class CatalogExportTests: XCTestCase {
         XCTAssertEqual(localizer.output, """
         <?xml version="1.0" encoding="UTF-8"?>
         
-          <resources xmlns:tools="http://schemas.android.com/tools">
+          <resources>
             <string name="GREETING">Hola Mundo!</string>
             <string name="HIDDEN_MESSAGE">solo en español</string>
           </resources>
@@ -90,7 +90,7 @@ final class CatalogExportTests: XCTestCase {
         XCTAssertEqual(localizer.output, """
         <?xml version="1.0" encoding="UTF-8"?>
         
-          <resources xmlns:tools="http://schemas.android.com/tools">
+          <resources>
             <string name="APPLICATION_NAME">Lingua</string>
             <string name="GREETING">Hola Mundo!</string>
             <string name="HIDDEN_MESSAGE">solo en español</string>
@@ -219,7 +219,7 @@ final class CatalogExportTests: XCTestCase {
         XCTAssertEqual(localizer.output, """
         <?xml version="1.0" encoding="UTF-8"?>
         
-          <resources xmlns:tools="http://schemas.android.com/tools">
+          <resources>
             <string name="APPLICATION_NAME">Lingua</string>
             <string name="GREETING">Hello World!</string>
             <string name="PLATFORM_ANDROID">Android</string>
@@ -244,7 +244,7 @@ final class CatalogExportTests: XCTestCase {
         XCTAssertEqual(localizer.output, """
         <?xml version="1.0" encoding="UTF-8"?>
         
-          <resources xmlns:tools="http://schemas.android.com/tools">
+          <resources>
             <string name="GREETING">Hola Mundo!</string>
             <string name="HIDDEN_MESSAGE">solo en español</string>
           </resources>
@@ -266,7 +266,7 @@ final class CatalogExportTests: XCTestCase {
         XCTAssertEqual(localizer.output, """
         <?xml version="1.0" encoding="UTF-8"?>
         
-          <resources xmlns:tools="http://schemas.android.com/tools">
+          <resources>
             <string name="APPLICATION_NAME">Lingua</string>
             <string name="GREETING">Hola Mundo!</string>
             <string name="HIDDEN_MESSAGE">solo en español</string>

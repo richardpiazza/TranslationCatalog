@@ -1,7 +1,7 @@
 import TranslationCatalogIO
 import ArgumentParser
 
-extension FileFormat: ExpressibleByArgument {
+extension FileFormat: @retroactive ExpressibleByArgument {
     var argument: String {
         switch self {
         case .androidXML: return "android-xml"
