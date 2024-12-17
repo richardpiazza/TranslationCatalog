@@ -20,8 +20,14 @@ jobs:
     - name: Checkout Source
       uses: actions/checkout@v4
 
+    - name: Setup Toolchain
+      if: ${{ runner.os == 'Linux' }}
+      shell: bash
+      run: sudo apt-get install sqlite3 libsqlite3-dev
+
     - name: Swift Build
       uses: SwiftActions/SwiftBuild@main
 
     - name: Swift Test
       uses: SwiftActions/SwiftTest@main
+      
