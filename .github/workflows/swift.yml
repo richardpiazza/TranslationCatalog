@@ -10,6 +10,7 @@ on:
 jobs:
   SwiftActions:
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-15, ubuntu-latest]
 
