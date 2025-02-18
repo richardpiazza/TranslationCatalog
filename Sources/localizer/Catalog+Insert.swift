@@ -15,7 +15,8 @@ extension Catalog {
             subcommands: [
                 ProjectCommand.self,
                 ExpressionCommand.self,
-                TranslationCommand.self
+                TranslationCommand.self,
+                KeyValueCommand.self,
             ],
             defaultSubcommand: nil,
             helpNames: .shortAndLong
@@ -126,9 +127,7 @@ extension Catalog.Insert {
             print("Inserted Expression [\(id)] '\(expression.name)'")
         }
     }
-}
 
-extension Catalog.Insert {
     struct TranslationCommand: CatalogCommand {
         
         static var configuration: CommandConfiguration = .init(
@@ -178,6 +177,63 @@ extension Catalog.Insert {
             
             let id = try catalog.createTranslation(translation)
             print("Inserted Translation [\(id)] '\(value)'")
+        }
+    }
+
+    struct KeyValueCommand: CatalogCommand {
+
+        static var configuration: CommandConfiguration = CommandConfiguration(
+            commandName: "key-value",
+            abstract: "Quickly add a Expression=Translation pairing to the catalog.",
+            usage: nil,
+            discussion: "",
+            version: "1.0.0",
+            shouldDisplay: true,
+            subcommands: [],
+            defaultSubcommand: nil,
+            helpNames: .shortAndLong
+        )
+
+        @Argument(help: "Unique key that identifies the expression in translation files.")
+        var key: String
+
+        @Argument(help: "The translated string.")
+        var value: String
+
+        @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
+        var storage: Catalog.Storage = .default
+
+        @Option(help: "Path to catalog to use in place of the application library.")
+        var path: String?
+
+        func run() async throws {
+            let catalog = try catalog(forStorage: storage)
+
+            let expression = Expression(
+                uuid: .zero,
+                key: key,
+                name: key,
+                defaultLanguage: .default,
+                context: nil,
+                feature: nil,
+                translations: []
+            )
+
+            let expressionId = try catalog.createExpression(expression)
+
+            let translation = Translation(
+                uuid: .zero,
+                expressionID: expressionId,
+                languageCode: .default,
+                scriptCode: nil,
+                regionCode: nil,
+                value: value
+            )
+
+            let translationId = try catalog.createTranslation(translation)
+
+            print("Inserted Expression / Translation [\(expressionId) / \(translationId)]")
+            print("\(key)='\(value)'")
         }
     }
 }
