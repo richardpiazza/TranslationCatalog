@@ -1,5 +1,8 @@
 import TranslationCatalogIO
 import ArgumentParser
 
-extension RenderFormat: @retroactive ExpressibleByArgument {
-}
+#if hasFeature(RetroactiveAttribute)
+extension RenderFormat: @retroactive ExpressibleByArgument {}
+#else
+extension RenderFormat: ExpressibleByArgument {}
+#endif
