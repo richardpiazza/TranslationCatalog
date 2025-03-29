@@ -26,7 +26,7 @@ public extension Project {
     
     @available(*, deprecated, renamed: "init(id:name:expressions:)")
     init(
-        uuid: UUID = .zero,
+        uuid: UUID,
         name: String = "",
         expressions: [Expression] = []
     ) {

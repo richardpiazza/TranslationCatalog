@@ -80,7 +80,7 @@ public extension Expression {
     
     @available(*, deprecated, renamed: "init(id:key:name:defaultLanguage:context:feature:translations:)")
     init(
-        uuid: UUID = .zero,
+        uuid: UUID,
         key: String = "",
         name: String = "",
         defaultLanguage: LanguageCode = .default,
