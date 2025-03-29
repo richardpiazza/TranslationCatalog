@@ -11,7 +11,7 @@ struct ProjectDocument: Document {
 extension Project {
     init(document: ProjectDocument, expressions: [TranslationCatalog.Expression]) {
         self.init(
-            uuid: document.id,
+            id: document.id,
             name: document.name,
             expressions: expressions
         )

@@ -5,16 +5,14 @@ import Plot
 
 extension TranslationCatalog.Expression {
     func replacingId(_ id: TranslationCatalog.Expression.ID) -> TranslationCatalog.Expression {
-        let translations = self.translations.map { $0.replacingExpressionId(id) }
-        
-        return Expression(
-            uuid: id,
+        Expression(
+            id: id,
             key: key,
             name: name,
             defaultLanguage: defaultLanguage,
             context: context,
             feature: feature,
-            translations: translations
+            translations: translations.map { Translation(translation: $0, expressionId: id) }
         )
     }
 }
@@ -27,9 +25,15 @@ extension Array where Element == TranslationCatalog.Expression {
                 return nil
             }
             
-            var mappedExpression = expression
-            mappedExpression.translations = [translation]
-            return mappedExpression
+            return Expression(
+                id: expression.id,
+                key: expression.key,
+                name: expression.name,
+                defaultLanguage: expression.defaultLanguage,
+                context: expression.context,
+                feature: expression.feature,
+                translations: [translation]
+            )
         }
     }
 }

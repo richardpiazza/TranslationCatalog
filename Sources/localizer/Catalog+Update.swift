@@ -72,7 +72,7 @@ extension Catalog.Update {
             
             let project = try catalog.project(id)
             
-            print("Updating Project '\(project.name) [\(project.uuid.uuidString)]'…")
+            print("Updating Project '\(project.name) [\(project.id.uuidString)]'…")
             
             if let name = self.name {
                 try catalog.updateProject(project.id, action: GenericProjectUpdate.name(name))

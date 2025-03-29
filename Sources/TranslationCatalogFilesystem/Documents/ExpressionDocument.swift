@@ -14,7 +14,7 @@ struct ExpressionDocument: Document {
 extension TranslationCatalog.Expression {
     init(document: ExpressionDocument, translations: [Translation]) {
         self.init(
-            uuid: document.id,
+            id: document.id,
             key: document.key,
             name: document.name,
             defaultLanguage: document.defaultLanguage,

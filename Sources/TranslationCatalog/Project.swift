@@ -1,23 +1,37 @@
 import Foundation
 
 /// A grouping of `Expression`s used for a common purpose, such as an application or service.
-public struct Project {
+public struct Project: Codable, Hashable, Identifiable, Sendable {
     /// Identifier that universally identifies this `Project`
-    public var uuid: UUID
+    public let id: UUID
     /// A custom description
-    public var name: String
+    public let name: String
     /// The `Expression`s associated with this `Project`
-    public var expressions: [Expression]
+    public let expressions: [Expression]
     
-    public init(uuid: UUID = .zero, name: String = "", expressions: [Expression] = []) {
-        self.uuid = uuid
+    public init(
+        id: UUID = .zero,
+        name: String = "",
+        expressions: [Expression] = []
+    ) {
+        self.id = id
         self.name = name
         self.expressions = expressions
     }
 }
 
-extension Project: Codable {}
-extension Project: Hashable {}
-extension Project: Identifiable {
-    public var id: UUID { uuid }
+public extension Project {
+    @available(*, deprecated, renamed: "id")
+    var uuid: UUID { id }
+    
+    @available(*, deprecated, renamed: "init(id:name:expressions:)")
+    init(
+        uuid: UUID = .zero,
+        name: String = "",
+        expressions: [Expression] = []
+    ) {
+        self.id = uuid
+        self.name = name
+        self.expressions = expressions
+    }
 }

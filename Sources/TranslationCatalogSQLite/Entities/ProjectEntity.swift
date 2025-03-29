@@ -21,7 +21,7 @@ extension ProjectEntity {
     static var name: Attribute { entity["name"]! }
     
     init(_ project: Project) {
-        uuid = project.uuid.uuidString
+        uuid = project.id.uuidString
         name = project.name
     }
     
@@ -30,6 +30,6 @@ extension ProjectEntity {
             throw CatalogError.dataTypeConversion("Invalid UUID '\(uuid)'")
         }
         
-        return Project(uuid: id, name: name, expressions: expressions)
+        return Project(id: id, name: name, expressions: expressions)
     }
 }

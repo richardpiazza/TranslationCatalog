@@ -33,16 +33,23 @@ extension Resource {
         script: ScriptCode? = nil,
         region: RegionCode? = nil
     ) -> Expression {
-        var expression = Expression(
-            uuid: uuid,
+        Expression(
+            id: uuid,
             key: name,
             name: name,
             defaultLanguage: defaultLanguage,
             context: comment,
-            feature: feature)
-        expression.translations = [
-            Translation(uuid: .zero, expressionID: uuid, languageCode: language, scriptCode: script, regionCode: region, value: value)
-        ]
-        return expression
+            feature: feature,
+            translations: [
+                Translation(
+                    id: .zero,
+                    expressionId: uuid,
+                    languageCode: language,
+                    scriptCode: script,
+                    regionCode: region,
+                    value: value
+                )
+            ]
+        )
     }
 }

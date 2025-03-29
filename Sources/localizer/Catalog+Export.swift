@@ -69,7 +69,7 @@ extension Catalog {
         ) throws -> [TranslationCatalog.Expression] {
             var expressions: [TranslationCatalog.Expression]
             if let id = projectId {
-                expressions = try catalog.expressions(matching: GenericExpressionQuery.projectID(id))
+                expressions = try catalog.expressions(matching: GenericExpressionQuery.projectId(id))
             } else {
                 expressions = try catalog.expressions()
             }
@@ -80,9 +80,8 @@ extension Catalog {
             
             let enumerated = expressions.enumerated()
             for (index, expression) in enumerated {
-                expressions[index].translations = try catalog.translations(
-                    matching: GenericTranslationQuery.expressionID(expression.id)
-                )
+                let translations = try catalog.translations(matching: GenericTranslationQuery.expressionId(expression.id))
+                expressions[index] = Expression(expression: expression, translations: translations)
             }
             
             return expressions
@@ -115,21 +114,23 @@ extension Catalog {
                 expressionIds = expressions.map { $0.id }
                 
                 for (index, id) in expressionIds.enumerated() {
+                    let expression = expressions[index]
+                    
                     let preferredTranslations = try catalog.translations(matching: GenericTranslationQuery.having(id, languageCode, scriptCode, regionCode))
                     if !preferredTranslations.isEmpty {
-                        expressions[index].translations = preferredTranslations
+                        expressions[index] = Expression(expression: expression, translations: preferredTranslations)
                         continue
                     }
                     
                     let fallbackTranslations = try catalog.translations(matching: GenericTranslationQuery.having(id, languageCode, nil, nil))
                     if !fallbackTranslations.isEmpty {
-                        expressions[index].translations = fallbackTranslations
+                        expressions[index] = Expression(expression: expression, translations: fallbackTranslations)
                         continue
                     }
                     
                     let defaultLanguage = expressions[index].defaultLanguage
                     let defaultTranslations = try catalog.translations(matching: GenericTranslationQuery.having(id, defaultLanguage, nil, nil))
-                    expressions[index].translations = defaultTranslations
+                    expressions[index] = Expression(expression: expression, translations: defaultTranslations)
                 }
             } else {
                 if let id = projectId {
@@ -145,7 +146,9 @@ extension Catalog {
                 expressionIds = expressions.map { $0.id }
                 
                 try expressionIds.enumerated().forEach { (index, id) in
-                    expressions[index].translations = try catalog.translations(matching: GenericTranslationQuery.having(id, languageCode, scriptCode, regionCode))
+                    let expression = expressions[index]
+                    let translations = try catalog.translations(matching: GenericTranslationQuery.having(id, languageCode, scriptCode, regionCode))
+                    expressions[index] = Expression(expression: expression, translations: translations)
                 }
             }
             

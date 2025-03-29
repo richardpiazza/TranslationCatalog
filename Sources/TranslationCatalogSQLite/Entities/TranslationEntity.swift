@@ -34,7 +34,7 @@ extension TranslationEntity {
     static var value: Attribute { entity["value"]! }
     
     init(_ translation: TranslationCatalog.Translation) {
-        uuid = translation.uuid.uuidString
+        uuid = translation.id.uuidString
         language = translation.languageCode.rawValue
         script = translation.scriptCode?.rawValue
         region = translation.regionCode?.rawValue
@@ -49,7 +49,7 @@ extension TranslationEntity {
             throw CatalogError.dataTypeConversion("Invalid UUID '\(expressionID)'")
         }
         
-        return TranslationCatalog.Translation(uuid: id, expressionID: foreignID, languageCode: languageCode, scriptCode: scriptCode, regionCode: regionCode, value: value)
+        return TranslationCatalog.Translation(id: id, expressionId: foreignID, languageCode: languageCode, scriptCode: scriptCode, regionCode: regionCode, value: value)
     }
 }
 

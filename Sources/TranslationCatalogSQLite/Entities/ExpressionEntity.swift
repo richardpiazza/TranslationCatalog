@@ -34,7 +34,7 @@ extension ExpressionEntity {
     static var feature: Attribute { entity["feature"]! }
     
     init(_ expression: TranslationCatalog.Expression) {
-        uuid = expression.uuid.uuidString
+        uuid = expression.id.uuidString
         key = expression.key
         name = expression.name
         defaultLanguage = expression.defaultLanguage.rawValue
@@ -50,6 +50,6 @@ extension ExpressionEntity {
             throw CatalogError.dataTypeConversion("Invalid LangaugeCode '\(defaultLanguage)'")
         }
         
-        return Expression(uuid: id, key: key, name: name, defaultLanguage: languageCode, context: context, feature: feature, translations: translations)
+        return Expression(id: id, key: key, name: name, defaultLanguage: languageCode, context: context, feature: feature, translations: translations)
     }
 }

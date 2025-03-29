@@ -14,8 +14,8 @@ struct TranslationDocument: Document {
 extension Translation {
     init(document: TranslationDocument) {
         self.init(
-            uuid: document.id,
-            expressionID: document.expressionID,
+            id: document.id,
+            expressionId: document.expressionID,
             languageCode: document.languageCode,
             scriptCode: document.scriptCode,
             regionCode: document.regionCode,

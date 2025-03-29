@@ -59,7 +59,7 @@ extension Catalog.Insert {
             
             let catalog = try catalog(forStorage: storage)
             
-            let entity = Project(uuid: .zero, name: name, expressions: [])
+            let entity = Project(id: .zero, name: name)
             let id = try catalog.createProject(entity)
             print("Project '\(name)' inserted with ID '\(id)'.")
         }
@@ -114,7 +114,7 @@ extension Catalog.Insert {
             let catalog = try catalog(forStorage: storage)
             
             let expression = Expression(
-                uuid: .zero,
+                id: .zero,
                 key: key,
                 name: name,
                 defaultLanguage: defaultLanguage,
@@ -167,8 +167,8 @@ extension Catalog.Insert {
             let catalog = try catalog(forStorage: storage)
             
             let translation = Translation(
-                uuid: .zero,
-                expressionID: expression,
+                id: .zero,
+                expressionId: expression,
                 languageCode: language,
                 scriptCode: script,
                 regionCode: region,
@@ -210,7 +210,7 @@ extension Catalog.Insert {
             let catalog = try catalog(forStorage: storage)
 
             let expression = Expression(
-                uuid: .zero,
+                id: .zero,
                 key: key,
                 name: key,
                 defaultLanguage: .default,
@@ -222,8 +222,8 @@ extension Catalog.Insert {
             let expressionId = try catalog.createExpression(expression)
 
             let translation = Translation(
-                uuid: .zero,
-                expressionID: expressionId,
+                id: .zero,
+                expressionId: expressionId,
                 languageCode: .default,
                 scriptCode: nil,
                 regionCode: nil,

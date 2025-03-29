@@ -5,7 +5,7 @@ extension Catalog {
     /// Verify that a `Project` can be removed from the catalog.
     func assertDeleteProject() throws {
         let projectId = UUID(uuidString: "06937A10-2E46-4FFD-A2E7-60A3F03ED007")!
-        let project = Project(uuid: projectId, name: "Example Project")
+        let project = Project(id: projectId, name: "Example Project")
         
         func preConditions(catalog: Catalog) throws {
             try catalog.createProject(project)
@@ -26,7 +26,7 @@ extension Catalog {
     /// Verify that a `Expression` can be removed from the catalog.
     func assertDeleteExpression() throws {
         let expressionId = UUID(uuidString: "0503A67E-EAC5-4612-A91A-559477283C56")!
-        let expression = Expression(uuid: expressionId, key: "TEST_EXPRESSION", name: "Test Expression", defaultLanguage: .en)
+        let expression = Expression(id: expressionId, key: "TEST_EXPRESSION", name: "Test Expression", defaultLanguage: .en)
 
         func preConditions(catalog: Catalog) throws {
             try catalog.createExpression(expression)
@@ -47,9 +47,9 @@ extension Catalog {
     /// Verify that a `Translation` can be removed from the catalog.
     func assertDeleteTranslation() throws {
         let expressionId = UUID(uuidString: "F590AA58-626D-4EAB-AEDA-21F047B9BA42")!
-        let expression = Expression(uuid: expressionId, key: "TRACK_TITLE", name: "Track Title", defaultLanguage: .en)
+        let expression = Expression(id: expressionId, key: "TRACK_TITLE", name: "Track Title", defaultLanguage: .en)
         let translationId = UUID(uuidString: "A93E74CD-58F2-4D00-BA6B-F722FFCCCFBF")!
-        let translation = TranslationCatalog.Translation(uuid: translationId, expressionID: expressionId, languageCode: .en, value: "Overture to Egmont, Op. 84")
+        let translation = TranslationCatalog.Translation(id: translationId, expressionId: expressionId, languageCode: .en, value: "Overture to Egmont, Op. 84")
         
         func preConditions(catalog: Catalog) throws {
             try catalog.createExpression(expression)
@@ -71,9 +71,9 @@ extension Catalog {
     /// Verify that a `Expression` can be removed from the catalog, and it's related `Translation` entities are also removed.
     func assertDeleteExpression_CascadeTranslation() throws {
         let expressionId = UUID(uuidString: "F590AA58-626D-4EAB-AEDA-21F047B9BA42")!
-        let expression = Expression(uuid: expressionId, key: "TRACK_TITLE", name: "Track Title", defaultLanguage: .en)
+        let expression = Expression(id: expressionId, key: "TRACK_TITLE", name: "Track Title", defaultLanguage: .en)
         let translationId = UUID(uuidString: "A93E74CD-58F2-4D00-BA6B-F722FFCCCFBF")!
-        let translation = TranslationCatalog.Translation(uuid: translationId, expressionID: expressionId, languageCode: .en, value: "Overture to Egmont, Op. 84")
+        let translation = TranslationCatalog.Translation(id: translationId, expressionId: expressionId, languageCode: .en, value: "Overture to Egmont, Op. 84")
         
         func preConditions(catalog: Catalog) throws {
             try catalog.createExpression(expression)
@@ -99,9 +99,9 @@ extension Catalog {
     /// Verify that a `Project` can be removed from the catalog, and it's related `Expression` entities remain intact.
     func assertDeleteProject_NullifyExpression() throws {
         let projectId = UUID(uuidString: "06937A10-2E46-4FFD-A2E7-60A3F03ED007")!
-        let project = Project(uuid: projectId, name: "Example Project")
+        let project = Project(id: projectId, name: "Example Project")
         let expressionId = UUID(uuidString: "F590AA58-626D-4EAB-AEDA-21F047B9BA42")!
-        let expression = Expression(uuid: expressionId, key: "TRACK_TITLE", name: "Track Title", defaultLanguage: .en)
+        let expression = Expression(id: expressionId, key: "TRACK_TITLE", name: "Track Title", defaultLanguage: .en)
         
         func preConditions(catalog: Catalog) throws {
             try catalog.createProject(project)
