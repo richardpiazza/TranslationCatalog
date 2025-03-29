@@ -56,7 +56,7 @@ public extension Translation {
     
     @available(*, deprecated, renamed: "init(id:expressionId:languageCode:scriptCode:regionCode:value:)")
     init(
-        uuid: UUID = .zero,
+        uuid: UUID,
         expressionID: Expression.ID = .zero,
         languageCode: LanguageCode = .default,
         scriptCode: ScriptCode? = nil,
