@@ -62,14 +62,21 @@ extension Dictionary where Key == String, Value == String {
     ) -> [TranslationCatalog.Expression] {
         return self.map { (key, value) -> TranslationCatalog.Expression in
             return TranslationCatalog.Expression(
-                uuid: .zero,
+                id: .zero,
                 key: key,
                 name: key,
                 defaultLanguage: defaultLanguage,
                 context: comment,
                 feature: feature,
                 translations: [
-                    Translation(uuid: .zero, expressionID: .zero, languageCode: language, scriptCode: script, regionCode: region, value: value)
+                    Translation(
+                        id: .zero,
+                        expressionId: .zero,
+                        languageCode: language,
+                        scriptCode: script,
+                        regionCode: region,
+                        value: value
+                    )
                 ]
             )
         }

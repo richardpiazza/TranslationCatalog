@@ -113,7 +113,7 @@ public class FilesystemCatalog: Catalog {
         switch query {
         case GenericProjectQuery.id(let uuid):
             guard let doc = projectDocuments.first(where: { $0.id == uuid }) else {
-                throw CatalogError.projectID(uuid)
+                throw CatalogError.projectId(uuid)
             }
             
             document = doc
@@ -137,14 +137,14 @@ public class FilesystemCatalog: Catalog {
     public func createProject(_ project: Project) throws -> Project.ID {
         if project.id != .zero {
             if let existing = try? self.project(project.id) {
-                throw CatalogError.projectID(existing.id)
+                throw CatalogError.projectId(existing.id)
             }
         }
         
         let expressionIds = try project.expressions.map {
             do {
                 return try createExpression($0)
-            } catch CatalogError.expressionID {
+            } catch CatalogError.expressionId {
                 return $0.id
             }
         }
@@ -163,7 +163,7 @@ public class FilesystemCatalog: Catalog {
     
     public func updateProject(_ id: Project.ID, action: CatalogUpdate) throws {
         guard let index = projectDocuments.firstIndex(where: { $0.id == id }) else {
-            throw CatalogError.projectID(id)
+            throw CatalogError.projectId(id)
         }
         
         switch action {
@@ -182,7 +182,7 @@ public class FilesystemCatalog: Catalog {
     
     public func deleteProject(_ id: Project.ID) throws {
         guard let index = projectDocuments.firstIndex(where: { $0.id == id }) else {
-            throw CatalogError.projectID(id)
+            throw CatalogError.projectId(id)
         }
         
         try projectDocuments[index].remove(from: projectsDirectory)
@@ -205,7 +205,7 @@ public class FilesystemCatalog: Catalog {
     
     public func expressions(matching query: CatalogQuery) throws -> [TranslationCatalog.Expression] {
         switch query {
-        case GenericExpressionQuery.projectID(let projectId):
+        case GenericExpressionQuery.projectId(let projectId):
             return try project(projectId).expressions
         case GenericExpressionQuery.key(let key):
             return expressionDocuments
@@ -280,7 +280,7 @@ public class FilesystemCatalog: Catalog {
         switch query {
         case GenericExpressionQuery.id(let uuid):
             guard let doc = expressionDocuments.first(where: { $0.id == uuid }) else {
-                throw CatalogError.expressionID(uuid)
+                throw CatalogError.expressionId(uuid)
             }
             
             document = doc
@@ -306,7 +306,7 @@ public class FilesystemCatalog: Catalog {
     public func createExpression(_ expression: TranslationCatalog.Expression) throws -> TranslationCatalog.Expression.ID {
         if expression.id != .zero {
             if let existing = try? self.expression(expression.id) {
-                throw CatalogError.expressionID(existing.id)
+                throw CatalogError.expressionId(existing.id)
             }
         }
         
@@ -316,14 +316,7 @@ public class FilesystemCatalog: Catalog {
         
         let id = expression.id != .zero ? expression.id : UUID()
         let translations = expression.translations.map {
-            Translation(
-                uuid: $0.id,
-                expressionID: id,
-                languageCode: $0.languageCode,
-                scriptCode: $0.scriptCode,
-                regionCode: $0.regionCode,
-                value: $0.value
-            )
+            Translation(translation: $0, expressionId: id)
         }
         
         let _ = try translations.map {
@@ -346,7 +339,7 @@ public class FilesystemCatalog: Catalog {
     
     public func updateExpression(_ id: TranslationCatalog.Expression.ID, action: CatalogUpdate) throws {
         guard let index = expressionDocuments.firstIndex(where: { $0.id == id }) else {
-            throw CatalogError.expressionID(id)
+            throw CatalogError.expressionId(id)
         }
         
         switch action {
@@ -369,7 +362,7 @@ public class FilesystemCatalog: Catalog {
     
     public func deleteExpression(_ id: TranslationCatalog.Expression.ID) throws {
         guard let index = expressionDocuments.firstIndex(where: { $0.id == id }) else {
-            throw CatalogError.expressionID(id)
+            throw CatalogError.expressionId(id)
         }
         
         let translationIds = translationDocuments
@@ -414,7 +407,7 @@ public class FilesystemCatalog: Catalog {
         var documents: [TranslationDocument]
         
         switch query {
-        case GenericTranslationQuery.expressionID(let expressionId):
+        case GenericTranslationQuery.expressionId(let expressionId):
             documents = translationDocuments
                 .filter { $0.expressionID == expressionId }
         case GenericTranslationQuery.havingOnly(let expressionId, let languageCode):
@@ -453,7 +446,7 @@ public class FilesystemCatalog: Catalog {
         switch query {
         case GenericTranslationQuery.id(let uuid):
             guard let document = translationDocuments.first(where: { $0.id == uuid }) else {
-                throw CatalogError.translationID(uuid)
+                throw CatalogError.translationId(uuid)
             }
             
             return Translation(document: document)
@@ -476,11 +469,11 @@ public class FilesystemCatalog: Catalog {
     public func createTranslation(_ translation: Translation) throws -> Translation.ID {
         if translation.id != .zero {
             if let existing = try? self.translation(translation.id) {
-                throw CatalogError.translationID(existing.id)
+                throw CatalogError.translationId(existing.id)
             }
         }
         
-        let query = GenericTranslationQuery.having(translation.expressionID, translation.languageCode, translation.scriptCode, translation.regionCode)
+        let query = GenericTranslationQuery.having(translation.expressionId, translation.languageCode, translation.scriptCode, translation.regionCode)
         if let existing = try? self.translation(matching: query) {
             if existing.value == translation.value {
                 throw CatalogError.translationExistingWithValue(translation.value, existing)
@@ -493,7 +486,7 @@ public class FilesystemCatalog: Catalog {
         let id = translation.id != .zero ? translation.id : UUID()
         let document = TranslationDocument(
             id: id,
-            expressionID: translation.expressionID,
+            expressionID: translation.expressionId,
             languageCode: translation.languageCode,
             scriptCode: translation.scriptCode,
             regionCode: translation.regionCode,
@@ -507,7 +500,7 @@ public class FilesystemCatalog: Catalog {
     
     public func updateTranslation(_ id: Translation.ID, action: CatalogUpdate) throws {
         guard let index = translationDocuments.firstIndex(where: { $0.id == id }) else {
-            throw CatalogError.translationID(id)
+            throw CatalogError.translationId(id)
         }
         
         switch action {
@@ -528,7 +521,7 @@ public class FilesystemCatalog: Catalog {
     
     public func deleteTranslation(_ id: Translation.ID) throws {
         guard let index = translationDocuments.firstIndex(where: { $0.id == id }) else {
-            throw CatalogError.translationID(id)
+            throw CatalogError.translationId(id)
         }
         
         try translationDocuments[index].remove(from: translationsDirectory)

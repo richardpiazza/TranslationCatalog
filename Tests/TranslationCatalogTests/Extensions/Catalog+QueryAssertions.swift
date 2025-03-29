@@ -45,7 +45,7 @@ extension Catalog {
     
     /// Verify that existing `Expression`s can be found using a `Project.ID`.
     func assertQueryExpressionsProjectID() throws {
-        let expressions = try self.expressions(matching: GenericExpressionQuery.projectID(.project3))
+        let expressions = try self.expressions(matching: GenericExpressionQuery.projectId(.project3))
         XCTAssertEqual(expressions.count, 2)
     }
     
@@ -95,7 +95,7 @@ extension Catalog {
     
     /// Verify that existing `Translation`s can be found using a `Expression.ID`.
     func assertQueryTranslationsExpressionId() throws {
-        let translations = try self.translations(matching: GenericTranslationQuery.expressionID(.expression3))
+        let translations = try self.translations(matching: GenericTranslationQuery.expressionId(.expression3))
         XCTAssertEqual(translations.count, 3)
     }
     
@@ -135,22 +135,22 @@ extension Catalog {
 
 struct CatalogData {
     static let project1 = Project(
-        uuid: .project1,
+        id: .project1,
         name: "Bakeshop",
         expressions: [expression1, expression2]
     )
     static let project2 = Project(
-        uuid: .project2,
+        id: .project2,
         name: "Shopclass",
         expressions: [expression1, expression2, expression3]
     )
     static let project3 = Project(
-        uuid: .project3,
+        id: .project3,
         name: "Classmate",
         expressions: [expression1, expression5]
     )
     static let expression1 = Expression(
-        uuid: .expression1,
+        id: .expression1,
         key: "BUTTON_SAVE",
         name: "Save",
         defaultLanguage: .en,
@@ -159,7 +159,7 @@ struct CatalogData {
         translations: [translation1, translation2, translation3]
     )
     static let expression2 = Expression(
-        uuid: .expression2,
+        id: .expression2,
         key: "BUTTON_DELETE",
         name: "Delete",
         defaultLanguage: .en,
@@ -168,7 +168,7 @@ struct CatalogData {
         translations: [translation4, translation5, translation6]
     )
     static let expression3 = Expression(
-        uuid: .expression3,
+        id: .expression3,
         key: "COMMON_PULL_TO_REFRESH",
         name: "Pull to Refresh",
         defaultLanguage: .en,
@@ -177,7 +177,7 @@ struct CatalogData {
         translations: [translation7, translation8, translation9]
     )
     static let expression4 = Expression(
-        uuid: .expression4,
+        id: .expression4,
         key: "GIT_FQDN",
         name: "Fully Qualified Domain Name",
         defaultLanguage: .en,
@@ -186,7 +186,7 @@ struct CatalogData {
         translations: [translation10]
     )
     static let expression5 = Expression(
-        uuid: .expression5,
+        id: .expression5,
         key: "AUTH_FAILURE_MESSAGE",
         name: "Authentication Failure Message",
         defaultLanguage: .en,
@@ -194,19 +194,19 @@ struct CatalogData {
         feature: "Alert,Auth",
         translations: [translation11, translation12, translation13]
     )
-    static let translation1 = TranslationCatalog.Translation(uuid: .translation1, expressionID: .expression1, languageCode: .en, scriptCode: nil, regionCode: nil, value: "Save")
-    static let translation2 = TranslationCatalog.Translation(uuid: .translation2, expressionID: .expression1, languageCode: .es, scriptCode: nil, regionCode: nil, value: "Guardar")
-    static let translation3 = TranslationCatalog.Translation(uuid: .translation3, expressionID: .expression1, languageCode: .fr, scriptCode: nil, regionCode: nil, value: "Sauvegarder")
-    static let translation4 = TranslationCatalog.Translation(uuid: .translation4, expressionID: .expression2, languageCode: .en, scriptCode: nil, regionCode: nil, value: "Delete")
-    static let translation5 = TranslationCatalog.Translation(uuid: .translation5, expressionID: .expression2, languageCode: .es, scriptCode: nil, regionCode: nil, value: "Eliminar")
-    static let translation6 = TranslationCatalog.Translation(uuid: .translation6, expressionID: .expression2, languageCode: .fr, scriptCode: nil, regionCode: nil, value: "Effacer")
-    static let translation7 = TranslationCatalog.Translation(uuid: .translation7, expressionID: .expression3, languageCode: .en, scriptCode: nil, regionCode: nil, value: "Pull to Refresh")
-    static let translation8 = TranslationCatalog.Translation(uuid: .translation8, expressionID: .expression3, languageCode: .zh, scriptCode: .Hans, regionCode: nil, value: "拉刷新")
-    static let translation9 = TranslationCatalog.Translation(uuid: .translation9, expressionID: .expression3, languageCode: .pt, scriptCode: nil, regionCode: .BR, value: "Puxe para Atualizar")
-    static let translation10 = TranslationCatalog.Translation(uuid: .translation10, expressionID: .expression4, languageCode: .en, scriptCode: nil, regionCode: nil, value: "Fully Qualified Domain Name")
-    static let translation11 = TranslationCatalog.Translation(uuid: .translation11, expressionID: .expression5, languageCode: .en, scriptCode: nil, regionCode: nil, value: "The server '%@' rejected the provided credentials.")
-    static let translation12 = TranslationCatalog.Translation(uuid: .translation12, expressionID: .expression5, languageCode: .fr, scriptCode: nil, regionCode: nil, value: "Le serveur '%@' a rejeté les informations d'identification fournies.")
-    static let translation13 = TranslationCatalog.Translation(uuid: .translation13, expressionID: .expression5, languageCode: .fr, scriptCode: nil, regionCode: .CA, value: "Le serveur '%@' a rejeté les informations d'identification fournies, eh.")
+    static let translation1 = TranslationCatalog.Translation(id: .translation1, expressionId: .expression1, languageCode: .en, scriptCode: nil, regionCode: nil, value: "Save")
+    static let translation2 = TranslationCatalog.Translation(id: .translation2, expressionId: .expression1, languageCode: .es, scriptCode: nil, regionCode: nil, value: "Guardar")
+    static let translation3 = TranslationCatalog.Translation(id: .translation3, expressionId: .expression1, languageCode: .fr, scriptCode: nil, regionCode: nil, value: "Sauvegarder")
+    static let translation4 = TranslationCatalog.Translation(id: .translation4, expressionId: .expression2, languageCode: .en, scriptCode: nil, regionCode: nil, value: "Delete")
+    static let translation5 = TranslationCatalog.Translation(id: .translation5, expressionId: .expression2, languageCode: .es, scriptCode: nil, regionCode: nil, value: "Eliminar")
+    static let translation6 = TranslationCatalog.Translation(id: .translation6, expressionId: .expression2, languageCode: .fr, scriptCode: nil, regionCode: nil, value: "Effacer")
+    static let translation7 = TranslationCatalog.Translation(id: .translation7, expressionId: .expression3, languageCode: .en, scriptCode: nil, regionCode: nil, value: "Pull to Refresh")
+    static let translation8 = TranslationCatalog.Translation(id: .translation8, expressionId: .expression3, languageCode: .zh, scriptCode: .Hans, regionCode: nil, value: "拉刷新")
+    static let translation9 = TranslationCatalog.Translation(id: .translation9, expressionId: .expression3, languageCode: .pt, scriptCode: nil, regionCode: .BR, value: "Puxe para Atualizar")
+    static let translation10 = TranslationCatalog.Translation(id: .translation10, expressionId: .expression4, languageCode: .en, scriptCode: nil, regionCode: nil, value: "Fully Qualified Domain Name")
+    static let translation11 = TranslationCatalog.Translation(id: .translation11, expressionId: .expression5, languageCode: .en, scriptCode: nil, regionCode: nil, value: "The server '%@' rejected the provided credentials.")
+    static let translation12 = TranslationCatalog.Translation(id: .translation12, expressionId: .expression5, languageCode: .fr, scriptCode: nil, regionCode: nil, value: "Le serveur '%@' a rejeté les informations d'identification fournies.")
+    static let translation13 = TranslationCatalog.Translation(id: .translation13, expressionId: .expression5, languageCode: .fr, scriptCode: nil, regionCode: .CA, value: "Le serveur '%@' a rejeté les informations d'identification fournies, eh.")
 }
 
 extension UUID {

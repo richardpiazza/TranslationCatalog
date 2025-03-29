@@ -78,14 +78,14 @@ public class ExpressionImporter {
             return
         }
         
-        expression
-            .translations
-            .sorted(by: { $0.value < $1.value })
-            .forEach { translation in
-                var t = translation
-                t.expressionID = id
-                importTranslation(t, into: catalog)
-            }
+        let translations = expression.translations.sorted(by: { $0.value < $1.value })
+        for translation in translations {
+            let expressionTranslation = Translation(
+                translation: translation,
+                expressionId: id
+            )
+            importTranslation(expressionTranslation, into: catalog)
+        }
     }
     
     private func importTranslation(_ translation: Translation, into catalog: Catalog) {

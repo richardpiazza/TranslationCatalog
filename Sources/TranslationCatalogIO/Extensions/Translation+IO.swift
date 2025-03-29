@@ -1,6 +1,7 @@
 import TranslationCatalog
 
 extension Translation {
+    @available(*, deprecated, message: "Use `Translation(translation:expressionId:)")
     func replacingExpressionId(_ id: Expression.ID) -> Translation {
         return Translation(
             uuid: uuid,
