@@ -19,19 +19,3 @@ public struct Project: Codable, Hashable, Identifiable, Sendable {
         self.expressions = expressions
     }
 }
-
-public extension Project {
-    @available(*, deprecated, renamed: "id")
-    var uuid: UUID { id }
-
-    @available(*, deprecated, renamed: "init(id:name:expressions:)")
-    init(
-        uuid: UUID,
-        name: String = "",
-        expressions: [Expression] = []
-    ) {
-        id = uuid
-        self.name = name
-        self.expressions = expressions
-    }
-}

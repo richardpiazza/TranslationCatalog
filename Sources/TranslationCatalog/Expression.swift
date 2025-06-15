@@ -73,27 +73,3 @@ public struct Expression: Codable, Hashable, Identifiable, Sendable {
         translationOrDefault(with: identifier) ?? translations.first
     }
 }
-
-public extension Expression {
-    @available(*, deprecated, renamed: "id")
-    var uuid: UUID { id }
-
-    @available(*, deprecated, renamed: "init(id:key:name:defaultLanguage:context:feature:translations:)")
-    init(
-        uuid: UUID,
-        key: String = "",
-        name: String = "",
-        defaultLanguage: LanguageCode = .default,
-        context: String? = nil,
-        feature: String? = nil,
-        translations: [Translation] = []
-    ) {
-        id = uuid
-        self.key = key
-        self.name = name
-        self.defaultLanguage = defaultLanguage
-        self.context = context
-        self.feature = feature
-        self.translations = translations
-    }
-}

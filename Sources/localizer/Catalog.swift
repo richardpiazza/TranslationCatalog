@@ -13,26 +13,6 @@ struct Catalog: AsyncParsableCommand {
         static var `default`: Storage = .sqlite
     }
 
-    @available(*, deprecated, renamed: "TranslationCatalogIO.FileFormat")
-    enum Format: String, ExpressibleByArgument {
-        case android
-        case apple
-        case json
-
-        init?(extension: String) {
-            switch `extension`.lowercased() {
-            case "xml":
-                self = .android
-            case "strings":
-                self = .apple
-            case "json":
-                self = .json
-            default:
-                return nil
-            }
-        }
-    }
-
     static let configuration = CommandConfiguration(
         commandName: "catalog",
         abstract: "Interact with the translation catalog.",
