@@ -143,8 +143,7 @@ final class CatalogDeleteProjectTests: _LocalizerTestCase {
             
             ======SQL======
             DELETE FROM project
-            WHERE id = 1
-            LIMIT 1;
+            WHERE id = 1;
             ======___======
             
             Project \'LocaleSupport\' deleted.
