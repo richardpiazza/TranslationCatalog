@@ -3,6 +3,7 @@ import StatementSQLite
 import TranslationCatalog
 
 // MARK: - ProjectExpression (Schema)
+
 extension SQLiteStatement {
     static var createProjectExpressionEntity: Self {
         .init(
@@ -14,6 +15,7 @@ extension SQLiteStatement {
 }
 
 // MARK: - ProjectExpression (Queries)
+
 extension SQLiteStatement {
     static func selectProjectExpression(projectID: Int, expressionID: Int) -> Self {
         SQLiteStatement(
@@ -32,13 +34,13 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func insertProjectExpression(projectID: Int, expressionID: Int) -> Self {
         SQLiteStatement(
             .INSERT_INTO(
                 ProjectExpressionEntity.self,
-              .column(ProjectExpressionEntity.projectID),
-              .column(ProjectExpressionEntity.expressionID)
+                .column(ProjectExpressionEntity.projectID),
+                .column(ProjectExpressionEntity.expressionID)
             ),
             .VALUES(
                 .value(projectID as DataTypeConvertible),
@@ -46,7 +48,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func deleteProjectExpression(projectID: Int, expressionID: Int) -> Self {
         SQLiteStatement(
             .DELETE(
@@ -60,7 +62,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func deleteProjectExpressions(projectID: Int) -> Self {
         SQLiteStatement(
             .DELETE(
@@ -71,7 +73,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func deleteProjectExpressions(expressionID: Int) -> Self {
         SQLiteStatement(
             .DELETE(

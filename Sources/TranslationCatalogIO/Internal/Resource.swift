@@ -1,24 +1,24 @@
-import XMLCoder
 import LocaleSupport
 import TranslationCatalog
+import XMLCoder
 
 struct Resource: Decodable, DynamicNodeDecoding {
     enum CodingKeys: String, CodingKey {
         case name
         case value = ""
     }
-    
+
     var name: String
     var value: String
-    
+
     static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
         switch key {
         case CodingKeys.name:
-            return .attribute
+            .attribute
         case CodingKeys.value:
-            return .element
+            .element
         default:
-            return .elementOrAttribute
+            .elementOrAttribute
         }
     }
 }
@@ -48,7 +48,7 @@ extension Resource {
                     scriptCode: script,
                     regionCode: region,
                     value: value
-                )
+                ),
             ]
         )
     }

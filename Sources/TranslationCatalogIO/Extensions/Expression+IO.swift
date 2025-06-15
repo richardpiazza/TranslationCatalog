@@ -1,7 +1,7 @@
 import Foundation
 import LocaleSupport
-import TranslationCatalog
 import Plot
+import TranslationCatalog
 
 extension TranslationCatalog.Expression {
     func replacingId(_ id: TranslationCatalog.Expression.ID) -> TranslationCatalog.Expression {
@@ -17,14 +17,14 @@ extension TranslationCatalog.Expression {
     }
 }
 
-extension Array where Element == TranslationCatalog.Expression {
+extension [TranslationCatalog.Expression] {
     func compactMap(localeIdentifier: Locale.Identifier?, defaultOrFirst: Bool) -> [TranslationCatalog.Expression] {
-        self.compactMap { expression -> TranslationCatalog.Expression? in
+        compactMap { expression -> TranslationCatalog.Expression? in
             let translation = defaultOrFirst ? expression.translationOrDefaultOrFirst(with: localeIdentifier) : expression.translation(with: localeIdentifier)
-            guard let translation = translation else {
+            guard let translation else {
                 return nil
             }
-            
+
             return Expression(
                 id: expression.id,
                 key: expression.key,

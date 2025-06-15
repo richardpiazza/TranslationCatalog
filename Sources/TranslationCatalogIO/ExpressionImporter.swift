@@ -1,10 +1,10 @@
-import Foundation
 import AsyncPlus
+import Foundation
 import LocaleSupport
 import TranslationCatalog
 
 public class ExpressionImporter {
-    
+
     public enum Operation: CustomStringConvertible {
         case createdExpression(TranslationCatalog.Expression)
         case skippedExpression(TranslationCatalog.Expression)
@@ -12,27 +12,27 @@ public class ExpressionImporter {
         case createdTranslation(Translation)
         case skippedTranslation(Translation)
         case failedTranslation(Translation, Error)
-        
+
         public var description: String {
             switch self {
             case .createdExpression(let expression):
-                return "Expression Created '\(expression.name)'"
+                "Expression Created '\(expression.name)'"
             case .skippedExpression(let expression):
-                return "Expression Exists with Key '\(expression.key)'; checking translations…"
+                "Expression Exists with Key '\(expression.key)'; checking translations…"
             case .failedExpression(let expression, let error):
-                return "Expression Failure '\(expression.key)'; \(error.localizedDescription)"
+                "Expression Failure '\(expression.key)'; \(error.localizedDescription)"
             case .createdTranslation(let translation):
-                return "Translation Created '\(translation.value)'"
+                "Translation Created '\(translation.value)'"
             case .skippedTranslation(let translation):
-                return "Translation Skipped '\(translation.value)'"
+                "Translation Skipped '\(translation.value)'"
             case .failedTranslation(let translation, let error):
-                return "Translation Failure '\(translation.value)'; \(error.localizedDescription)"
+                "Translation Failure '\(translation.value)'; \(error.localizedDescription)"
             }
         }
     }
-    
+
     private let catalog: Catalog
-    
+
     private var sequence: PassthroughAsyncThrowingSequence<Operation>?
     var stream: AsyncThrowingStream<Operation, Error> {
         sequence?.finish()
@@ -40,11 +40,11 @@ public class ExpressionImporter {
         self.sequence = sequence
         return sequence.stream
     }
-    
+
     public init(catalog: Catalog) {
         self.catalog = catalog
     }
-    
+
     public func importTranslations(
         from expressions: [TranslationCatalog.Expression]
     ) -> AsyncThrowingStream<Operation, Error> {
@@ -54,13 +54,13 @@ public class ExpressionImporter {
                 .forEach {
                     importExpression($0, into: catalog)
                 }
-            
+
             sequence?.finish()
         }
-        
+
         return stream
     }
-    
+
     private func importExpression(_ expression: TranslationCatalog.Expression, into catalog: Catalog) {
         do {
             try catalog.createExpression(expression)
@@ -72,12 +72,12 @@ public class ExpressionImporter {
             sequence?.yield(.failedExpression(expression, error))
         }
     }
-    
+
     private func importTranslations(_ expression: TranslationCatalog.Expression, into catalog: Catalog) {
         guard let id = try? catalog.expression(matching: GenericExpressionQuery.key(expression.key)).id else {
             return
         }
-        
+
         let translations = expression.translations.sorted(by: { $0.value < $1.value })
         for translation in translations {
             let expressionTranslation = Translation(
@@ -87,7 +87,7 @@ public class ExpressionImporter {
             importTranslation(expressionTranslation, into: catalog)
         }
     }
-    
+
     private func importTranslation(_ translation: Translation, into catalog: Catalog) {
         do {
             try catalog.createTranslation(translation)

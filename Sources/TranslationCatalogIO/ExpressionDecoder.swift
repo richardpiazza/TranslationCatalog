@@ -4,9 +4,9 @@ import TranslationCatalog
 
 /// Utility for decoding `Expression`s from a translation file.
 public struct ExpressionDecoder {
-    
+
     private init() {}
-    
+
     /// Decode a collection of `Expression` from the provided `Data`.
     ///
     /// - throws: `Error`
@@ -27,7 +27,7 @@ public struct ExpressionDecoder {
         regionCode: RegionCode?
     ) throws -> [TranslationCatalog.Expression] {
         let expressions: [TranslationCatalog.Expression]
-        
+
         switch fileFormat {
         case .androidXML:
             let xml = try StringsXml.make(with: data)
@@ -39,7 +39,7 @@ public struct ExpressionDecoder {
             let dictionary = try JSONDecoder().decode([String: String].self, from: data)
             expressions = dictionary.expressions(defaultLanguage: defaultLanguage, language: languageCode, script: scriptCode, region: regionCode)
         }
-        
+
         return expressions
     }
 }

@@ -1,10 +1,11 @@
+import Foundation
+import LocaleSupport
 import Statement
 import StatementSQLite
 import TranslationCatalog
-import LocaleSupport
-import Foundation
 
 // MARK: - Expression (Schema)
+
 extension SQLiteStatement {
     static var createExpressionEntity: Self {
         .init(
@@ -16,8 +17,10 @@ extension SQLiteStatement {
 }
 
 // MARK: - Expression (Queries)
+
 extension SQLiteStatement {
     // MARK: Select Expressions
+
     static var selectAllFromExpression: Self {
         .init(
             .SELECT(
@@ -32,7 +35,7 @@ extension SQLiteStatement {
             .FROM_TABLE(ExpressionEntity.self)
         )
     }
-    
+
     static func selectExpressions(withProjectID id: Int) -> Self {
         .init(
             .SELECT(
@@ -53,7 +56,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func selectExpressions(withKeyLike key: String) -> Self {
         .init(
             .SELECT(
@@ -73,7 +76,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func selectExpressions(withNameLike name: String) -> Self {
         SQLiteStatement(
             .SELECT(
@@ -93,7 +96,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func selectExpressionsHavingOnly(languageCode: LanguageCode) -> Self {
         .init(
             .SELECT_DISTINCT(
@@ -118,7 +121,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func selectExpressionsWith(languageCode: LanguageCode, scriptCode: ScriptCode?, regionCode: RegionCode?) -> Self {
         .init(
             .SELECT_DISTINCT(
@@ -143,8 +146,9 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     // MARK: Select Expression
+
     static func selectExpression(withID id: Int) -> Self {
         .init(
             .SELECT(
@@ -162,7 +166,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func selectExpression(withID id: TranslationCatalog.Expression.ID) -> Self {
         .init(
             .SELECT(
@@ -181,7 +185,7 @@ extension SQLiteStatement {
             .LIMIT(1)
         )
     }
-    
+
     static func selectExpression(withKey key: String) -> Self {
         .init(
             .SELECT(
@@ -200,8 +204,9 @@ extension SQLiteStatement {
             .LIMIT(1)
         )
     }
-    
+
     // MARK: Insert Expression
+
     static func insertExpression(_ expression: ExpressionEntity) -> Self {
         .init(
             .INSERT_INTO(
@@ -223,8 +228,9 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     // MARK: Update Expression
+
     static func updateExpression(_ id: Int, key: String) -> Self {
         SQLiteStatement(
             .UPDATE(
@@ -233,7 +239,7 @@ extension SQLiteStatement {
             .SET(
                 .comparison(op: .equal, segments: [
                     Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.key),
-                    .value(key as DataTypeConvertible)
+                    .value(key as DataTypeConvertible),
                 ])
             ),
             .WHERE(
@@ -241,7 +247,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func updateExpression(_ id: Int, name: String) -> Self {
         SQLiteStatement(
             .UPDATE(
@@ -250,7 +256,7 @@ extension SQLiteStatement {
             .SET(
                 .comparison(op: .equal, segments: [
                     Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.name),
-                    .value(name as DataTypeConvertible)
+                    .value(name as DataTypeConvertible),
                 ])
             ),
             .WHERE(
@@ -258,7 +264,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func updateExpression(_ id: Int, defaultLanguage: LanguageCode) -> Self {
         SQLiteStatement(
             .UPDATE(
@@ -267,7 +273,7 @@ extension SQLiteStatement {
             .SET(
                 .comparison(op: .equal, segments: [
                     Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.defaultLanguage),
-                    .value(defaultLanguage.rawValue as DataTypeConvertible)
+                    .value(defaultLanguage.rawValue as DataTypeConvertible),
                 ])
             ),
             .WHERE(
@@ -275,7 +281,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func updateExpression(_ id: Int, context: String?) -> Self {
         SQLiteStatement(
             .UPDATE(
@@ -285,12 +291,12 @@ extension SQLiteStatement {
                 .unwrap(context, transform: { value in
                     .comparison(op: .equal, segments: [
                         Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.context),
-                        .value(value as DataTypeConvertible)
+                        .value(value as DataTypeConvertible),
                     ])
                 }, else: .comparison(op: .equal, segments: [
-                        Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.context),
-                        .value(context as DataTypeConvertible)
-                    ])
+                    Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.context),
+                    .value(context as DataTypeConvertible),
+                ])
                 )
             ),
             .WHERE(
@@ -298,7 +304,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func updateExpression(_ id: Int, feature: String?) -> Self {
         SQLiteStatement(
             .UPDATE(
@@ -310,14 +316,14 @@ extension SQLiteStatement {
                     transform: { value in
                         .comparison(op: .equal, segments: [
                             Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.feature),
-                            .value(value as DataTypeConvertible)
+                            .value(value as DataTypeConvertible),
                         ])
                     },
                     else:
-                        .comparison(op: .equal, segments: [
-                            Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.feature),
-                            .value(feature as DataTypeConvertible)
-                        ])
+                    .comparison(op: .equal, segments: [
+                        Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.feature),
+                        .value(feature as DataTypeConvertible),
+                    ])
                 )
             ),
             .WHERE(
@@ -325,8 +331,9 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     // MARK: Delete Expression
+
     static func deleteExpression(_ id: Int) -> Self {
         .init(
             .DELETE_FROM(ExpressionEntity.self),

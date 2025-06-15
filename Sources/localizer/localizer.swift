@@ -4,7 +4,7 @@ import LocaleSupport
 @main struct Command: AsyncParsableCommand {
     static let configuration = {
         try? Configuration.load(.default)
-        
+
         return CommandConfiguration(
             commandName: "localizer",
             abstract: "Utility for interacting with Android 'strings.xml', Apple 'Localizable.strings', and Web '*.json' localization files.",
@@ -19,7 +19,7 @@ import LocaleSupport
                 Catalog.self,
                 Catalog.Import.self,
                 Catalog.Export.self,
-                Configure.self
+                Configure.self,
             ],
             helpNames: .shortAndLong)
     }()

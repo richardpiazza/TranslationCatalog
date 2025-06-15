@@ -1,34 +1,34 @@
-import LocaleSupport
 import Foundation
+import LocaleSupport
 
 struct Configuration: Codable {
     var defaultLanguageCode: LanguageCode
     var defaultRegionCode: RegionCode
     var defaultStorage: Catalog.Storage
-    
+
     init() {
         defaultLanguageCode = .default
         defaultRegionCode = .default
         defaultStorage = .default
     }
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         defaultLanguageCode = try container.decodeIfPresent(LanguageCode.self, forKey: .defaultLanguageCode) ?? .default
         defaultRegionCode = try container.decodeIfPresent(RegionCode.self, forKey: .defaultRegionCode) ?? .default
         defaultStorage = try container.decodeIfPresent(Catalog.Storage.self, forKey: .defaultStorage) ?? .default
     }
-    
-    internal static var decoder: JSONDecoder {
-        return JSONDecoder()
+
+    static var decoder: JSONDecoder {
+        JSONDecoder()
     }
-    
-    internal static var encoder: JSONEncoder {
+
+    static var encoder: JSONEncoder {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         return encoder
     }
-    
+
     static var `default`: Configuration {
         do {
             let url = try FileManager.default.configurationURL()
@@ -38,13 +38,13 @@ struct Configuration: Codable {
             return Configuration()
         }
     }
-    
+
     static func load(_ configuration: Configuration) throws {
         LanguageCode.default = configuration.defaultLanguageCode
         RegionCode.default = configuration.defaultRegionCode
         Catalog.Storage.default = configuration.defaultStorage
     }
-    
+
     static func save(_ configuration: Configuration) throws {
         let url = try FileManager.default.configurationURL()
         let data = try encoder.encode(configuration)

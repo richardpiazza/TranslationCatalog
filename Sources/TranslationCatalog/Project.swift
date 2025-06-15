@@ -8,7 +8,7 @@ public struct Project: Codable, Hashable, Identifiable, Sendable {
     public let name: String
     /// The `Expression`s associated with this `Project`
     public let expressions: [Expression]
-    
+
     public init(
         id: UUID = .zero,
         name: String = "",
@@ -23,14 +23,14 @@ public struct Project: Codable, Hashable, Identifiable, Sendable {
 public extension Project {
     @available(*, deprecated, renamed: "id")
     var uuid: UUID { id }
-    
+
     @available(*, deprecated, renamed: "init(id:name:expressions:)")
     init(
         uuid: UUID,
         name: String = "",
         expressions: [Expression] = []
     ) {
-        self.id = uuid
+        id = uuid
         self.name = name
         self.expressions = expressions
     }

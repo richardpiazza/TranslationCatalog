@@ -1,10 +1,10 @@
-import Plot
 import HTMLString
+import Plot
 import TranslationCatalog
 
 extension HTML {
     static func make(with expressions: [Expression]) -> Self {
-        return HTML(
+        HTML(
             .head(
                 .title("Localization Strings"),
                 .style("""
@@ -45,7 +45,7 @@ extension HTML {
 extension Node where Context == HTML.BodyContext {
     static func localization(_ expression: Expression) -> Self {
         let values = expression.translations.sorted(by: { $0.languageCode.rawValue < $1.languageCode.rawValue })
-        
+
         return .div(
             .h2(
                 .text(expression.name)
@@ -71,13 +71,11 @@ extension Node where Context == HTML.BodyContext {
             )
         )
     }
-    
-    
 }
 
 extension Node where Context == HTML.TableContext {
     static func value(_ translation: Translation) -> Self {
-        return .tr(
+        .tr(
             .td(
                 .text("\(translation.id)")
             ),
@@ -89,9 +87,9 @@ extension Node where Context == HTML.TableContext {
             )
         )
     }
-    
+
     static func defaultValue(_ translation: Translation) -> Self {
-        return .tr(
+        .tr(
             .td(
                 .b(
                     .text("\(translation.id)")

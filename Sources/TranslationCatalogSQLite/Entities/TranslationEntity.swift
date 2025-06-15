@@ -1,12 +1,12 @@
+import Foundation
+import LocaleSupport
 import Statement
 import TranslationCatalog
-import LocaleSupport
-import Foundation
 
 struct TranslationEntity: Entity {
-    
+
     static let identifier: String = "translation"
-    
+
     @Field("id", unique: true, primaryKey: true, autoIncrement: true)
     var id: Int = 0
     @Field("uuid", unique: true)
@@ -32,7 +32,7 @@ extension TranslationEntity {
     static var script: Attribute { entity["script_code"]! }
     static var region: Attribute { entity["region_code"]! }
     static var value: Attribute { entity["value"]! }
-    
+
     init(_ translation: TranslationCatalog.Translation) {
         uuid = translation.id.uuidString
         language = translation.languageCode.rawValue
@@ -40,7 +40,7 @@ extension TranslationEntity {
         region = translation.regionCode?.rawValue
         value = translation.value
     }
-    
+
     func translation(with expressionID: String) throws -> TranslationCatalog.Translation {
         guard let id = UUID(uuidString: uuid) else {
             throw CatalogError.dataTypeConversion("Invalid UUID '\(uuid)'")
@@ -48,7 +48,7 @@ extension TranslationEntity {
         guard let foreignID = UUID(uuidString: expressionID) else {
             throw CatalogError.dataTypeConversion("Invalid UUID '\(expressionID)'")
         }
-        
+
         return TranslationCatalog.Translation(id: id, expressionId: foreignID, languageCode: languageCode, scriptCode: scriptCode, regionCode: regionCode, value: value)
     }
 }
@@ -58,31 +58,31 @@ extension TranslationEntity: LocaleRepresentable {
         guard let language = LanguageCode(rawValue: language) else {
             fatalError("Invalid LanguageCode '\(language)'")
         }
-        
+
         return language
     }
-    
+
     var scriptCode: ScriptCode? {
-        guard let script = self.script else {
+        guard let script else {
             return nil
         }
-        
+
         guard let code = ScriptCode(rawValue: script) else {
             return nil
         }
-        
+
         return code
     }
-    
+
     var regionCode: RegionCode? {
-        guard let region = self.region else {
+        guard let region else {
             return nil
         }
-        
+
         guard let code = RegionCode(rawValue: region) else {
             return nil
         }
-        
+
         return code
     }
 }

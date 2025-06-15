@@ -1,6 +1,6 @@
 import Foundation
-import TranslationCatalog
 import LocaleSupport
+import TranslationCatalog
 
 struct ProjectDocument: Document {
     let id: UUID

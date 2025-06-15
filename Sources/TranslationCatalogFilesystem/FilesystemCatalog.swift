@@ -4,7 +4,7 @@ import TranslationCatalog
 
 /// Implementation of `Catalog` the reads/writes data from/to a filesystem directory.
 public class FilesystemCatalog: Catalog {
-    
+
     private let fileManager = FileManager.default
     private let decoder: JSONDecoder = JSONDecoder()
     private let encoder: JSONEncoder = {
@@ -12,23 +12,23 @@ public class FilesystemCatalog: Catalog {
         encoder.outputFormatting = [.sortedKeys, .prettyPrinted]
         return encoder
     }()
-    
+
     private let directory: URL
     private let translationsDirectory: URL
     private let expressionsDirectory: URL
     private let projectsDirectory: URL
-    
+
     private var translationDocuments: [TranslationDocument] = []
     private var expressionDocuments: [ExpressionDocument] = []
     private var projectDocuments: [ProjectDocument] = []
-    
+
     public init(url: URL) throws {
         guard url.hasDirectoryPath else {
             throw URLError(.unsupportedURL)
         }
-        
+
         directory = url
-        
+
         #if swift(>=5.7.1) && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS))
         if #available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *) {
             translationsDirectory = directory.appending(path: "Translations", directoryHint: .isDirectory)
@@ -44,7 +44,7 @@ public class FilesystemCatalog: Catalog {
         expressionsDirectory = directory.appendingPathComponent("Expressions", isDirectory: true)
         projectsDirectory = directory.appendingPathComponent("Projects", isDirectory: true)
         #endif
-        
+
         if !fileManager.fileExists(atPath: translationsDirectory.path) {
             try fileManager.createDirectory(at: translationsDirectory, withIntermediateDirectories: true)
         }
@@ -54,21 +54,21 @@ public class FilesystemCatalog: Catalog {
         if !fileManager.fileExists(atPath: projectsDirectory.path) {
             try fileManager.createDirectory(at: projectsDirectory, withIntermediateDirectories: true)
         }
-        
+
         let translationUrls = try fileManager.contentsOfDirectory(at: translationsDirectory, includingPropertiesForKeys: nil)
         try translationUrls.forEach {
             let data = try Data(contentsOf: $0)
             let translation = try decoder.decode(TranslationDocument.self, from: data)
             translationDocuments.append(translation)
         }
-        
+
         let expressionUrls = try fileManager.contentsOfDirectory(at: expressionsDirectory, includingPropertiesForKeys: nil)
         try expressionUrls.forEach {
             let data = try Data(contentsOf: $0)
             let expression = try decoder.decode(ExpressionDocument.self, from: data)
             expressionDocuments.append(expression)
         }
-        
+
         let projectUrls = try fileManager.contentsOfDirectory(at: projectsDirectory, includingPropertiesForKeys: nil)
         try projectUrls.forEach {
             let data = try Data(contentsOf: $0)
@@ -76,22 +76,22 @@ public class FilesystemCatalog: Catalog {
             projectDocuments.append(project)
         }
     }
-    
+
     // MARK: - Project
-    
+
     public func projects() throws -> [Project] {
         try projectDocuments.map { document in
             let expressions = try document.expressionIds.map {
                 try expression($0)
             }
-            
+
             return Project(document: document, expressions: expressions)
         }
     }
-    
+
     public func projects(matching query: CatalogQuery) throws -> [Project] {
         let documents: [ProjectDocument]
-        
+
         switch query {
         case GenericProjectQuery.named(let name):
             documents = projectDocuments
@@ -99,48 +99,48 @@ public class FilesystemCatalog: Catalog {
         default:
             throw CatalogError.unhandledQuery(query)
         }
-        
+
         return documents.map { Project(document: $0, expressions: []) }
     }
-    
+
     public func project(_ id: Project.ID) throws -> Project {
         try project(matching: GenericProjectQuery.id(id))
     }
-    
+
     public func project(matching query: CatalogQuery) throws -> Project {
         let document: ProjectDocument
-        
+
         switch query {
         case GenericProjectQuery.id(let uuid):
             guard let doc = projectDocuments.first(where: { $0.id == uuid }) else {
                 throw CatalogError.projectId(uuid)
             }
-            
+
             document = doc
         case GenericProjectQuery.named(let name):
             guard let doc = projectDocuments.first(where: { $0.name == name }) else {
                 throw CatalogError.badQuery(query)
             }
-            
+
             document = doc
         default:
             throw CatalogError.unhandledQuery(query)
         }
-        
+
         let expressions = try document.expressionIds.map {
             try expression($0)
         }
-        
+
         return Project(document: document, expressions: expressions)
     }
-    
+
     public func createProject(_ project: Project) throws -> Project.ID {
         if project.id != .zero {
             if let existing = try? self.project(project.id) {
                 throw CatalogError.projectId(existing.id)
             }
         }
-        
+
         let expressionIds = try project.expressions.map {
             do {
                 return try createExpression($0)
@@ -148,24 +148,24 @@ public class FilesystemCatalog: Catalog {
                 return $0.id
             }
         }
-        
+
         let id = project.id != .zero ? project.id : UUID()
         let document = ProjectDocument(
             id: id,
             name: project.name,
             expressionIds: expressionIds
         )
-        
+
         try document.write(to: projectsDirectory, using: encoder)
         projectDocuments.append(document)
         return id
     }
-    
+
     public func updateProject(_ id: Project.ID, action: CatalogUpdate) throws {
         guard let index = projectDocuments.firstIndex(where: { $0.id == id }) else {
             throw CatalogError.projectId(id)
         }
-        
+
         switch action {
         case GenericProjectUpdate.name(let name):
             projectDocuments[index].name = name
@@ -176,21 +176,21 @@ public class FilesystemCatalog: Catalog {
         default:
             throw CatalogError.unhandledUpdate(action)
         }
-        
+
         try projectDocuments[index].write(to: projectsDirectory, using: encoder)
     }
-    
+
     public func deleteProject(_ id: Project.ID) throws {
         guard let index = projectDocuments.firstIndex(where: { $0.id == id }) else {
             throw CatalogError.projectId(id)
         }
-        
+
         try projectDocuments[index].remove(from: projectsDirectory)
         projectDocuments.remove(at: index)
     }
-    
+
     // MARK: - Expression
-    
+
     public func expressions() throws -> [TranslationCatalog.Expression] {
         expressionDocuments.map { document in
             let translations = translationDocuments
@@ -198,11 +198,11 @@ public class FilesystemCatalog: Catalog {
                 .map {
                     Translation(document: $0)
                 }
-            
+
             return Expression(document: document, translations: translations)
         }
     }
-    
+
     public func expressions(matching query: CatalogQuery) throws -> [TranslationCatalog.Expression] {
         switch query {
         case GenericExpressionQuery.projectId(let projectId):
@@ -216,7 +216,7 @@ public class FilesystemCatalog: Catalog {
                         .map {
                             Translation(document: $0)
                         }
-                    
+
                     return Expression(document: document, translations: translations)
                 }
         case GenericExpressionQuery.named(let name):
@@ -228,40 +228,40 @@ public class FilesystemCatalog: Catalog {
                         .map {
                             Translation(document: $0)
                         }
-                    
+
                     return Expression(document: document, translations: translations)
                 }
         case GenericExpressionQuery.translationsHavingOnly(let languageCode):
             // TODO: Find a better/optimized way of doing this
-            var expressions = try self.expressions()
+            var expressions = try expressions()
             var index = expressions.count - 1
             while index >= 0 {
                 let expression = expressions[index]
                 if !expression.translations.contains(where: {
                     $0.languageCode == languageCode &&
-                    $0.scriptCode == nil &&
-                    $0.regionCode == nil
+                        $0.scriptCode == nil &&
+                        $0.regionCode == nil
                 }) {
                     expressions.remove(at: index)
                 }
-                
+
                 index -= 1
             }
             return expressions
         case GenericExpressionQuery.translationsHaving(let languageCode, let scriptCode, let regionCode):
             // TODO: Find a better/optimized way of doing this
-            var expressions = try self.expressions()
+            var expressions = try expressions()
             var index = expressions.count - 1
             while index >= 0 {
                 let expression = expressions[index]
                 if !expression.translations.contains(where: {
                     $0.languageCode == languageCode &&
-                    $0.scriptCode == scriptCode &&
-                    $0.regionCode == regionCode
+                        $0.scriptCode == scriptCode &&
+                        $0.regionCode == regionCode
                 }) {
                     expressions.remove(at: index)
                 }
-                
+
                 index -= 1
             }
             return expressions
@@ -269,60 +269,60 @@ public class FilesystemCatalog: Catalog {
             throw CatalogError.unhandledQuery(query)
         }
     }
-    
+
     public func expression(_ id: TranslationCatalog.Expression.ID) throws -> TranslationCatalog.Expression {
         try expression(matching: GenericExpressionQuery.id(id))
     }
-    
+
     public func expression(matching query: CatalogQuery) throws -> TranslationCatalog.Expression {
         let document: ExpressionDocument
-        
+
         switch query {
         case GenericExpressionQuery.id(let uuid):
             guard let doc = expressionDocuments.first(where: { $0.id == uuid }) else {
                 throw CatalogError.expressionId(uuid)
             }
-            
+
             document = doc
         case GenericExpressionQuery.key(let key):
             guard let doc = expressionDocuments.first(where: { $0.key == key }) else {
                 throw CatalogError.badQuery(query)
             }
-            
+
             document = doc
         default:
             throw CatalogError.unhandledQuery(query)
         }
-        
+
         let translations = translationDocuments
             .filter { $0.expressionID == document.id }
             .map {
                 Translation(document: $0)
             }
-        
+
         return Expression(document: document, translations: translations)
     }
-    
+
     public func createExpression(_ expression: TranslationCatalog.Expression) throws -> TranslationCatalog.Expression.ID {
         if expression.id != .zero {
             if let existing = try? self.expression(expression.id) {
                 throw CatalogError.expressionId(existing.id)
             }
         }
-        
+
         if let existing = try? self.expression(matching: GenericExpressionQuery.key(expression.key)) {
             throw CatalogError.expressionExistingWithKey(expression.key, existing)
         }
-        
+
         let id = expression.id != .zero ? expression.id : UUID()
         let translations = expression.translations.map {
             Translation(translation: $0, expressionId: id)
         }
-        
+
         let _ = try translations.map {
             try createTranslation($0)
         }
-        
+
         let document = ExpressionDocument(
             id: id,
             key: expression.key,
@@ -331,17 +331,17 @@ public class FilesystemCatalog: Catalog {
             context: expression.context,
             feature: expression.feature
         )
-        
+
         try document.write(to: expressionsDirectory, using: encoder)
         expressionDocuments.append(document)
         return id
     }
-    
+
     public func updateExpression(_ id: TranslationCatalog.Expression.ID, action: CatalogUpdate) throws {
         guard let index = expressionDocuments.firstIndex(where: { $0.id == id }) else {
             throw CatalogError.expressionId(id)
         }
-        
+
         switch action {
         case GenericExpressionUpdate.key(let key):
             expressionDocuments[index].key = key
@@ -356,56 +356,56 @@ public class FilesystemCatalog: Catalog {
         default:
             throw CatalogError.unhandledUpdate(action)
         }
-        
+
         try expressionDocuments[index].write(to: expressionsDirectory, using: encoder)
     }
-    
+
     public func deleteExpression(_ id: TranslationCatalog.Expression.ID) throws {
         guard let index = expressionDocuments.firstIndex(where: { $0.id == id }) else {
             throw CatalogError.expressionId(id)
         }
-        
+
         let translationIds = translationDocuments
             .filter { $0.expressionID == id }
-            .map { $0.id }
-        
+            .map(\.id)
+
         try translationIds.forEach { translationId in
             guard let idx = translationDocuments.firstIndex(where: { $0.id == translationId }) else {
                 return
             }
-            
+
             try translationDocuments[idx].remove(from: translationsDirectory)
             translationDocuments.remove(at: idx)
         }
-        
+
         let projectIds = projectDocuments
             .filter { $0.expressionIds.contains(id) }
-            .map { $0.id }
-        
+            .map(\.id)
+
         try projectIds.forEach { projectId in
             guard let idx = projectDocuments.firstIndex(where: { $0.id == projectId }) else {
                 return
             }
-            
+
             projectDocuments[idx].expressionIds.removeAll(where: { $0 == id })
             try projectDocuments[idx].write(to: projectsDirectory, using: encoder)
         }
-        
+
         try expressionDocuments[index].remove(from: expressionsDirectory)
         expressionDocuments.remove(at: index)
     }
-    
+
     // MARK: - Translation
-    
+
     public func translations() throws -> [Translation] {
         translationDocuments.map { document in
             Translation(document: document)
         }
     }
-    
+
     public func translations(matching query: CatalogQuery) throws -> [Translation] {
         var documents: [TranslationDocument]
-        
+
         switch query {
         case GenericTranslationQuery.expressionId(let expressionId):
             documents = translationDocuments
@@ -414,65 +414,65 @@ public class FilesystemCatalog: Catalog {
             documents = translationDocuments
                 .filter {
                     $0.expressionID == expressionId &&
-                    $0.languageCode == languageCode &&
-                    $0.scriptCode == nil &&
-                    $0.regionCode == nil
+                        $0.languageCode == languageCode &&
+                        $0.scriptCode == nil &&
+                        $0.regionCode == nil
                 }
         case GenericTranslationQuery.having(let expressionId, let languageCode, let scriptCode, let regionCode):
             documents = translationDocuments
                 .filter {
                     $0.expressionID == expressionId &&
-                    $0.languageCode == languageCode
+                        $0.languageCode == languageCode
                 }
-            
-            if let scriptCode = scriptCode {
+
+            if let scriptCode {
                 documents.removeAll(where: { $0.scriptCode != scriptCode })
             }
-            if let regionCode = regionCode {
+            if let regionCode {
                 documents.removeAll(where: { $0.regionCode != regionCode })
             }
         default:
             throw CatalogError.unhandledQuery(query)
         }
-        
+
         return documents.map { Translation(document: $0) }
     }
-    
+
     public func translation(_ id: Translation.ID) throws -> Translation {
         try translation(matching: GenericTranslationQuery.id(id))
     }
-    
+
     public func translation(matching query: CatalogQuery) throws -> Translation {
         switch query {
         case GenericTranslationQuery.id(let uuid):
             guard let document = translationDocuments.first(where: { $0.id == uuid }) else {
                 throw CatalogError.translationId(uuid)
             }
-            
+
             return Translation(document: document)
         case GenericTranslationQuery.having(let expressionId, let languageCode, let scriptCode, let regionCode):
             guard let document = translationDocuments.first(where: {
                 $0.expressionID == expressionId &&
-                $0.languageCode == languageCode &&
-                $0.scriptCode == scriptCode &&
-                $0.regionCode == regionCode
+                    $0.languageCode == languageCode &&
+                    $0.scriptCode == scriptCode &&
+                    $0.regionCode == regionCode
             }) else {
                 throw CatalogError.badQuery(query)
             }
-            
+
             return Translation(document: document)
         default:
             throw CatalogError.unhandledQuery(query)
         }
     }
-    
+
     public func createTranslation(_ translation: Translation) throws -> Translation.ID {
         if translation.id != .zero {
             if let existing = try? self.translation(translation.id) {
                 throw CatalogError.translationId(existing.id)
             }
         }
-        
+
         let query = GenericTranslationQuery.having(translation.expressionId, translation.languageCode, translation.scriptCode, translation.regionCode)
         if let existing = try? self.translation(matching: query) {
             if existing.value == translation.value {
@@ -482,7 +482,7 @@ public class FilesystemCatalog: Catalog {
                 return existing.id
             }
         }
-        
+
         let id = translation.id != .zero ? translation.id : UUID()
         let document = TranslationDocument(
             id: id,
@@ -492,17 +492,17 @@ public class FilesystemCatalog: Catalog {
             regionCode: translation.regionCode,
             value: translation.value
         )
-        
+
         try document.write(to: translationsDirectory, using: encoder)
         translationDocuments.append(document)
         return id
     }
-    
+
     public func updateTranslation(_ id: Translation.ID, action: CatalogUpdate) throws {
         guard let index = translationDocuments.firstIndex(where: { $0.id == id }) else {
             throw CatalogError.translationId(id)
         }
-        
+
         switch action {
         case GenericTranslationUpdate.language(let languageCode):
             translationDocuments[index].languageCode = languageCode
@@ -515,21 +515,21 @@ public class FilesystemCatalog: Catalog {
         default:
             throw CatalogError.unhandledUpdate(action)
         }
-        
+
         try translationDocuments[index].write(to: translationsDirectory, using: encoder)
     }
-    
+
     public func deleteTranslation(_ id: Translation.ID) throws {
         guard let index = translationDocuments.firstIndex(where: { $0.id == id }) else {
             throw CatalogError.translationId(id)
         }
-        
+
         try translationDocuments[index].remove(from: translationsDirectory)
         translationDocuments.remove(at: index)
     }
-    
+
     // MARK: - Metadata
-    
+
     public func localeIdentifiers() throws -> Set<Locale.Identifier> {
         Set(translationDocuments.map(\.localeIdentifier))
     }

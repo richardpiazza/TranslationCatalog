@@ -3,11 +3,11 @@ import LocaleSupport
 import TranslationCatalog
 
 public extension SQLiteCatalog {
-    
+
     enum Error: Swift.Error {
         case invalidPrimaryKey(Int)
         case invalidStringValue(String)
-        
+
         @available(*, deprecated, renamed: "CatalogError.unhandledUpdate()")
         case invalidAction(CatalogUpdate)
         @available(*, deprecated, renamed: "CatalogError.badQuery()")
@@ -31,21 +31,21 @@ public extension SQLiteCatalog {
         @available(*, deprecated, renamed: "CatalogError.unhandledQuery()")
         case unhandledQuery(CatalogQuery)
     }
-    
+
     enum ProjectQuery: CatalogQuery {
         case hierarchy
         case primaryKey(Int)
-        
+
         @available(*, deprecated, renamed: "GenericProjectQuery.id")
         case id(Project.ID)
         @available(*, deprecated, renamed: "GenericProjectQuery.named")
         case named(String)
     }
-    
+
     enum ExpressionQuery: CatalogQuery {
         case hierarchy
         case primaryKey(Int)
-        
+
         @available(*, deprecated, renamed: "GenericExpressionQuery.id")
         case id(TranslationCatalog.Expression.ID)
         @available(*, deprecated, renamed: "GenericExpressionQuery.projectID")
@@ -61,10 +61,10 @@ public extension SQLiteCatalog {
         @available(*, deprecated, renamed: "GenericExpressionQuery.translationsHavingOnly")
         case havingOnly(LanguageCode)
     }
-    
+
     enum TranslationQuery: CatalogQuery {
         case primaryKey(Int)
-        
+
         @available(*, deprecated, renamed: "GenericTranslationQuery.id")
         case id(TranslationCatalog.Translation.ID)
         @available(*, deprecated, renamed: "GenericTranslationQuery.expressionID")
@@ -76,7 +76,7 @@ public extension SQLiteCatalog {
         @available(*, deprecated, renamed: "GenericTranslationQuery.havingOnly")
         case havingOnly(TranslationCatalog.Expression.ID, LanguageCode)
     }
-    
+
     enum ProjectUpdate: CatalogUpdate {
         @available(*, deprecated, renamed: "GenericProjectUpdate.name")
         case name(String)
@@ -85,7 +85,7 @@ public extension SQLiteCatalog {
         @available(*, deprecated, renamed: "GenericProjectUpdate.unlinkExpression")
         case unlinkExpression(TranslationCatalog.Expression.ID)
     }
-    
+
     enum ExpressionUpdate: CatalogUpdate {
         @available(*, deprecated, renamed: "GenericExpressionUpdate.key")
         case key(String)
@@ -102,7 +102,7 @@ public extension SQLiteCatalog {
         @available(*, deprecated, renamed: "GenericProjectUpdate.unlinkExpression")
         case unlinkProject(Project.ID)
     }
-    
+
     enum TranslationUpdate: CatalogUpdate {
         @available(*, deprecated, renamed: "GenericTranslationUpdate.language")
         case language(LanguageCode)
