@@ -21,7 +21,7 @@ public struct Expression: Codable, Hashable, Identifiable, Sendable {
     public let feature: String?
     /// The translated values for the `Expression`
     public let translations: [Translation]
-    
+
     public init(
         id: UUID = .zero,
         key: String = "",
@@ -39,7 +39,7 @@ public struct Expression: Codable, Hashable, Identifiable, Sendable {
         self.feature = feature
         self.translations = translations
     }
-    
+
     public init(
         expression: Expression,
         translations: [Translation]
@@ -52,22 +52,22 @@ public struct Expression: Codable, Hashable, Identifiable, Sendable {
         feature = expression.feature
         self.translations = translations
     }
-    
+
     /// The `Translation` that matches the `defaultLanguage` code of this instance.
     public var defaultTranslation: Translation? {
         translations.first(where: { $0.languageCode == defaultLanguage })
     }
-    
+
     /// The `Translation` that matches the provided `Locale.Identifier`.
     public func translation(with identifier: Locale.Identifier?) -> Translation? {
         translations.first(where: { $0.localeIdentifier == identifier })
     }
-    
+
     /// The `Translation` matching the `Locale.Identifier` or `defaultTranslation` if no matches found.
     public func translationOrDefault(with identifier: Locale.Identifier?) -> Translation? {
         translation(with: identifier) ?? defaultTranslation
     }
-    
+
     /// The `Translation` that best matches the provided identifier, default if none, or first in the collection.
     public func translationOrDefaultOrFirst(with identifier: Locale.Identifier?) -> Translation? {
         translationOrDefault(with: identifier) ?? translations.first
@@ -77,7 +77,7 @@ public struct Expression: Codable, Hashable, Identifiable, Sendable {
 public extension Expression {
     @available(*, deprecated, renamed: "id")
     var uuid: UUID { id }
-    
+
     @available(*, deprecated, renamed: "init(id:key:name:defaultLanguage:context:feature:translations:)")
     init(
         uuid: UUID,
@@ -88,7 +88,7 @@ public extension Expression {
         feature: String? = nil,
         translations: [Translation] = []
     ) {
-        self.id = uuid
+        id = uuid
         self.key = key
         self.name = name
         self.defaultLanguage = defaultLanguage

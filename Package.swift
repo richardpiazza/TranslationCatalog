@@ -11,7 +11,7 @@ let package = Package(
         .macCatalyst(.v15),
         .iOS(.v15),
         .tvOS(.v15),
-        .watchOS(.v8)
+        .watchOS(.v8),
     ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
@@ -21,13 +21,13 @@ let package = Package(
                 "TranslationCatalog",
                 "TranslationCatalogIO",
                 "TranslationCatalogSQLite",
-                "TranslationCatalogFilesystem"
+                "TranslationCatalogFilesystem",
             ]
         ),
         .executable(
             name: "localizer",
             targets: ["localizer"]
-        )
+        ),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.

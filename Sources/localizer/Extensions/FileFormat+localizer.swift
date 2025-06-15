@@ -1,12 +1,12 @@
-import TranslationCatalogIO
 import ArgumentParser
+import TranslationCatalogIO
 
 extension FileFormat: ExpressibleByArgument {
     var argument: String {
         switch self {
-        case .androidXML: return "android-xml"
-        case .appleStrings: return "apple-strings"
-        case .json: return "json"
+        case .androidXML: "android-xml"
+        case .appleStrings: "apple-strings"
+        case .json: "json"
         }
     }
 

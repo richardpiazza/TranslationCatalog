@@ -1,6 +1,6 @@
+import ArgumentParser
 import Foundation
 import LocaleSupport
-import ArgumentParser
 
 #if hasFeature(RetroactiveAttribute)
 extension LanguageCode: @retroactive ExpressibleByArgument {}

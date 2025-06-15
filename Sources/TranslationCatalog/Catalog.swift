@@ -4,6 +4,7 @@ import LocaleSupport
 /// Interface providing storage and retrieval of the `Expression`s and associated `Translation`s.
 public protocol Catalog {
     // MARK: - Project
+
     /// Retrieve all `Project`s in the catalog.
     func projects() throws -> [Project]
     /// Retrieve all `Project`s that match the provided query parameters
@@ -35,8 +36,9 @@ public protocol Catalog {
     ///
     /// - parameter id: The unique identifier for the `Project`.
     func deleteProject(_ id: Project.ID) throws
-    
+
     // MARK: - Expression
+
     func expressions() throws -> [Expression]
     func expressions(matching query: CatalogQuery) throws -> [Expression]
     func expression(_ id: Expression.ID) throws -> Expression
@@ -54,8 +56,9 @@ public protocol Catalog {
     ///
     /// - parameter id: The unique identifier for the `Expression`.
     func deleteExpression(_ id: Expression.ID) throws
-    
+
     // MARK: - Translation
+
     func translations() throws -> [Translation]
     func translations(matching query: CatalogQuery) throws -> [Translation]
     func translation(_ id: Translation.ID) throws -> Translation
@@ -74,7 +77,8 @@ public protocol Catalog {
     ///
     /// - parameter id: The unique identifier for the `Translation`.
     func deleteTranslation(_ id: Translation.ID) throws
-    
+
     // MARK: - Metadata
+
     func localeIdentifiers() throws -> Set<Locale.Identifier>
 }

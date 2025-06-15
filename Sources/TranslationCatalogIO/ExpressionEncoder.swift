@@ -1,13 +1,13 @@
 import Foundation
-import TranslationCatalog
 import LocaleSupport
 import Plot
+import TranslationCatalog
 
 /// Utility for encoding catalog `Translation`s for export/transfer.
 public struct ExpressionEncoder {
-    
+
     private init() {}
-    
+
     /// Encode the first/primary `Translation` of each `Expression` in the collection.
     ///
     /// - throws: `Error`
@@ -20,9 +20,9 @@ public struct ExpressionEncoder {
         for expressions: [TranslationCatalog.Expression],
         fileFormat: FileFormat
     ) throws -> Data {
-        return try encodeTranslations(for: expressions, fileFormat: fileFormat, localeIdentifier: nil, defaultOrFirst: false)
+        try encodeTranslations(for: expressions, fileFormat: fileFormat, localeIdentifier: nil, defaultOrFirst: false)
     }
-    
+
     /// Encode the a `Translation` of each `Expression` in the collection.
     ///
     /// - throws: `Error`
@@ -40,49 +40,49 @@ public struct ExpressionEncoder {
     ) throws -> Data {
         switch fileFormat {
         case .androidXML:
-            return exportAndroid(expressions, localeIdentifier: localeIdentifier, defaultOrFirst: defaultOrFirst)
+            exportAndroid(expressions, localeIdentifier: localeIdentifier, defaultOrFirst: defaultOrFirst)
         case .appleStrings:
-            return exportApple(expressions, localeIdentifier: localeIdentifier, defaultOrFirst: defaultOrFirst)
+            exportApple(expressions, localeIdentifier: localeIdentifier, defaultOrFirst: defaultOrFirst)
         case .json:
-            return try exportJson(expressions, localeIdentifier: localeIdentifier, defaultOrFirst: defaultOrFirst)
+            try exportJson(expressions, localeIdentifier: localeIdentifier, defaultOrFirst: defaultOrFirst)
         }
     }
-    
+
     private static func exportAndroid(_ expressions: [TranslationCatalog.Expression], localeIdentifier: Locale.Identifier?, defaultOrFirst: Bool) -> Data {
-        let sorted = expressions.sorted(by: { $0.key < $1.key})
+        let sorted = expressions.sorted(by: { $0.key < $1.key })
         let xml = XML.make(with: sorted, localeIdentifier: localeIdentifier, defaultOrFirst: defaultOrFirst)
         let raw = xml.render(indentedBy: .spaces(2))
         return raw.data(using: .utf8) ?? Data()
     }
-    
+
     private static func exportApple(_ expressions: [TranslationCatalog.Expression], localeIdentifier: Locale.Identifier?, defaultOrFirst: Bool) -> Data {
-        let sorted = expressions.sorted(by: { $0.key < $1.key})
+        let sorted = expressions.sorted(by: { $0.key < $1.key })
         var output: [String] = []
-        
-        sorted.forEach { (expression) in
+
+        for expression in sorted {
             let translation = defaultOrFirst ? expression.translationOrDefaultOrFirst(with: localeIdentifier) : expression.translation(with: localeIdentifier)
-            guard let translation = translation else {
-                return
+            guard let translation else {
+                continue
             }
-            
+
             output.append("\"\(expression.key)\" = \"\(translation.value.simpleAppleDictionaryEscaped())\";")
         }
-        
+
         return output
             .joined(separator: "\n")
             .data(using: .utf8) ?? Data()
     }
-    
+
     private static func exportJson(_ expressions: [TranslationCatalog.Expression], localeIdentifier: Locale.Identifier?, defaultOrFirst: Bool) throws -> Data {
         let filtered = expressions.compactMap(localeIdentifier: localeIdentifier, defaultOrFirst: defaultOrFirst)
         let sequence = filtered.map { [$0.key: $0.translations.first?.value ?? ""] }
-        let dictionary = sequence.reduce(into: Dictionary<String, String>()) { partialResult, pair in
+        let dictionary = sequence.reduce(into: [String: String]()) { partialResult, pair in
             partialResult[pair.keys.first!] = pair.values.first!
         }
-        
+
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys, .prettyPrinted]
-        
+
         return try encoder.encode(dictionary)
     }
 }

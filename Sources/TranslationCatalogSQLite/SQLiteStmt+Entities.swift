@@ -1,26 +1,26 @@
 import Foundation
 import LocaleSupport
-import TranslationCatalog
 import SQLite
+import TranslationCatalog
 
 extension Statement.Element {
     func isNull(position: Int) -> Bool {
         self[position] == nil
     }
-    
+
     func columnText(position: Int) -> String {
         guard let value = self[position] as? String else {
             fatalError()
         }
-        
+
         return value
     }
-    
+
     func columnInt(position: Int) -> Int {
         guard let value = self[position] as? Int64 else {
             fatalError()
         }
-        
+
         return Int(value)
     }
 }
@@ -30,7 +30,7 @@ extension Statement.Element {
         guard !isNull(position: position) else {
             return nil
         }
-        
+
         switch T.self {
         case is String.Type:
             return (columnText(position: position) as! T)
@@ -42,31 +42,31 @@ extension Statement.Element {
             return nil
         }
     }
-    
+
     func uuid(position: Int) -> UUID {
-        return UUID(uuidString: columnText(position: position))!
+        UUID(uuidString: columnText(position: position))!
     }
-    
+
     func languageCode(position: Int) -> LanguageCode {
-        return LanguageCode(rawValue: columnText(position: position)) ?? .default
+        LanguageCode(rawValue: columnText(position: position)) ?? .default
     }
-    
+
     func scriptCode(position: Int) -> ScriptCode? {
         guard !isNull(position: position) else {
             return nil
         }
-        
+
         return ScriptCode(rawValue: columnText(position: position))
     }
-    
+
     func regionCode(position: Int) -> RegionCode? {
         guard !isNull(position: position) else {
             return nil
         }
-        
+
         return RegionCode(rawValue: columnText(position: position))
     }
-    
+
     var projectEntity: ProjectEntity {
         .init(
             id: columnInt(position: 0),
@@ -74,11 +74,11 @@ extension Statement.Element {
             name: columnText(position: 2)
         )
     }
-    
+
     var projectExpressionEntity: ProjectExpressionEntity {
         .init(projectID: columnInt(position: 0), expressionID: columnInt(position: 1))
     }
-    
+
     var expressionEntity: ExpressionEntity {
         .init(
             id: columnInt(position: 0),
@@ -90,7 +90,7 @@ extension Statement.Element {
             feature: optional(position: 6)
         )
     }
-    
+
     var translationEntity: TranslationEntity {
         .init(
             id: columnInt(position: 0),

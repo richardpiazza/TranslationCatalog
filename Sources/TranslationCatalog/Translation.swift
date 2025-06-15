@@ -15,7 +15,7 @@ public struct Translation: Codable, Hashable, Identifiable, LocaleRepresentable,
     public let regionCode: RegionCode?
     /// The translated value
     public let value: String
-    
+
     public init(
         id: UUID = .zero,
         expressionId: Expression.ID = .zero,
@@ -31,7 +31,7 @@ public struct Translation: Codable, Hashable, Identifiable, LocaleRepresentable,
         self.regionCode = regionCode
         self.value = value
     }
-    
+
     /// Convenience initializer to assigns all values from the provided `Translation`,
     /// while overriding the `Expression.ID`.
     public init(
@@ -50,10 +50,10 @@ public struct Translation: Codable, Hashable, Identifiable, LocaleRepresentable,
 public extension Translation {
     @available(*, deprecated, renamed: "id")
     var uuid: UUID { id }
-    
+
     @available(*, deprecated, renamed: "expressionId")
     var expressionID: Expression.ID { expressionId }
-    
+
     @available(*, deprecated, renamed: "init(id:expressionId:languageCode:scriptCode:regionCode:value:)")
     init(
         uuid: UUID,
@@ -63,8 +63,8 @@ public extension Translation {
         regionCode: RegionCode? = nil,
         value: String = ""
     ) {
-        self.id = uuid
-        self.expressionId = expressionID
+        id = uuid
+        expressionId = expressionID
         self.languageCode = languageCode
         self.scriptCode = scriptCode
         self.regionCode = regionCode

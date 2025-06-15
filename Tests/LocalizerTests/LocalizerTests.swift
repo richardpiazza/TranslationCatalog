@@ -1,11 +1,11 @@
 import XCTest
 
 final class LocalizerTests: _LocalizerTestCase {
-    
+
     func testExecute() throws {
         try process.run()
         process.waitUntilExit()
-        
+
         XCTAssertEqual(output, """
         OVERVIEW: Utility for interacting with Android 'strings.xml', Apple
         'Localizable.strings', and Web '*.json' localization files.
@@ -19,7 +19,7 @@ final class LocalizerTests: _LocalizerTestCase {
         OPTIONS:
           --version               Show the version.
           -h, --help              Show help information.
-        
+
         SUBCOMMANDS:
           preview                 Displays the localizations found in a translation
                                   file.
@@ -29,7 +29,7 @@ final class LocalizerTests: _LocalizerTestCase {
           configure               Displays or alters the command configuration details.
 
           See 'localizer help <subcommand>' for detailed help.
-        
+
         """)
     }
 }

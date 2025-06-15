@@ -1,10 +1,11 @@
+import Foundation
+import LocaleSupport
 import Statement
 import StatementSQLite
 import TranslationCatalog
-import LocaleSupport
-import Foundation
 
 // MARK: - Translation (Schema)
+
 extension SQLiteStatement {
     static var createTranslationEntity: Self {
         .init(
@@ -13,7 +14,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static var translationTable_addScriptCode: Self {
         .init(
             .ALTER_TABLE(
@@ -22,7 +23,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static var translationTable_addUUID: Self {
         .init(
             .ALTER_TABLE(TranslationEntity.self, .ADD_COLUMN(TranslationEntity.uuid))
@@ -31,6 +32,7 @@ extension SQLiteStatement {
 }
 
 // MARK: - Translation (Queries)
+
 extension SQLiteStatement {
     static var selectAllFromTranslation: Self {
         .init(
@@ -46,7 +48,7 @@ extension SQLiteStatement {
             .FROM_TABLE(TranslationEntity.self)
         )
     }
-    
+
     static func selectTranslation(withID id: Int) -> Self {
         .init(
             .SELECT(
@@ -64,7 +66,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func selectTranslation(withID id: TranslationCatalog.Translation.ID) -> Self {
         .init(
             .SELECT(
@@ -83,7 +85,7 @@ extension SQLiteStatement {
             .LIMIT(1)
         )
     }
-    
+
     static func selectTranslationsFor(_ expressionID: Int) -> Self {
         .init(
             .SELECT(
@@ -101,7 +103,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func selectTranslationsFor(_ expressionID: Int, languageCode: LanguageCode?, scriptCode: ScriptCode?, regionCode: RegionCode?) -> Self {
         .init(
             .SELECT(
@@ -124,7 +126,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func selectTranslationsHavingOnly(_ expressionID: Int, languageCode: LanguageCode) -> Self {
         .init(
             .SELECT(
@@ -149,7 +151,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func selectTranslationsHaving(_ expressionID: Int, languageCode: LanguageCode, scriptCode: ScriptCode?, regionCode: RegionCode?) -> Self {
         .init(
             .SELECT(
@@ -170,19 +172,15 @@ extension SQLiteStatement {
                     .column(TranslationEntity.language, op: .equal, value: languageCode.rawValue),
                     .unwrap(scriptCode, transform: {
                         .column(TranslationEntity.script, op: .equal, value: $0.rawValue)
-                    }, else: {
-                        .logical(op: .isNull, segments: [Segment<WhereContext>.column(TranslationEntity.script)])
-                    }()),
+                    }, else: .logical(op: .isNull, segments: [Segment<WhereContext>.column(TranslationEntity.script)])),
                     .unwrap(regionCode, transform: {
                         .column(TranslationEntity.region, op: .equal, value: $0.rawValue)
-                    }, else: {
-                        .logical(op: .isNull, segments: [Segment<WhereContext>.column(TranslationEntity.region)])
-                    }())
+                    }, else: .logical(op: .isNull, segments: [Segment<WhereContext>.column(TranslationEntity.region)]))
                 )
             )
         )
     }
-    
+
     static func insertTranslation(_ translation: TranslationEntity) -> Self {
         .init(
             .INSERT_INTO(
@@ -204,7 +202,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func updateTranslation(_ id: Int, languageCode: LanguageCode) -> Self {
         SQLiteStatement(
             .UPDATE(
@@ -218,7 +216,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func updateTranslation(_ id: Int, scriptCode: ScriptCode?) -> Self {
         SQLiteStatement(
             .UPDATE(
@@ -231,7 +229,7 @@ extension SQLiteStatement {
                         .column(TranslationEntity.script, op: .equal, value: value.rawValue)
                     },
                     else:
-                        .column(TranslationEntity.script, op: .equal, value: scriptCode)
+                    .column(TranslationEntity.script, op: .equal, value: scriptCode)
                 )
             ),
             .WHERE(
@@ -239,7 +237,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func updateTranslation(_ id: Int, regionCode: RegionCode?) -> Self {
         SQLiteStatement(
             .UPDATE(
@@ -252,7 +250,7 @@ extension SQLiteStatement {
                         .column(TranslationEntity.region, op: .equal, value: value.rawValue)
                     },
                     else:
-                        .column(TranslationEntity.region, op: .equal, value: regionCode)
+                    .column(TranslationEntity.region, op: .equal, value: regionCode)
                 )
             ),
             .WHERE(
@@ -260,7 +258,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func updateTranslation(_ id: Int, value: String) -> Self {
         SQLiteStatement(
             .UPDATE(
@@ -274,7 +272,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func deleteTranslation(_ id: Int) -> Self {
         .init(
             .DELETE_FROM(TranslationEntity.self),
@@ -283,7 +281,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func deleteTranslations(withExpressionID id: Int) -> Self {
         .init(
             .DELETE_FROM(TranslationEntity.self),

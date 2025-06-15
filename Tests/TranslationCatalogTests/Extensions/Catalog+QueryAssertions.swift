@@ -1,5 +1,5 @@
-import XCTest
 @testable import TranslationCatalog
+import XCTest
 
 extension Catalog {
     /// Prepare a `Catalog` with example data.
@@ -9,118 +9,118 @@ extension Catalog {
         try createProject(CatalogData.project3)
         try createExpression(CatalogData.expression4)
     }
-    
+
     /// Verify an expected number of existing `Project`.
     func assertQueryProjects() throws {
-        let projects = try self.projects()
+        let projects = try projects()
         XCTAssertEqual(projects.count, 3)
     }
-    
+
     /// Verify that existing `Project`s can be found loosely matching the `name`.
     func assertQueryProjectsNamed() throws {
-        var projects = try self.projects(matching: GenericProjectQuery.named("shop"))
+        var projects = try projects(matching: GenericProjectQuery.named("shop"))
         XCTAssertEqual(projects.count, 2)
         projects = try self.projects(matching: GenericProjectQuery.named("class"))
         XCTAssertEqual(projects.count, 2)
     }
-    
+
     /// Verify that an existing `Project` can be found using its `id`.
     func assertQueryProjectId() throws {
-        let project = try self.project(.project2)
+        let project = try project(.project2)
         XCTAssertEqual(project.name, CatalogData.project2.name)
     }
-    
+
     /// Verify that an existing `Project` can be found using its exact `name`.
     func assertQueryProjectNamed() throws {
         XCTAssertThrowsError(try self.project(matching: GenericProjectQuery.named("class")))
-        let project = try self.project(matching: GenericProjectQuery.named("Shopclass"))
+        let project = try project(matching: GenericProjectQuery.named("Shopclass"))
         XCTAssertEqual(project.id, .project2)
     }
-    
+
     /// Verify an expected number of existing `Expression`.
     func assertQueryExpressions() throws {
-        let expressions = try self.expressions()
+        let expressions = try expressions()
         XCTAssertEqual(expressions.count, 5)
     }
-    
+
     /// Verify that existing `Expression`s can be found using a `Project.ID`.
     func assertQueryExpressionsProjectID() throws {
-        let expressions = try self.expressions(matching: GenericExpressionQuery.projectId(.project3))
+        let expressions = try expressions(matching: GenericExpressionQuery.projectId(.project3))
         XCTAssertEqual(expressions.count, 2)
     }
-    
+
     /// Verify `Expression` entities can be retrieved using a loose `name`.
     func assertQueryExpressionsNamed() throws {
-        let expressions = try self.expressions(matching: GenericExpressionQuery.named("ull"))
+        let expressions = try expressions(matching: GenericExpressionQuery.named("ull"))
         XCTAssertEqual(expressions.count, 2)
     }
-    
+
     /// Verify `Expression` entities can be retrieved using a loose `key`.
     func assertQueryExpressionsKeyed() throws {
-        let expressions = try self.expressions(matching: GenericExpressionQuery.key("button"))
+        let expressions = try expressions(matching: GenericExpressionQuery.key("button"))
         XCTAssertEqual(expressions.count, 2)
     }
-    
+
     /// Verify `Expression` entities can be retrieved matching _having_ statements.
     func assertQueryExpressionsHaving() throws {
-        var expressions = try self.expressions(matching: GenericExpressionQuery.translationsHaving(.fr, nil, nil))
+        var expressions = try expressions(matching: GenericExpressionQuery.translationsHaving(.fr, nil, nil))
         XCTAssertEqual(expressions.count, 3)
         expressions = try self.expressions(matching: GenericExpressionQuery.translationsHaving(.fr, nil, .CA))
         XCTAssertEqual(expressions.count, 1)
     }
-    
+
     /// Verify `Expression` entities can be retrieved matching _having only_ statements.
     func assertQueryExpressionsHavingOnly() throws {
-        let expressions = try self.expressions(matching: GenericExpressionQuery.translationsHavingOnly(.fr))
+        let expressions = try expressions(matching: GenericExpressionQuery.translationsHavingOnly(.fr))
         XCTAssertEqual(expressions.count, 3)
     }
-    
+
     /// Verify a `Expression` entity can be retrieved by `id`.
     func assertQueryExpressionId() throws {
-        let expression = try self.expression(.expression4)
+        let expression = try expression(.expression4)
         XCTAssertEqual(expression.name, "Fully Qualified Domain Name")
     }
-    
+
     /// Verify a `Expression` entity can be retrieved by `key`.
     func assertQueryExpressionKey() throws {
-        let expression = try self.expression(matching: GenericExpressionQuery.key("GIT_FQDN"))
+        let expression = try expression(matching: GenericExpressionQuery.key("GIT_FQDN"))
         XCTAssertEqual(expression.id, .expression4)
     }
-    
+
     /// Verify an expected number of existing `Translation`.
     func assertQueryTranslations() throws {
-        let translations = try self.translations()
+        let translations = try translations()
         XCTAssertEqual(translations.count, 13)
     }
-    
+
     /// Verify that existing `Translation`s can be found using a `Expression.ID`.
     func assertQueryTranslationsExpressionId() throws {
-        let translations = try self.translations(matching: GenericTranslationQuery.expressionId(.expression3))
+        let translations = try translations(matching: GenericTranslationQuery.expressionId(.expression3))
         XCTAssertEqual(translations.count, 3)
     }
-    
+
     /// Verify `Translation` entities can be retrieved matching _having_ statements.
     func assertQueryTranslationsHaving() throws {
-        var translations = try self.translations(matching: GenericTranslationQuery.having(.expression5, .fr, nil, nil))
+        var translations = try translations(matching: GenericTranslationQuery.having(.expression5, .fr, nil, nil))
         XCTAssertEqual(translations.count, 2)
         translations = try self.translations(matching: GenericTranslationQuery.having(.expression5, .fr, nil, .CA))
         XCTAssertEqual(translations.count, 1)
     }
-    
+
     /// Verify `Translation` entities can be retrieved matching _having only_ statements.
     func assertQueryTranslationsHavingOnly() throws {
-        let translations = try self.translations(matching: GenericTranslationQuery.havingOnly(.expression5, .fr))
+        let translations = try translations(matching: GenericTranslationQuery.havingOnly(.expression5, .fr))
         XCTAssertEqual(translations.count, 1)
     }
-    
+
     /// Verify a `Translation` entity can be retrieved by `id`.
     func assertQueryTranslationId() throws {
-        let translation = try self.translation(.translation8)
+        let translation = try translation(.translation8)
         XCTAssertEqual(translation.localeIdentifier, "zh-Hans")
     }
-    
+
     func assertLocaleIdentifiers() throws {
-        let localeIdentifiers = try self.localeIdentifiers()
+        let localeIdentifiers = try localeIdentifiers()
         XCTAssertEqual(localeIdentifiers.count, 6)
         XCTAssertEqual(localeIdentifiers.sorted(), [
             "en",
@@ -128,12 +128,12 @@ extension Catalog {
             "fr",
             "fr_CA",
             "pt_BR",
-            "zh-Hans"
+            "zh-Hans",
         ])
     }
 }
 
-struct CatalogData {
+enum CatalogData {
     static let project1 = Project(
         id: .project1,
         name: "Bakeshop",

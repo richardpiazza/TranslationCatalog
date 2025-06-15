@@ -1,24 +1,24 @@
-import Foundation
 import ArgumentParser
+import Foundation
 import TranslationCatalog
-import TranslationCatalogSQLite
 import TranslationCatalogFilesystem
+import TranslationCatalogSQLite
 
 struct Catalog: AsyncParsableCommand {
-    
+
     enum Storage: String, CaseIterable, Codable, ExpressibleByArgument {
         case sqlite
         case filesystem
-        
+
         static var `default`: Storage = .sqlite
     }
-    
+
     @available(*, deprecated, renamed: "TranslationCatalogIO.FileFormat")
     enum Format: String, ExpressibleByArgument {
         case android
         case apple
         case json
-        
+
         init?(extension: String) {
             switch `extension`.lowercased() {
             case "xml":
@@ -32,7 +32,7 @@ struct Catalog: AsyncParsableCommand {
             }
         }
     }
-    
+
     static let configuration = CommandConfiguration(
         commandName: "catalog",
         abstract: "Interact with the translation catalog.",
@@ -44,7 +44,7 @@ struct Catalog: AsyncParsableCommand {
             Query.self,
             Insert.self,
             Update.self,
-            Delete.self
+            Delete.self,
         ],
         helpNames: .shortAndLong
     )
@@ -59,30 +59,30 @@ extension CatalogCommand {
     func catalogURL(forStorage storage: Catalog.Storage) throws -> URL {
         switch storage {
         case .sqlite:
-            if let path = path, !path.isEmpty {
-                return try FileManager.default.url(for: path)
+            if let path, !path.isEmpty {
+                try FileManager.default.url(for: path)
             } else {
-                return try FileManager.default.catalogURL()
+                try FileManager.default.catalogURL()
             }
         case .filesystem:
-            if let path = path, !path.isEmpty {
-                return try FileManager.default.directoryURL(for: path)
+            if let path, !path.isEmpty {
+                try FileManager.default.directoryURL(for: path)
             } else {
-                return try FileManager.default.catalogDirectoryURL()
+                try FileManager.default.catalogDirectoryURL()
             }
         }
     }
-    
+
     func catalog(forStorage storage: Catalog.Storage, debug: Bool = false) throws -> TranslationCatalog.Catalog {
         let url = try catalogURL(forStorage: storage)
-        
+
         let catalog: TranslationCatalog.Catalog
-        
+
         switch storage {
         case .sqlite:
             let sqliteCatalog = try SQLiteCatalog(url: url)
             if debug {
-                sqliteCatalog.statementHook = { (sql) in
+                sqliteCatalog.statementHook = { sql in
                     print("======SQL======\n\(sql)\n======___======\n")
                 }
             }
@@ -90,7 +90,7 @@ extension CatalogCommand {
         case .filesystem:
             catalog = try FilesystemCatalog(url: url)
         }
-        
+
         return catalog
     }
 }

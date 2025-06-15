@@ -10,10 +10,10 @@ public protocol LocaleRepresentable {
 public extension LocaleRepresentable {
     var localeIdentifier: Locale.Identifier {
         var output = languageCode.rawValue
-        if let scriptCode = self.scriptCode {
+        if let scriptCode {
             output += "-\(scriptCode.rawValue)"
         }
-        if let regionCode = self.regionCode {
+        if let regionCode {
             output += "_\(regionCode.rawValue)"
         }
         return output

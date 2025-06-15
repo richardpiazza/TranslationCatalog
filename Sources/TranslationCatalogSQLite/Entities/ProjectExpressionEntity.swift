@@ -2,9 +2,9 @@ import Statement
 import TranslationCatalog
 
 struct ProjectExpressionEntity: Entity {
-    
+
     static let identifier: String = "project_expression"
-    
+
     @Field("project_id", foreignKey: ForeignKey(ProjectEntity.self, "id"))
     var projectID: Int = 0
     @Field("expression_id", foreignKey: ForeignKey(ExpressionEntity.self, "id"))

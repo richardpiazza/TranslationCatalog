@@ -3,6 +3,7 @@ import StatementSQLite
 import TranslationCatalog
 
 // MARK: - Project (Schema)
+
 extension SQLiteStatement {
     static var createProjectEntity: Self {
         .init(
@@ -14,6 +15,7 @@ extension SQLiteStatement {
 }
 
 // MARK: - Project (Queries)
+
 extension SQLiteStatement {
     static var selectAllFromProject: Self {
         .init(
@@ -27,7 +29,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func selectProject(withID id: Int) -> Self {
         .init(
             .SELECT(
@@ -43,7 +45,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func selectProject(withID id: Project.ID) -> Self {
         .init(
             .SELECT(
@@ -60,7 +62,7 @@ extension SQLiteStatement {
             .LIMIT(1)
         )
     }
-    
+
     static func selectProject(withName name: String) -> Self {
         .init(
             .SELECT(
@@ -77,7 +79,7 @@ extension SQLiteStatement {
             .LIMIT(1)
         )
     }
-    
+
     static func selectProjects(withNameLike name: String) -> Self {
         .init(
             .SELECT(
@@ -93,7 +95,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func insertProject(_ project: ProjectEntity) -> Self {
         SQLiteStatement(
             .INSERT_INTO(
@@ -107,7 +109,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func updateProject(_ id: Int, name: String) -> Self {
         SQLiteStatement(
             .UPDATE(
@@ -121,7 +123,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func deleteProject(_ id: Int) -> Self {
         SQLiteStatement(
             .DELETE(
