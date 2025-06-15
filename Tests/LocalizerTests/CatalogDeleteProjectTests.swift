@@ -15,7 +15,7 @@ final class CatalogDeleteProjectTests: _LocalizerTestCase {
             XCTAssertEqual(error, """
             Error: Missing expected argument '<id>'
             Help:  <id>  Unique ID of the Project.
-            Usage: localizer catalog delete project <id> [--storage <storage>] [--path <path>] [--debug]
+            Usage: localizer catalog delete project <id> [--storage <storage>] [--path <path>] [--debug] [--verbose]
               See 'localizer catalog delete project --help' for more information.
 
             """)
@@ -51,7 +51,7 @@ final class CatalogDeleteProjectTests: _LocalizerTestCase {
             XCTAssertEqual(error, """
             Error: The value '123ABC' is invalid for '<id>'
             Help:  <id>  Unique ID of the Project.
-            Usage: localizer catalog delete project <id> [--storage <storage>] [--path <path>] [--debug]
+            Usage: localizer catalog delete project <id> [--storage <storage>] [--path <path>] [--debug] [--verbose]
               See 'localizer catalog delete project --help' for more information.
 
             """)
@@ -69,7 +69,7 @@ final class CatalogDeleteProjectTests: _LocalizerTestCase {
         default:
             XCTAssertEqual(error, """
             Error: Unknown Project '399150E5-6709-4CA8-AE54-C665EC3D1916'.
-            Usage: project <id> [--storage <storage>] [--path <path>] [--debug]
+            Usage: project <id> [--storage <storage>] [--path <path>] [--debug] [--verbose]
               See 'project --help' for more information.
 
             """)
@@ -97,7 +97,7 @@ final class CatalogDeleteProjectTests: _LocalizerTestCase {
             """)
             XCTAssertEqual(error, """
             Error: Unknown Project '399150E5-6709-4CA8-AE54-C665EC3D1916'.
-            Usage: project <id> [--storage <storage>] [--path <path>] [--debug]
+            Usage: project <id> [--storage <storage>] [--path <path>] [--debug] [--verbose]
               See 'project --help' for more information.
 
             """)

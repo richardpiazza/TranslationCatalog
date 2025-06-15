@@ -53,7 +53,7 @@ extension CatalogCommand {
         }
     }
 
-    func catalog(forStorage storage: Catalog.Storage, debug: Bool = false) throws -> TranslationCatalog.Catalog {
+    func catalog(forStorage storage: Catalog.Storage, verbose: Bool = false) throws -> TranslationCatalog.Catalog {
         let url = try catalogURL(forStorage: storage)
 
         let catalog: TranslationCatalog.Catalog
@@ -61,7 +61,7 @@ extension CatalogCommand {
         switch storage {
         case .sqlite:
             let sqliteCatalog = try SQLiteCatalog(url: url)
-            if debug {
+            if verbose {
                 sqliteCatalog.statementHook = { sql in
                     print("======SQL======\n\(sql)\n======___======\n")
                 }

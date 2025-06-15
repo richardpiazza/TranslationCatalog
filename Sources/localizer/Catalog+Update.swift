@@ -47,8 +47,12 @@ extension Catalog.Update {
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
 
+        @available(*, deprecated, renamed: "verbose")
         @Flag(help: "Outputs detailed execution")
         var noisy: Bool = false
+
+        @Flag(help: "Additional execution details in the standard output.")
+        var verbose: Bool = false
 
         func validate() throws {
             if let name {
@@ -59,7 +63,7 @@ extension Catalog.Update {
         }
 
         func run() async throws {
-            let catalog = try catalog(forStorage: storage, debug: noisy)
+            let catalog = try catalog(forStorage: storage, verbose: verbose || noisy)
 
             let project = try catalog.project(id)
 
@@ -121,8 +125,12 @@ extension Catalog.Update {
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
 
+        @available(*, deprecated, renamed: "verbose")
         @Flag(help: "Outputs detailed execution")
         var noisy: Bool = false
+
+        @Flag(help: "Additional execution details in the standard output.")
+        var verbose: Bool = false
 
         func validate() throws {
             if let key {
@@ -139,7 +147,7 @@ extension Catalog.Update {
         }
 
         func run() async throws {
-            let catalog = try catalog(forStorage: storage, debug: noisy)
+            let catalog = try catalog(forStorage: storage, verbose: verbose || noisy)
 
             let expression = try catalog.expression(id)
 
@@ -213,11 +221,15 @@ extension Catalog.Update {
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
 
+        @available(*, deprecated, renamed: "verbose")
         @Flag(help: "Outputs detailed execution")
         var noisy: Bool = false
 
+        @Flag(help: "Additional execution details in the standard output.")
+        var verbose: Bool = false
+
         func run() async throws {
-            let catalog = try catalog(forStorage: storage, debug: noisy)
+            let catalog = try catalog(forStorage: storage, verbose: verbose || noisy)
 
             let translation = try catalog.translation(id)
 
