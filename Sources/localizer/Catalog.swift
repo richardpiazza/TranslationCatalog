@@ -33,13 +33,10 @@ struct Catalog: AsyncParsableCommand {
         }
     }
     
-    static var configuration: CommandConfiguration = .init(
+    static let configuration = CommandConfiguration(
         commandName: "catalog",
         abstract: "Interact with the translation catalog.",
-        usage: nil,
-        discussion: "",
         version: "1.0.0",
-        shouldDisplay: true,
         subcommands: [
             Import.self,
             Export.self,
@@ -49,7 +46,6 @@ struct Catalog: AsyncParsableCommand {
             Update.self,
             Delete.self
         ],
-        defaultSubcommand: nil,
         helpNames: .shortAndLong
     )
 }

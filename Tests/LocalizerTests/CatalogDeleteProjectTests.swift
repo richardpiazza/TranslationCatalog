@@ -114,19 +114,43 @@ final class CatalogDeleteProjectTests: _LocalizerTestCase {
         
         try preconditions()
         
-        process.arguments = ["catalog", "delete", "project", "82362D51-8C80-4328-BADD-BBE2EA08889F", "--path", path]
+        process.arguments = ["catalog", "delete", "project", "82362D51-8C80-4328-BADD-BBE2EA08889F", "--path", path, "--debug"]
         try process.run()
         process.waitUntilExit()
         
         switch process.terminationStatus {
         case 0:
             XCTAssertEqual(output, """
+            ======SQL======
+            SELECT id, uuid, name
+            FROM project
+            WHERE uuid = \'82362D51-8C80-4328-BADD-BBE2EA08889F\'
+            LIMIT 1;
+            ======___======
+            
             Removing project \'LocaleSupport\' [82362D51-8C80-4328-BADD-BBE2EA08889F].
+            ======SQL======
+            SELECT id, uuid, name
+            FROM project
+            WHERE uuid = \'82362D51-8C80-4328-BADD-BBE2EA08889F\'
+            LIMIT 1;
+            ======___======
+            
+            ======SQL======
+            DELETE FROM project_expression
+            WHERE project_id = 1;
+            ======___======
+            
+            ======SQL======
+            DELETE FROM project
+            WHERE id = 1;
+            ======___======
+            
             Project \'LocaleSupport\' deleted.
             
             """)
         default:
-            XCTFail("Unexpected dirty exit.")
+            XCTFail("Unexpected dirty exit. Code \(process.terminationStatus).")
         }
     }
 }

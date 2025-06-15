@@ -3,13 +3,10 @@ import Foundation
 
 struct Configure: AsyncParsableCommand {
     
-    static var configuration: CommandConfiguration = .init(
+    static let configuration = CommandConfiguration(
         commandName: "configure",
         abstract: "Displays or alters the command configuration details.",
-        usage: nil,
-        discussion: "",
         version: "1.0.0",
-        shouldDisplay: true,
         subcommands: [
             Get.self,
             Set.self

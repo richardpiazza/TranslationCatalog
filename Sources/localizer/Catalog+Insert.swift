@@ -5,20 +5,16 @@ import TranslationCatalog
 
 extension Catalog {
     struct Insert: AsyncParsableCommand {
-        static var configuration: CommandConfiguration = .init(
+        static let configuration = CommandConfiguration(
             commandName: "insert",
             abstract: "Adds a single entity to the catalog.",
-            usage: nil,
-            discussion: "",
             version: "1.0.0",
-            shouldDisplay: true,
             subcommands: [
                 ProjectCommand.self,
                 ExpressionCommand.self,
                 TranslationCommand.self,
                 KeyValueCommand.self,
             ],
-            defaultSubcommand: nil,
             helpNames: .shortAndLong
         )
     }
@@ -27,15 +23,10 @@ extension Catalog {
 extension Catalog.Insert {
     struct ProjectCommand: CatalogCommand {
         
-        static var configuration: CommandConfiguration = .init(
+        static let configuration = CommandConfiguration(
             commandName: "project",
             abstract: "Add a Project to the catalog.",
-            usage: nil,
-            discussion: "",
             version: "1.0.0",
-            shouldDisplay: true,
-            subcommands: [],
-            defaultSubcommand: nil,
             helpNames: .shortAndLong
         )
         
@@ -67,15 +58,10 @@ extension Catalog.Insert {
     
     struct ExpressionCommand: CatalogCommand {
         
-        static var configuration: CommandConfiguration = .init(
+        static let configuration = CommandConfiguration(
             commandName: "expression",
             abstract: "Add an Expression to the catalog.",
-            usage: nil,
-            discussion: "",
             version: "1.0.0",
-            shouldDisplay: true,
-            subcommands: [],
-            defaultSubcommand: nil,
             helpNames: .shortAndLong
         )
         
@@ -130,15 +116,10 @@ extension Catalog.Insert {
 
     struct TranslationCommand: CatalogCommand {
         
-        static var configuration: CommandConfiguration = .init(
+        static let configuration = CommandConfiguration(
             commandName: "translation",
             abstract: "Add a Translation to the catalog.",
-            usage: nil,
-            discussion: "",
             version: "1.0.0",
-            shouldDisplay: true,
-            subcommands: [],
-            defaultSubcommand: nil,
             helpNames: .shortAndLong
         )
         
@@ -182,15 +163,10 @@ extension Catalog.Insert {
 
     struct KeyValueCommand: CatalogCommand {
 
-        static var configuration: CommandConfiguration = CommandConfiguration(
+        static let configuration = CommandConfiguration(
             commandName: "key-value",
             abstract: "Quickly add a Expression=Translation pairing to the catalog.",
-            usage: nil,
-            discussion: "",
             version: "1.0.0",
-            shouldDisplay: true,
-            subcommands: [],
-            defaultSubcommand: nil,
             helpNames: .shortAndLong
         )
 

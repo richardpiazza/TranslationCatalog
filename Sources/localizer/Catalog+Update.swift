@@ -5,19 +5,15 @@ import TranslationCatalog
 
 extension Catalog {
     struct Update: AsyncParsableCommand {
-        static var configuration: CommandConfiguration = .init(
+        static let configuration = CommandConfiguration(
             commandName: "update",
             abstract: "Update a single entity in the catalog.",
-            usage: nil,
-            discussion: "",
             version: "1.0.0",
-            shouldDisplay: true,
             subcommands: [
                 ProjectCommand.self,
                 ExpressionCommand.self,
                 TranslationCommand.self
             ],
-            defaultSubcommand: nil,
             helpNames: .shortAndLong
         )
     }
@@ -26,15 +22,10 @@ extension Catalog {
 extension Catalog.Update {
     struct ProjectCommand: CatalogCommand {
         
-        static var configuration: CommandConfiguration = .init(
+        static let configuration = CommandConfiguration(
             commandName: "project",
             abstract: "Update a Project in the catalog.",
-            usage: nil,
-            discussion: "",
             version: "1.0.0",
-            shouldDisplay: true,
-            subcommands: [],
-            defaultSubcommand: nil,
             helpNames: .shortAndLong
         )
         
@@ -93,15 +84,10 @@ extension Catalog.Update {
     
     struct ExpressionCommand: CatalogCommand {
         
-        static var configuration: CommandConfiguration = .init(
+        static let configuration = CommandConfiguration(
             commandName: "expression",
             abstract: "Update an Expression in the catalog.",
-            usage: nil,
-            discussion: "",
             version: "1.0.0",
-            shouldDisplay: true,
-            subcommands: [],
-            defaultSubcommand: nil,
             helpNames: .shortAndLong
         )
         
@@ -193,15 +179,10 @@ extension Catalog.Update {
 extension Catalog.Update {
     struct TranslationCommand: CatalogCommand {
         
-        static var configuration: CommandConfiguration = .init(
+        static let configuration = CommandConfiguration(
             commandName: "translation",
             abstract: "Update a Translation in the catalog.",
-            usage: nil,
-            discussion: "",
             version: "1.0.0",
-            shouldDisplay: true,
-            subcommands: [],
-            defaultSubcommand: nil,
             helpNames: .shortAndLong
         )
         

@@ -57,8 +57,7 @@ extension SQLiteStatement {
                     .column(ProjectExpressionEntity.projectID, op: .equal, value: projectID),
                     .column(ProjectExpressionEntity.expressionID, op: .equal, value: expressionID)
                 )
-            ),
-            .LIMIT(1)
+            )
         )
     }
     

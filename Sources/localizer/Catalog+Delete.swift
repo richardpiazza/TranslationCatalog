@@ -4,19 +4,15 @@ import TranslationCatalog
 
 extension Catalog {
     struct Delete: AsyncParsableCommand {
-        static var configuration: CommandConfiguration = .init(
+        static let configuration = CommandConfiguration(
             commandName: "delete",
             abstract: "Remove a single entity in the catalog.",
-            usage: nil,
-            discussion: "",
             version: "1.0.0",
-            shouldDisplay: true,
             subcommands: [
                 ProjectEntity.self,
                 ExpressionEntity.self,
                 TranslationEntity.self
             ],
-            defaultSubcommand: nil,
             helpNames: .shortAndLong
         )
     }
@@ -25,15 +21,10 @@ extension Catalog {
 extension Catalog.Delete {
     struct ProjectEntity: CatalogCommand {
         
-        static var configuration: CommandConfiguration = .init(
+        static let configuration = CommandConfiguration(
             commandName: "project",
             abstract: "Delete a Project from the catalog.",
-            usage: nil,
-            discussion: "",
             version: "1.0.0",
-            shouldDisplay: true,
-            subcommands: [],
-            defaultSubcommand: nil,
             helpNames: .shortAndLong
         )
         
@@ -64,15 +55,10 @@ extension Catalog.Delete {
     
     struct ExpressionEntity: CatalogCommand {
         
-        static var configuration: CommandConfiguration = .init(
+        static let configuration = CommandConfiguration(
             commandName: "expression",
             abstract: "Delete a Expression from the catalog.",
-            usage: nil,
-            discussion: "",
             version: "1.0.0",
-            shouldDisplay: true,
-            subcommands: [],
-            defaultSubcommand: nil,
             helpNames: .shortAndLong
         )
         
@@ -93,15 +79,10 @@ extension Catalog.Delete {
     
     struct TranslationEntity: CatalogCommand {
         
-        static var configuration: CommandConfiguration = .init(
+        static let configuration = CommandConfiguration(
             commandName: "translation",
             abstract: "Delete a Translation from the catalog.",
-            usage: nil,
-            discussion: "",
             version: "1.0.0",
-            shouldDisplay: true,
-            subcommands: [],
-            defaultSubcommand: nil,
             helpNames: .shortAndLong
         )
         

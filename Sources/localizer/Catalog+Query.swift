@@ -5,18 +5,14 @@ import TranslationCatalogIO
 
 extension Catalog {
     struct Query: AsyncParsableCommand {
-        static var configuration: CommandConfiguration = .init(
+        static let configuration = CommandConfiguration(
             commandName: "query",
             abstract: "Perform queries against the catalog.",
-            usage: nil,
-            discussion: "",
             version: "1.0.0",
-            shouldDisplay: true,
             subcommands: [
                 ProjectCommand.self,
                 ExpressionCommand.self
             ],
-            defaultSubcommand: nil,
             helpNames: .shortAndLong
         )
     }
@@ -25,15 +21,10 @@ extension Catalog {
 extension Catalog.Query {
     struct ProjectCommand: CatalogCommand {
         
-        static var configuration: CommandConfiguration = .init(
+        static let configuration = CommandConfiguration(
             commandName: "project",
             abstract: "Query for projects in the catalog.",
-            usage: nil,
-            discussion: "",
             version: "1.0.0",
-            shouldDisplay: true,
-            subcommands: [],
-            defaultSubcommand: nil,
             helpNames: .shortAndLong
         )
         
@@ -80,15 +71,10 @@ extension Catalog.Query {
     
     struct ExpressionCommand: CatalogCommand {
         
-        static var configuration: CommandConfiguration = .init(
+        static let configuration = CommandConfiguration(
             commandName: "expression",
             abstract: "Query for expressions in the catalog.",
-            usage: nil,
-            discussion: "",
             version: "1.0.0",
-            shouldDisplay: true,
-            subcommands: [],
-            defaultSubcommand: nil,
             helpNames: .shortAndLong
         )
         
