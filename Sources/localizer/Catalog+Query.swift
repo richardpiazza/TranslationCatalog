@@ -40,7 +40,7 @@ extension Catalog.Query {
         @available(*, deprecated, renamed: "verbose")
         @Flag(help: "Outputs detailed execution")
         var noisy: Bool = false
-        
+
         @Flag(help: "Additional execution details in the standard output.")
         var verbose: Bool = false
 
@@ -97,7 +97,7 @@ extension Catalog.Query {
         @available(*, deprecated, renamed: "verbose")
         @Flag(help: "Outputs detailed execution")
         var noisy: Bool = false
-        
+
         @Flag(help: "Additional execution details in the standard output.")
         var verbose: Bool = false
 
