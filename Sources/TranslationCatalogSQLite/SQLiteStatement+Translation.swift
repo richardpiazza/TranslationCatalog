@@ -61,8 +61,7 @@ extension SQLiteStatement {
             .FROM_TABLE(TranslationEntity.self),
             .WHERE(
                 .column(TranslationEntity.id, op: .equal, value: id)
-            ),
-            .LIMIT(1)
+            )
         )
     }
     
@@ -216,8 +215,7 @@ extension SQLiteStatement {
             ),
             .WHERE(
                 .column(TranslationEntity.id, op: .equal, value: id)
-            ),
-            .LIMIT(1)
+            )
         )
     }
     
@@ -238,8 +236,7 @@ extension SQLiteStatement {
             ),
             .WHERE(
                 .column(TranslationEntity.id, op: .equal, value: id)
-            ),
-            .LIMIT(1)
+            )
         )
     }
     
@@ -260,8 +257,7 @@ extension SQLiteStatement {
             ),
             .WHERE(
                 .column(TranslationEntity.id, op: .equal, value: id)
-            ),
-            .LIMIT(1)
+            )
         )
     }
     
@@ -275,8 +271,7 @@ extension SQLiteStatement {
             ),
             .WHERE(
                 .column(TranslationEntity.id, op: .equal, value: id)
-            ),
-            .LIMIT(1)
+            )
         )
     }
     
@@ -285,8 +280,7 @@ extension SQLiteStatement {
             .DELETE_FROM(TranslationEntity.self),
             .WHERE(
                 .column(TranslationEntity.id, op: .equal, value: id)
-            ),
-            .LIMIT(1)
+            )
         )
     }
     
