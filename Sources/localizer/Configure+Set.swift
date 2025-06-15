@@ -5,15 +5,10 @@ import Foundation
 extension Configure {
     struct Set: AsyncParsableCommand {
         
-        static var configuration: CommandConfiguration = .init(
+        static let configuration = CommandConfiguration(
             commandName: "set",
             abstract: "Sets configuration parameters.",
-            usage: nil,
-            discussion: "",
             version: "1.0.0",
-            shouldDisplay: true,
-            subcommands: [],
-            defaultSubcommand: nil,
             helpNames: .shortAndLong
         )
         

@@ -7,19 +7,15 @@ import TranslationCatalogIO
 extension Catalog {
     struct Export: CatalogCommand {
         
-        static var configuration: CommandConfiguration = .init(
+        static let configuration = CommandConfiguration(
             commandName: "export",
             abstract: "Export a translation file using the catalog.",
-            usage: nil,
             discussion: """
             iOS Localization should contain all keys (expressions) for a given language. There is no native fallback
             mechanism to a 'base' language. (i.e. en-GB > en). Given this functionality, when exporting the 'apple'
             format, all expressions will be included (preferring the script/region).
             """,
             version: "1.0.0",
-            shouldDisplay: true,
-            subcommands: [],
-            defaultSubcommand: nil,
             helpNames: .shortAndLong
         )
         

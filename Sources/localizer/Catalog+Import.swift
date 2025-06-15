@@ -8,17 +8,10 @@ import TranslationCatalogSQLite
 extension Catalog {
     struct Import: CatalogCommand {
         
-        static var configuration: CommandConfiguration = .init(
+        static let configuration = CommandConfiguration(
             commandName: "import",
             abstract: "Imports a translation file into the catalog.",
-            usage: nil,
-            discussion: """
-            
-            """,
             version: "1.0.0",
-            shouldDisplay: true,
-            subcommands: [],
-            defaultSubcommand: nil,
             helpNames: .shortAndLong
         )
         

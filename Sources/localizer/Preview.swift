@@ -5,15 +5,10 @@ import TranslationCatalogIO
 
 struct Preview: AsyncParsableCommand {
     
-    static var configuration: CommandConfiguration = .init(
+    static let configuration = CommandConfiguration(
         commandName: "preview",
         abstract: "Displays the localizations found in a translation file.",
-        usage: nil,
-        discussion: "",
         version: "1.0.0",
-        shouldDisplay: true,
-        subcommands: [],
-        defaultSubcommand: nil,
         helpNames: .shortAndLong
     )
     

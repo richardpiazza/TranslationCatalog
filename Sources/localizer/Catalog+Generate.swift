@@ -8,17 +8,13 @@ import TranslationCatalogFilesystem
 extension Catalog {
     struct Generate: CatalogCommand {
         
-        static var configuration: CommandConfiguration = .init(
+        static let configuration = CommandConfiguration(
             commandName: "generate",
             abstract: "Generate a viewable document using the strings catalog.",
-            usage: nil,
             discussion: """
             Available formats: \(RenderFormat.allCases.map{ $0.rawValue }.joined(separator: " "))
             """,
             version: "1.0.0",
-            shouldDisplay: true,
-            subcommands: [],
-            defaultSubcommand: nil,
             helpNames: .shortAndLong
         )
         
