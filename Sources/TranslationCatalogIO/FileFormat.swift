@@ -15,11 +15,6 @@ public enum FileFormat: CaseIterable {
         }
     }
 
-    @available(*, deprecated, renamed: "androidXML")
-    public static var android: FileFormat { androidXML }
-    @available(*, deprecated, renamed: "appleStrings")
-    public static var apple: FileFormat { appleStrings }
-
     public var fileExtension: String {
         switch self {
         case .androidXML: "xml"

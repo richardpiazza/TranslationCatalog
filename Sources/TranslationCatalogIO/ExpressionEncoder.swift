@@ -8,21 +8,6 @@ public struct ExpressionEncoder {
 
     private init() {}
 
-    /// Encode the first/primary `Translation` of each `Expression` in the collection.
-    ///
-    /// - throws: `Error`
-    /// - parameters:
-    ///   - expressions: The `Expression`s with `Translation`(s) to be encoded.
-    ///   - fileFormat: Format in which the `data` should be interpreted.
-    /// - returns: The encoded translations in the request format.
-    @available(*, deprecated, renamed: "encodeTranslations(for:fileFormat:localeIdentifier:defaultOrFirst:)")
-    public static func encodeTranslations(
-        for expressions: [TranslationCatalog.Expression],
-        fileFormat: FileFormat
-    ) throws -> Data {
-        try encodeTranslations(for: expressions, fileFormat: fileFormat, localeIdentifier: nil, defaultOrFirst: false)
-    }
-
     /// Encode the a `Translation` of each `Expression` in the collection.
     ///
     /// - throws: `Error`

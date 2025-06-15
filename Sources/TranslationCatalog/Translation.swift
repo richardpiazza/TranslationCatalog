@@ -46,28 +46,3 @@ public struct Translation: Codable, Hashable, Identifiable, LocaleRepresentable,
         value = translation.value
     }
 }
-
-public extension Translation {
-    @available(*, deprecated, renamed: "id")
-    var uuid: UUID { id }
-
-    @available(*, deprecated, renamed: "expressionId")
-    var expressionID: Expression.ID { expressionId }
-
-    @available(*, deprecated, renamed: "init(id:expressionId:languageCode:scriptCode:regionCode:value:)")
-    init(
-        uuid: UUID,
-        expressionID: Expression.ID = .zero,
-        languageCode: LanguageCode = .default,
-        scriptCode: ScriptCode? = nil,
-        regionCode: RegionCode? = nil,
-        value: String = ""
-    ) {
-        id = uuid
-        expressionId = expressionID
-        self.languageCode = languageCode
-        self.scriptCode = scriptCode
-        self.regionCode = regionCode
-        self.value = value
-    }
-}
