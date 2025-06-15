@@ -37,11 +37,15 @@ extension Catalog.Delete {
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
 
+        @available(*, deprecated, renamed: "verbose")
         @Flag(help: "Outputs additional details about the execution of the command.")
         var debug: Bool = false
 
+        @Flag(help: "Additional execution details in the standard output.")
+        var verbose: Bool = false
+
         func run() async throws {
-            let catalog = try catalog(forStorage: storage, debug: debug)
+            let catalog = try catalog(forStorage: storage, verbose: verbose || debug)
 
             guard let project = try? catalog.project(id) else {
                 Self.exit(withError: ValidationError("Unknown Project '\(id)'."))
