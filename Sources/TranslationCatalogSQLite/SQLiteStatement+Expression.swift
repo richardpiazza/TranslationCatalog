@@ -272,8 +272,7 @@ extension SQLiteStatement {
             ),
             .WHERE(
                 .column(ExpressionEntity.id, op: .equal, value: id)
-            ),
-            .LIMIT(1)
+            )
         )
     }
     
@@ -296,8 +295,7 @@ extension SQLiteStatement {
             ),
             .WHERE(
                 .column(ExpressionEntity.id, op: .equal, value: id)
-            ),
-            .LIMIT(1)
+            )
         )
     }
     

@@ -40,8 +40,7 @@ extension SQLiteStatement {
             ),
             .WHERE(
                 .column(ProjectEntity.id, op: .equal, value: id)
-            ),
-            .LIMIT(1)
+            )
         )
     }
     
