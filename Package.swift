@@ -32,7 +32,7 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/richardpiazza/LocaleSupport.git", .upToNextMajor(from: "0.6.0")),
+        .package(url: "https://github.com/richardpiazza/LocaleSupport.git", .upToNextMajor(from: "0.6.2")),
         .package(url: "https://github.com/richardpiazza/Statement.git", .upToNextMajor(from: "0.8.1")),
         .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMajor(from: "1.5.1")),
         .package(url: "https://github.com/CoreOffice/XMLCoder.git", .upToNextMajor(from: "0.17.1")),
