@@ -20,6 +20,7 @@ import Foundation
                 Catalog.Import.self,
                 Catalog.Export.self,
                 Configure.self,
+                Syntax.self
             ],
             helpNames: .shortAndLong)
     }()
