@@ -1,4 +1,3 @@
-import AsyncPlus
 import Foundation
 import LocaleSupport
 import TranslationCatalog
@@ -32,14 +31,7 @@ public class ExpressionImporter {
     }
 
     private let catalog: Catalog
-
-    private var sequence: PassthroughAsyncThrowingSequence<Operation>?
-    var stream: AsyncThrowingStream<Operation, Error> {
-        sequence?.finish()
-        let sequence = PassthroughAsyncThrowingSequence<Operation>()
-        self.sequence = sequence
-        return sequence.stream
-    }
+    private let sequence = AsyncStream.makeStream(of: Operation.self)
 
     public init(catalog: Catalog) {
         self.catalog = catalog
@@ -47,29 +39,32 @@ public class ExpressionImporter {
 
     public func importTranslations(
         from expressions: [TranslationCatalog.Expression]
-    ) -> AsyncThrowingStream<Operation, Error> {
+    ) async -> AsyncStream<Operation> {
         defer {
-            expressions
-                .sorted(by: { $0.name < $1.name })
-                .forEach {
-                    importExpression($0, into: catalog)
-                }
-
-            sequence?.finish()
+            importExpressions(expressions)
         }
-
-        return stream
+        
+        return sequence.stream
+    }
+    
+    private func importExpressions(_ expressions: [TranslationCatalog.Expression]) {
+        let sortedExpressions = expressions.sorted(by: { $0.name < $1.name })
+        for expression in sortedExpressions {
+            importExpression(expression, into: catalog)
+        }
+        
+        sequence.continuation.finish()
     }
 
     private func importExpression(_ expression: TranslationCatalog.Expression, into catalog: Catalog) {
         do {
             try catalog.createExpression(expression)
-            sequence?.yield(.createdExpression(expression))
+            sequence.continuation.yield(.createdExpression(expression))
         } catch CatalogError.expressionExistingWithKey(_, let existing) {
-            sequence?.yield(.skippedExpression(existing))
+            sequence.continuation.yield(.skippedExpression(existing))
             importTranslations(expression.replacingId(existing.id), into: catalog)
         } catch {
-            sequence?.yield(.failedExpression(expression, error))
+            sequence.continuation.yield(.failedExpression(expression, error))
         }
     }
 
@@ -91,11 +86,11 @@ public class ExpressionImporter {
     private func importTranslation(_ translation: Translation, into catalog: Catalog) {
         do {
             try catalog.createTranslation(translation)
-            sequence?.yield(.createdTranslation(translation))
+            sequence.continuation.yield(.createdTranslation(translation))
         } catch CatalogError.translationExistingWithValue {
-            sequence?.yield(.skippedTranslation(translation))
+            sequence.continuation.yield(.skippedTranslation(translation))
         } catch {
-            sequence?.yield(.failedTranslation(translation, error))
+            sequence.continuation.yield(.failedTranslation(translation, error))
         }
     }
 }

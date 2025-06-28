@@ -1,15 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "asyncplus",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/richardpiazza/AsyncPlus.git",
-      "state" : {
-        "revision" : "ab486f6744539f8814296cc85a7cc317f165dfc0",
-        "version" : "0.3.2"
-      }
-    },
-    {
       "identity" : "htmlstring",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/alexisakers/HTMLString.git",

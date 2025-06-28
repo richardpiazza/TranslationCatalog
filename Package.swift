@@ -7,11 +7,11 @@ let package = Package(
     name: "TranslationCatalog",
     defaultLocalization: "en",
     platforms: [
-        .macOS(.v12),
-        .macCatalyst(.v15),
-        .iOS(.v15),
-        .tvOS(.v15),
-        .watchOS(.v8),
+        .macOS(.v13),
+        .macCatalyst(.v16),
+        .iOS(.v16),
+        .tvOS(.v16),
+        .watchOS(.v9),
     ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
@@ -33,7 +33,6 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/richardpiazza/LocaleSupport.git", .upToNextMajor(from: "0.6.0")),
-        .package(url: "https://github.com/richardpiazza/AsyncPlus.git", .upToNextMinor(from: "0.3.2")),
         .package(url: "https://github.com/richardpiazza/Statement.git", .upToNextMajor(from: "0.8.1")),
         .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMajor(from: "1.5.1")),
         .package(url: "https://github.com/CoreOffice/XMLCoder.git", .upToNextMajor(from: "0.17.1")),
@@ -52,7 +51,6 @@ let package = Package(
             name: "TranslationCatalogIO",
             dependencies: [
                 "TranslationCatalog",
-                .product(name: "AsyncPlus", package: "AsyncPlus"),
                 .product(name: "XMLCoder", package: "XMLCoder"),
                 .product(name: "Plot", package: "Plot"),
                 .product(name: "HTMLString", package: "HTMLString"),
