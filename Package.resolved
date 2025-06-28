@@ -1,15 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "asyncplus",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/richardpiazza/AsyncPlus.git",
-      "state" : {
-        "revision" : "ab486f6744539f8814296cc85a7cc317f165dfc0",
-        "version" : "0.3.2"
-      }
-    },
-    {
       "identity" : "htmlstring",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/alexisakers/HTMLString.git",
@@ -23,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/richardpiazza/LocaleSupport.git",
       "state" : {
-        "revision" : "713795ac3cc73f2f340723ace514ac6cee3dfe1e",
-        "version" : "0.6.0"
+        "revision" : "a378eb2e9974b851182a8c81ee198d5409f643df",
+        "version" : "0.6.2"
       }
     },
     {
