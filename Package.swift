@@ -36,6 +36,7 @@ let package = Package(
         .package(url: "https://github.com/richardpiazza/AsyncPlus.git", .upToNextMinor(from: "0.3.2")),
         .package(url: "https://github.com/richardpiazza/Statement.git", .upToNextMajor(from: "0.8.1")),
         .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMajor(from: "1.5.1")),
+        .package(url: "https://github.com/apple/swift-syntax.git", .upToNextMajor(from: "509.0.0")),
         .package(url: "https://github.com/CoreOffice/XMLCoder.git", .upToNextMajor(from: "0.17.1")),
         .package(url: "https://github.com/JohnSundell/Plot.git", .upToNextMajor(from: "0.14.0")),
         .package(url: "https://github.com/alexisakers/HTMLString.git", .upToNextMajor(from: "6.0.0")),
@@ -84,6 +85,8 @@ let package = Package(
                 "TranslationCatalogSQLite",
                 "TranslationCatalogFilesystem",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
             ]
         ),
         .testTarget(
