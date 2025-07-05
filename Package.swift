@@ -19,6 +19,7 @@ let package = Package(
             name: "TranslationCatalog",
             targets: [
                 "TranslationCatalog",
+                "TranslationCatalogCoreData",
                 "TranslationCatalogIO",
                 "TranslationCatalogSQLite",
                 "TranslationCatalogFilesystem",
