@@ -90,7 +90,7 @@ extension TranslationCatalog.Expression {
             name: name,
             defaultLanguage: entity.defaultLanguage,
             context: entity.context,
-            feature: entity.feature,
+            feature: entity.feature
         )
     }
 }

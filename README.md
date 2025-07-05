@@ -35,6 +35,11 @@ A swift command line that can interact with a catalog along with importing, expo
 **`localizer`** makes it easy to generate Localization files for different platforms. A great workflow option is to use the `FilesystemCatalog` with a
 Github repo, and use Github Actions to generate updated localization files when changes are merged.
 
+File types that are currently supported:
+* Android `strings.xml`
+* Apple `Localizable.strings`
+* Web (Key/Value) `.json`
+
 ## Helpful Information
 
 * [Apple String Format Specifiers](https://developer.apple.com/library/archive/documentation/CoreFoundation/Conceptual/CFStrings/formatSpecifiers.html#//apple_ref/doc/uid/TP40004265)
