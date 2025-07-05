@@ -7,23 +7,33 @@ Swift toolkit for managing app localization &amp; internationalization.
 
 ## Usage
 
-This toolkit is comprised of several components:
+Whether managing string translations as a sole developer on a single project, or as a team across multiple projects, **TranslationCatalog** has tools for you:
+* Lightweight definitions for cataloging multiple languages translations
+* Multiple storage options
+* Command line utilities.
 
-### TranslationCatalog
+The _TranslationCatalog_ target includes entity definitions as well as a catalog that can persist and retrieve translations.
+The primary types are:
+* `Project`: A grouping of _expressions_.
+* `Expression`: Core type which identifies a collection of _translations_ for a unique key.
+* `Translation`: The translated value of an _expression_ for a specific Locale.
 
-Entity definitions for a lightweight catalog that can persist and retrieve translations.
+## Storage Options
 
-### TranslationCatalogFilesystem
+**TranslationCatalog** has multiple default storage classes which all implement the `Catalog` protocol.
 
-A cross-platform implementation of the _Translation Catalog_ that uses directories and JSON documents.
+| Class | Medium | Notes |
+| --- | --- | --- |
+| `CoreDataCatalog` | CoreData (In-Memory / SQLite) | Great for Apple platforms & when persistence is not needed |
+| `FilesystemCatalog` | Directories & JSON Files | Optimized for a team who is using a Git Repository as a store |
+| `SQLiteCatalog` | SQLite Database | Lightweight, Fast & Cross-Platform all in a single file |
 
-### TranslationCatalogSQLite
-
-A cross-platform implementation of the _Translation Catalog_ that is backed by a SQLite store.
-
-### `localizer`
+## `localizer`
 
 A swift command line that can interact with a catalog along with importing, exporting, and documenting localizations.
+
+**`localizer`** makes it easy to generate Localization files for different platforms. A great workflow option is to use the `FilesystemCatalog` with a
+Github repo, and use Github Actions to generate updated localization files when changes are merged.
 
 ## Helpful Information
 
@@ -32,4 +42,4 @@ A swift command line that can interact with a catalog along with importing, expo
 
 ## Contribution
 
-Contributions to **LocaleSupport** are welcomed and encouraged!
+Contributions to **TranslationCatalog** are welcomed and encouraged!
