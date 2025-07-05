@@ -23,6 +23,14 @@ extension Catalog {
         projects = try self.projects(matching: GenericProjectQuery.named("class"))
         XCTAssertEqual(projects.count, 2)
     }
+    
+    /// Verify that a list of `Project`s can be found associated to an `Expression.ID`.
+    func assertQueryProjectsExpressionID() throws {
+        var projects = try projects(matching: GenericProjectQuery.expressionId(.expression2))
+        XCTAssertEqual(projects.count, 2)
+        projects = try self.projects(matching: GenericProjectQuery.expressionId(.expression5))
+        XCTAssertEqual(projects.count, 1)
+    }
 
     /// Verify that an existing `Project` can be found using its `id`.
     func assertQueryProjectId() throws {

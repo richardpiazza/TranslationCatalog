@@ -49,6 +49,13 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
         case GenericProjectQuery.named(let name):
             let entities = try db.projectEntities(statement: renderStatement(.selectProjects(withNameLike: name)))
             return try entities.map { try $0.project() }
+        case GenericProjectQuery.expressionId(let expressionId):
+            guard let entity = try db.expressionEntity(statement: renderStatement(.selectExpression(withID: expressionId))) else {
+                throw CatalogError.expressionId(expressionId)
+            }
+            
+            let entities = try db.projectEntities(statement: renderStatement(.selectProjects(withExpressionID: entity.id)))
+            return try entities.map { try $0.project() }
         default:
             throw CatalogError.unhandledQuery(query)
         }

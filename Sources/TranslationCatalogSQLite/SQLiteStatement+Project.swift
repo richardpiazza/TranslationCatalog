@@ -95,6 +95,23 @@ extension SQLiteStatement {
             )
         )
     }
+    
+    static func selectProjects(withExpressionID id: Int) -> Self {
+        SQLiteStatement(
+            .SELECT(
+                .column(ProjectEntity.id),
+                .column(ProjectEntity.uuid),
+                .column(ProjectEntity.name)
+            ),
+            .FROM(
+                .TABLE(ProjectEntity.self),
+                .JOIN_ON(ProjectExpressionEntity.self, attribute: ProjectExpressionEntity.projectID, equals: ProjectEntity.self, attribute: ProjectEntity.id)
+            ),
+            .WHERE(
+                .column(ProjectExpressionEntity.expressionID, op: .equal, value: id)
+            )
+        )
+    }
 
     static func insertProject(_ project: ProjectEntity) -> Self {
         SQLiteStatement(

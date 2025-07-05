@@ -47,20 +47,23 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
     }
 
     public func projects(matching query: any TranslationCatalog.CatalogQuery) throws -> [TranslationCatalog.Project] {
+        let request = ProjectEntity.fetchRequest()
+        
         switch query {
         case GenericProjectQuery.named(let named):
-            let request = ProjectEntity.fetchRequest()
             request.predicate = NSPredicate(format: "%K CONTAINS[cd] %@", "name", named)
-
-            return try viewContext.performAndWait {
-                try viewContext
-                    .fetch(request)
-                    .map {
-                        try TranslationCatalog.Project($0)
-                    }
-            }
+        case GenericProjectQuery.expressionId(let expressionId):
+            request.predicate = NSPredicate(format: "ANY %K == %@", argumentArray: ["expressionEntities.id", expressionId])
         default:
             throw CatalogError.unhandledQuery(query)
+        }
+        
+        return try viewContext.performAndWait {
+            try viewContext
+                .fetch(request)
+                .map {
+                    try TranslationCatalog.Project($0)
+                }
         }
     }
 

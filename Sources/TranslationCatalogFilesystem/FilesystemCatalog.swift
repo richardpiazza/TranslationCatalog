@@ -96,6 +96,9 @@ public class FilesystemCatalog: Catalog {
         case GenericProjectQuery.named(let name):
             documents = projectDocuments
                 .filter { $0.name.lowercased().contains(name.lowercased()) }
+        case GenericProjectQuery.expressionId(let expressionId):
+            documents = projectDocuments
+                .filter { $0.expressionIds.contains(expressionId) }
         default:
             throw CatalogError.unhandledQuery(query)
         }
