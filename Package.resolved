@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "coredataplus",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/richardpiazza/CoreDataPlus.git",
+      "state" : {
+        "revision" : "224cda394e5f6d89c6c0f240e480fe0d7aa367b9",
+        "version" : "0.4.2"
+      }
+    },
+    {
       "identity" : "htmlstring",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/alexisakers/HTMLString.git",
@@ -52,6 +61,15 @@
       "state" : {
         "revision" : "011f0c765fb46d9cac61bca19be0527e99c98c8b",
         "version" : "1.5.1"
+      }
+    },
+    {
+      "identity" : "swift-log",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-log.git",
+      "state" : {
+        "revision" : "3d8596ed08bd13520157f0355e35caed215ffbfa",
+        "version" : "1.6.3"
       }
     },
     {

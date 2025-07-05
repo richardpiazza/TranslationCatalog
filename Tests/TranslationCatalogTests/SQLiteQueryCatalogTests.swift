@@ -3,7 +3,7 @@ import LocaleSupport
 @testable import TranslationCatalogSQLite
 import XCTest
 
-final class SQLiteQueryCatalogTests: XCTestCase {
+final class SQLiteQueryCatalogTests: QueryCatalogTestCase {
 
     private let fileManager: FileManager = .default
 
@@ -28,48 +28,14 @@ final class SQLiteQueryCatalogTests: XCTestCase {
         try fileManager.removeItem(at: url)
     }
 
-    private var catalog: SQLiteCatalog!
-
     override func setUpWithError() throws {
-        try super.setUpWithError()
-
         catalog = try SQLiteCatalog(url: url)
-        try catalog.assertPrepare()
+        try super.setUpWithError()
     }
 
     override func tearDownWithError() throws {
         try recycle()
         try super.tearDownWithError()
-    }
-
-    func testProjectQueries() throws {
-        try catalog.assertQueryProjects()
-        try catalog.assertQueryProjectsNamed()
-        try catalog.assertQueryProjectId()
-        try catalog.assertQueryProjectNamed()
-    }
-
-    func testExpressionQueries() throws {
-        try catalog.assertQueryExpressions()
-        try catalog.assertQueryExpressionsProjectID()
-        try catalog.assertQueryExpressionsNamed()
-        try catalog.assertQueryExpressionsKeyed()
-        try catalog.assertQueryExpressionsHaving()
-        try catalog.assertQueryExpressionsHavingOnly()
-        try catalog.assertQueryExpressionId()
-        try catalog.assertQueryExpressionKey()
-    }
-
-    func testTranslationQueries() throws {
-        try catalog.assertQueryTranslations()
-        try catalog.assertQueryTranslationsExpressionId()
-        try catalog.assertQueryTranslationsHaving()
-        try catalog.assertQueryTranslationsHavingOnly()
-        try catalog.assertQueryTranslationId()
-    }
-
-    func testMetadataQueries() throws {
-        try catalog.assertLocaleIdentifiers()
     }
 
     func testQueryProjectsHierarchy() throws {
