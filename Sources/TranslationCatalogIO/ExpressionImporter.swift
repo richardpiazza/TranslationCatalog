@@ -43,16 +43,16 @@ public class ExpressionImporter {
         defer {
             importExpressions(expressions)
         }
-        
+
         return sequence.stream
     }
-    
+
     private func importExpressions(_ expressions: [TranslationCatalog.Expression]) {
         let sortedExpressions = expressions.sorted(by: { $0.name < $1.name })
         for expression in sortedExpressions {
             importExpression(expression, into: catalog)
         }
-        
+
         sequence.continuation.finish()
     }
 
