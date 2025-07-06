@@ -16,6 +16,7 @@ class QueryCatalogTestCase: XCTestCase {
     func testProjectQueries() throws {
         try catalog.assertQueryProjects()
         try catalog.assertQueryProjectsNamed()
+        try catalog.assertQueryProjectsExpressionID()
         try catalog.assertQueryProjectId()
         try catalog.assertQueryProjectNamed()
     }

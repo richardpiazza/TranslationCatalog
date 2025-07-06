@@ -7,6 +7,7 @@ public protocol CatalogQuery {}
 public enum GenericProjectQuery: CatalogQuery {
     case id(Project.ID)
     case named(String)
+    case expressionId(Expression.ID)
 }
 
 public enum GenericExpressionQuery: CatalogQuery {
