@@ -34,9 +34,11 @@ extension Catalog {
             let expressions: [TranslationCatalog.Expression]
 
             switch storage {
+            #if os(macOS)
             case .coreData:
                 let catalog = try CoreDataCatalog(url: url)
                 expressions = try catalog.expressions()
+            #endif
             case .filesystem:
                 let catalog = try FilesystemCatalog(url: url)
                 expressions = try catalog.expressions()
