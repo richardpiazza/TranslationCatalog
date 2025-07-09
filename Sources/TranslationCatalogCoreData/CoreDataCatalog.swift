@@ -48,7 +48,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
 
     public func projects(matching query: any TranslationCatalog.CatalogQuery) throws -> [TranslationCatalog.Project] {
         let request = ProjectEntity.fetchRequest()
-        
+
         switch query {
         case GenericProjectQuery.named(let named):
             request.predicate = NSPredicate(format: "%K CONTAINS[cd] %@", "name", named)
@@ -57,7 +57,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
         default:
             throw CatalogError.unhandledQuery(query)
         }
-        
+
         return try viewContext.performAndWait {
             try viewContext
                 .fetch(request)

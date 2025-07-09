@@ -2,8 +2,8 @@ import ArgumentParser
 import Foundation
 import TranslationCatalog
 import TranslationCatalogCoreData
-import TranslationCatalogIO
 import TranslationCatalogFilesystem
+import TranslationCatalogIO
 import TranslationCatalogSQLite
 
 extension Catalog {

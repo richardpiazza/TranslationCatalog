@@ -95,7 +95,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func selectProjects(withExpressionID id: Int) -> Self {
         SQLiteStatement(
             .SELECT(
