@@ -31,21 +31,17 @@ extension Catalog.Delete {
         @Argument(help: "Unique ID of the Project.")
         var id: Project.ID
 
-        @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
+        @Option(help: "Storage mechanism used to persist the catalog. (*default) [core-data, filesystem, *sqlite]")
         var storage: Catalog.Storage = .default
 
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
 
-        @available(*, deprecated, renamed: "verbose")
-        @Flag(help: "Outputs additional details about the execution of the command.")
-        var debug: Bool = false
-
         @Flag(help: "Additional execution details in the standard output.")
         var verbose: Bool = false
 
         func run() async throws {
-            let catalog = try catalog(forStorage: storage, verbose: verbose || debug)
+            let catalog = try catalog(forStorage: storage, verbose: verbose)
 
             guard let project = try? catalog.project(id) else {
                 Self.exit(withError: ValidationError("Unknown Project '\(id)'."))

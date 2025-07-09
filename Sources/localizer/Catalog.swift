@@ -1,14 +1,18 @@
 import ArgumentParser
 import Foundation
 import TranslationCatalog
+import TranslationCatalogCoreData
 import TranslationCatalogFilesystem
 import TranslationCatalogSQLite
 
 struct Catalog: AsyncParsableCommand {
 
     enum Storage: String, CaseIterable, Codable, ExpressibleByArgument {
-        case sqlite
+        #if os(macOS)
+        case coreData = "core-data"
+        #endif
         case filesystem
+        case sqlite
 
         static var `default`: Storage = .sqlite
     }
@@ -38,17 +42,25 @@ protocol CatalogCommand: AsyncParsableCommand {
 extension CatalogCommand {
     func catalogURL(forStorage storage: Catalog.Storage) throws -> URL {
         switch storage {
-        case .sqlite:
+        #if os(macOS)
+        case .coreData:
             if let path, !path.isEmpty {
-                try FileManager.default.url(for: path)
+                return try FileManager.default.url(for: path)
             } else {
-                try FileManager.default.catalogURL()
+                return try FileManager.default.catalogURL()
             }
+        #endif
         case .filesystem:
             if let path, !path.isEmpty {
-                try FileManager.default.directoryURL(for: path)
+                return try FileManager.default.directoryURL(for: path)
             } else {
-                try FileManager.default.catalogDirectoryURL()
+                return try FileManager.default.catalogDirectoryURL()
+            }
+        case .sqlite:
+            if let path, !path.isEmpty {
+                return try FileManager.default.url(for: path)
+            } else {
+                return try FileManager.default.catalogURL()
             }
         }
     }
@@ -59,6 +71,12 @@ extension CatalogCommand {
         let catalog: TranslationCatalog.Catalog
 
         switch storage {
+        #if os(macOS)
+        case .coreData:
+            catalog = try CoreDataCatalog(url: url)
+        #endif
+        case .filesystem:
+            catalog = try FilesystemCatalog(url: url)
         case .sqlite:
             let sqliteCatalog = try SQLiteCatalog(url: url)
             if verbose {
@@ -67,8 +85,6 @@ extension CatalogCommand {
                 }
             }
             catalog = sqliteCatalog
-        case .filesystem:
-            catalog = try FilesystemCatalog(url: url)
         }
 
         return catalog

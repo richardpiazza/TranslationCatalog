@@ -41,15 +41,11 @@ extension Catalog.Update {
         @Option(help: "Remove an expression from a project.")
         var unlinkExpression: TranslationCatalog.Expression.ID?
 
-        @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
+        @Option(help: "Storage mechanism used to persist the catalog. (*default) [core-data, filesystem, *sqlite]")
         var storage: Catalog.Storage = .default
 
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
-
-        @available(*, deprecated, renamed: "verbose")
-        @Flag(help: "Outputs detailed execution")
-        var noisy: Bool = false
 
         @Flag(help: "Additional execution details in the standard output.")
         var verbose: Bool = false
@@ -63,7 +59,7 @@ extension Catalog.Update {
         }
 
         func run() async throws {
-            let catalog = try catalog(forStorage: storage, verbose: verbose || noisy)
+            let catalog = try catalog(forStorage: storage, verbose: verbose)
 
             let project = try catalog.project(id)
 
@@ -125,10 +121,6 @@ extension Catalog.Update {
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
 
-        @available(*, deprecated, renamed: "verbose")
-        @Flag(help: "Outputs detailed execution")
-        var noisy: Bool = false
-
         @Flag(help: "Additional execution details in the standard output.")
         var verbose: Bool = false
 
@@ -147,7 +139,7 @@ extension Catalog.Update {
         }
 
         func run() async throws {
-            let catalog = try catalog(forStorage: storage, verbose: verbose || noisy)
+            let catalog = try catalog(forStorage: storage, verbose: verbose)
 
             let expression = try catalog.expression(id)
 
@@ -221,15 +213,11 @@ extension Catalog.Update {
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
 
-        @available(*, deprecated, renamed: "verbose")
-        @Flag(help: "Outputs detailed execution")
-        var noisy: Bool = false
-
         @Flag(help: "Additional execution details in the standard output.")
         var verbose: Bool = false
 
         func run() async throws {
-            let catalog = try catalog(forStorage: storage, verbose: verbose || noisy)
+            let catalog = try catalog(forStorage: storage, verbose: verbose)
 
             let translation = try catalog.translation(id)
 

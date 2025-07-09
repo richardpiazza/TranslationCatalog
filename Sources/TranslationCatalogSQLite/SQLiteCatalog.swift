@@ -53,7 +53,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             guard let entity = try db.expressionEntity(statement: renderStatement(.selectExpression(withID: expressionId))) else {
                 throw CatalogError.expressionId(expressionId)
             }
-            
+
             let entities = try db.projectEntities(statement: renderStatement(.selectProjects(withExpressionID: entity.id)))
             return try entities.map { try $0.project() }
         default:

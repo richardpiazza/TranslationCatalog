@@ -12,13 +12,13 @@ extension Configure {
             helpNames: .shortAndLong
         )
 
-        @Option(help: "")
+        @Option(help: "The default LanguageCode used when no other option is presented.")
         var defaultLanguage: LanguageCode?
 
-        @Option(help: "")
+        @Option(help: "The default RegionCode used when no other option is presented.")
         var defaultRegion: RegionCode?
 
-        @Option(help: "")
+        @Option(help: "Storage mechanism used to persist the catalog. (*default) [core-data, filesystem, *sqlite]")
         var defaultStorage: Catalog.Storage?
 
         func run() async throws {

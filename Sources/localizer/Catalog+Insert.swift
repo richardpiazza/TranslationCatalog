@@ -33,7 +33,7 @@ extension Catalog.Insert {
         @Argument(help: "Name that identifies a collection of expressions.")
         var name: String
 
-        @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
+        @Option(help: "Storage mechanism used to persist the catalog. (*default) [core-data, filesystem, *sqlite]")
         var storage: Catalog.Storage = .default
 
         @Option(help: "Path to catalog to use in place of the application library.")
