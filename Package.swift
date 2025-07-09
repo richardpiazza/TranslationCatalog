@@ -91,6 +91,7 @@ let package = Package(
             dependencies: [
                 "LocaleSupport",
                 "TranslationCatalog",
+                "TranslationCatalogCoreData",
                 "TranslationCatalogIO",
                 "TranslationCatalogSQLite",
                 "TranslationCatalogFilesystem",

@@ -37,7 +37,7 @@ extension Catalog {
         @Flag(help: "Indicates if a fallback translation should be used when no matching option is found.")
         var fallback: Bool = false
 
-        @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
+        @Option(help: "Storage mechanism used to persist the catalog. (*default) [core-data, filesystem, *sqlite]")
         var storage: Catalog.Storage = .default
 
         @Option(help: "Path to catalog to use in place of the application library.")

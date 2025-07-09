@@ -1,8 +1,9 @@
 import ArgumentParser
 import Foundation
 import TranslationCatalog
-import TranslationCatalogFilesystem
+import TranslationCatalogCoreData
 import TranslationCatalogIO
+import TranslationCatalogFilesystem
 import TranslationCatalogSQLite
 
 extension Catalog {
@@ -21,7 +22,7 @@ extension Catalog {
         @Argument(help: "The export format")
         var format: RenderFormat
 
-        @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
+        @Option(help: "Storage mechanism used to persist the catalog. (*default) [core-data, filesystem, *sqlite]")
         var storage: Catalog.Storage = .default
 
         @Option(help: "Path to catalog to use in place of the application library.")
@@ -33,15 +34,19 @@ extension Catalog {
             let expressions: [TranslationCatalog.Expression]
 
             switch storage {
-            case .sqlite:
-                let catalog = try SQLiteCatalog(url: url)
-                expressions = try catalog.expressions(matching: SQLiteCatalog.ExpressionQuery.hierarchy).sorted(by: { $0.name < $1.name })
+            case .coreData:
+                let catalog = try CoreDataCatalog(url: url)
+                expressions = try catalog.expressions()
             case .filesystem:
                 let catalog = try FilesystemCatalog(url: url)
-                expressions = try catalog.expressions().sorted(by: { $0.name < $1.name })
+                expressions = try catalog.expressions()
+            case .sqlite:
+                let catalog = try SQLiteCatalog(url: url)
+                expressions = try catalog.expressions(matching: SQLiteCatalog.ExpressionQuery.hierarchy)
             }
 
-            let render = try ExpressionRenderer.render(expressions: expressions, renderFormat: format)
+            let sortedExpressions = expressions.sorted(by: { $0.name < $1.name })
+            let render = try ExpressionRenderer.render(expressions: sortedExpressions, renderFormat: format)
             print(render)
         }
     }

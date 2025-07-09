@@ -15,7 +15,7 @@ final class CatalogDeleteProjectTests: _LocalizerTestCase {
             XCTAssertEqual(error, """
             Error: Missing expected argument '<id>'
             Help:  <id>  Unique ID of the Project.
-            Usage: localizer catalog delete project <id> [--storage <storage>] [--path <path>] [--debug] [--verbose]
+            Usage: localizer catalog delete project <id> [--storage <storage>] [--path <path>] [--verbose]
               See 'localizer catalog delete project --help' for more information.
 
             """)
@@ -31,7 +31,7 @@ final class CatalogDeleteProjectTests: _LocalizerTestCase {
         case 0:
             let output = try XCTUnwrap(output)
             XCTAssertTrue(output.contains("OVERVIEW: Delete a Project from the catalog."))
-            XCTAssertTrue(output.contains("USAGE: localizer catalog delete project <id> [--storage <storage>] [--path <path>] [--debug]"))
+            XCTAssertTrue(output.contains("USAGE: localizer catalog delete project <id> [--storage <storage>] [--path <path>] [--verbose]"))
             XCTAssertTrue(output.contains("ARGUMENTS:"))
             XCTAssertTrue(output.contains("OPTIONS:"))
         default:
@@ -51,7 +51,7 @@ final class CatalogDeleteProjectTests: _LocalizerTestCase {
             XCTAssertEqual(error, """
             Error: The value '123ABC' is invalid for '<id>'
             Help:  <id>  Unique ID of the Project.
-            Usage: localizer catalog delete project <id> [--storage <storage>] [--path <path>] [--debug] [--verbose]
+            Usage: localizer catalog delete project <id> [--storage <storage>] [--path <path>] [--verbose]
               See 'localizer catalog delete project --help' for more information.
 
             """)
@@ -69,7 +69,7 @@ final class CatalogDeleteProjectTests: _LocalizerTestCase {
         default:
             XCTAssertEqual(error, """
             Error: Unknown Project '399150E5-6709-4CA8-AE54-C665EC3D1916'.
-            Usage: project <id> [--storage <storage>] [--path <path>] [--debug] [--verbose]
+            Usage: project <id> [--storage <storage>] [--path <path>] [--verbose]
               See 'project --help' for more information.
 
             """)
@@ -77,7 +77,7 @@ final class CatalogDeleteProjectTests: _LocalizerTestCase {
     }
 
     func testUnknownProjectIDDebug() throws {
-        process.arguments = ["catalog", "delete", "project", "399150E5-6709-4CA8-AE54-C665EC3D1916", "--path", path, "--debug"]
+        process.arguments = ["catalog", "delete", "project", "399150E5-6709-4CA8-AE54-C665EC3D1916", "--path", path, "--verbose"]
         try process.run()
         process.waitUntilExit()
 
@@ -97,7 +97,7 @@ final class CatalogDeleteProjectTests: _LocalizerTestCase {
             """)
             XCTAssertEqual(error, """
             Error: Unknown Project '399150E5-6709-4CA8-AE54-C665EC3D1916'.
-            Usage: project <id> [--storage <storage>] [--path <path>] [--debug] [--verbose]
+            Usage: project <id> [--storage <storage>] [--path <path>] [--verbose]
               See 'project --help' for more information.
 
             """)
@@ -113,7 +113,7 @@ final class CatalogDeleteProjectTests: _LocalizerTestCase {
 
         try preconditions()
 
-        process.arguments = ["catalog", "delete", "project", "82362D51-8C80-4328-BADD-BBE2EA08889F", "--path", path, "--debug"]
+        process.arguments = ["catalog", "delete", "project", "82362D51-8C80-4328-BADD-BBE2EA08889F", "--path", path, "--verbose"]
         try process.run()
         process.waitUntilExit()
 
