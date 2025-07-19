@@ -2,7 +2,7 @@ import Foundation
 import LocaleSupport
 
 /// A specific language/region variation of an `Expression`.
-public struct Translation: Codable, Hashable, Identifiable, LocaleRepresentable, Sendable {
+public struct Translation: Codable, Hashable, Identifiable, Sendable {
     /// Identifier that universally identifies this `Translation`
     public let id: UUID
     /// Identifier of the `Expression` that contains this `Translation`
@@ -69,6 +69,11 @@ public struct Translation: Codable, Hashable, Identifiable, LocaleRepresentable,
         script = translation.script
         region = translation.region
         value = translation.value
+    }
+    
+    /// The `Locale` represented by this instance.
+    public var locale: Locale {
+        Locale(languageCode: language, script: script, languageRegion: region)
     }
 
     /// The primary `LanguageCode` of the translated `value`

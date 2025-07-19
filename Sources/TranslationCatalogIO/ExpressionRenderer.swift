@@ -25,7 +25,7 @@ public struct ExpressionRenderer {
 
             for expression in expressions {
                 let table = try MarkdownTable<[Translation]>(
-                    paths: [\.id, \.localeIdentifier, \.value],
+                    paths: [\.id, \.locale.identifier, \.value],
                     headers: ["ID", "Locale Identifier", "Value"]
                 )
 

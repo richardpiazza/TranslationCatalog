@@ -632,6 +632,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
         )
     }
 
+    @available(*, deprecated)
     public func localeIdentifiers() throws -> Set<Locale.Identifier> {
         try Set(locales().map(\.identifier))
     }

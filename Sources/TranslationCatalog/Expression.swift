@@ -85,12 +85,12 @@ public struct Expression: Codable, Hashable, Identifiable, Sendable {
 
     /// The `Translation` that matches the provided `Locale.Identifier`.
     public func translation(with locale: Locale?) -> Translation? {
-        translations.first(where: { $0.localeIdentifier == locale?.identifier })
+        translations.first(where: { $0.locale == locale })
     }
 
     @available(*, deprecated, message: "Use `with: Locale?` variant.")
     public func translation(with identifier: Locale.Identifier?) -> Translation? {
-        translations.first(where: { $0.localeIdentifier == identifier })
+        translations.first(where: { $0.locale.identifier == identifier })
     }
 
     /// The `Translation` matching the `Locale.Identifier` or `defaultTranslation` if no matches found.

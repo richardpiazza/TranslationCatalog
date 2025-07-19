@@ -80,7 +80,7 @@ extension Node where Context == HTML.TableContext {
                 .text("\(translation.id)")
             ),
             .td(
-                .text(translation.localeIdentifier)
+                .text(translation.locale.identifier)
             ),
             .td(
                 .raw(translation.value.addingASCIIEntities())
@@ -97,7 +97,7 @@ extension Node where Context == HTML.TableContext {
             ),
             .td(
                 .b(
-                    .text(translation.localeIdentifier)
+                    .text(translation.locale.identifier)
                 )
             ),
             .td(

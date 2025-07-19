@@ -124,7 +124,7 @@ extension Catalog {
     /// Verify a `Translation` entity can be retrieved by `id`.
     func assertQueryTranslationId() throws {
         let translation = try translation(.translation8)
-        XCTAssertEqual(translation.localeIdentifier, "zh-Hans")
+        XCTAssertEqual(translation.locale.identifier, "zh-Hans")
     }
 
     func assertLocaleIdentifiers() throws {
