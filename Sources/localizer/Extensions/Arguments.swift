@@ -4,19 +4,31 @@ import Foundation
 #if hasFeature(RetroactiveAttribute)
 extension Locale.LanguageCode: @retroactive ExpressibleByArgument {
     public init?(argument: String) {
-        self = Locale.LanguageCode(argument)
+        guard let languageCode = try? Locale.LanguageCode(matching: argument) else {
+            return nil
+        }
+
+        self = languageCode
     }
 }
 
 extension Locale.Region: @retroactive ExpressibleByArgument {
     public init?(argument: String) {
-        self = Locale.Region(argument)
+        guard let region = try? Locale.Region(matching: argument) else {
+            return nil
+        }
+
+        self = region
     }
 }
 
 extension Locale.Script: @retroactive ExpressibleByArgument {
     public init?(argument: String) {
-        self = Locale.Script(argument)
+        guard let script = try? Locale.Script(matching: argument) else {
+            return nil
+        }
+
+        self = script
     }
 }
 
@@ -28,19 +40,31 @@ extension UUID: @retroactive ExpressibleByArgument {
 #else
 extension Locale.LanguageCode: ExpressibleByArgument {
     public init?(argument: String) {
-        self = Locale.LanguageCode(argument)
+        guard let languageCode = try? Locale.LanguageCode(matching: argument) else {
+            return nil
+        }
+
+        self = languageCode
     }
 }
 
 extension Locale.Region: ExpressibleByArgument {
     public init?(argument: String) {
-        self = Locale.Region(argument)
+        guard let region = try? Locale.Region(matching: argument) else {
+            return nil
+        }
+
+        self = region
     }
 }
 
 extension Locale.Script: ExpressibleByArgument {
     public init?(argument: String) {
-        self = Locale.Script(argument)
+        guard let script = try? Locale.Script(matching: argument) else {
+            return nil
+        }
+
+        self = script
     }
 }
 

@@ -29,7 +29,11 @@ extension TranslationEntity {
             return .default
         }
 
-        return Locale.LanguageCode(languageCodeRawValue)
+        guard let languageCode = try? Locale.LanguageCode(matching: languageCodeRawValue) else {
+            return .default
+        }
+
+        return languageCode
     }
 
     var script: Locale.Script? {
@@ -37,7 +41,7 @@ extension TranslationEntity {
             return nil
         }
 
-        return Locale.Script(scriptCodeRawValue)
+        return try? Locale.Script(matching: scriptCodeRawValue)
     }
 
     var region: Locale.Region? {
@@ -45,7 +49,7 @@ extension TranslationEntity {
             return nil
         }
 
-        return Locale.Region(regionCodeRawValue)
+        return try? Locale.Region(matching: regionCodeRawValue)
     }
 }
 

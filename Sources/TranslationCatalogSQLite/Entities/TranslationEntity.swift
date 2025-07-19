@@ -61,7 +61,11 @@ extension TranslationEntity {
 
 extension TranslationEntity {
     var languageCode: Locale.LanguageCode {
-        Locale.LanguageCode(language)
+        guard let languageCode = try? Locale.LanguageCode(matching: language) else {
+            return .default
+        }
+
+        return languageCode
     }
 
     var scriptCode: Locale.Script? {
@@ -69,7 +73,7 @@ extension TranslationEntity {
             return nil
         }
 
-        return Locale.Script(script)
+        return try? Locale.Script(matching: script)
     }
 
     var regionCode: Locale.Region? {
@@ -77,6 +81,6 @@ extension TranslationEntity {
             return nil
         }
 
-        return Locale.Region(region)
+        return try? Locale.Region(matching: region)
     }
 }

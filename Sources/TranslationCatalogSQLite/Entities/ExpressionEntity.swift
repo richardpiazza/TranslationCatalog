@@ -23,6 +23,16 @@ struct ExpressionEntity: Entity {
 }
 
 extension ExpressionEntity {
+    var languageCode: Locale.LanguageCode {
+        guard let languageCode = try? Locale.LanguageCode(matching: defaultLanguage) else {
+            return .default
+        }
+
+        return languageCode
+    }
+}
+
+extension ExpressionEntity {
     static let entity = ExpressionEntity()
     static var id: Attribute { entity["id"]! }
     static var uuid: Attribute { entity["uuid"]! }
@@ -50,7 +60,7 @@ extension ExpressionEntity {
             id: id,
             key: key,
             name: name,
-            defaultLanguageCode: Locale.LanguageCode(defaultLanguage),
+            defaultLanguageCode: languageCode,
             context: context,
             feature: feature,
             translations: translations
