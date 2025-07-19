@@ -71,9 +71,9 @@ extension Catalog {
             let entity = try XCTUnwrap(translations.first)
             XCTAssertEqual(entity.id, translationId)
             XCTAssertEqual(entity.expressionId, expressionId)
-            XCTAssertEqual(entity.languageCode, .en)
-            XCTAssertNil(entity.scriptCode)
-            XCTAssertEqual(entity.regionCode, .US)
+            XCTAssertEqual(entity.language, .english)
+            XCTAssertNil(entity.script)
+            XCTAssertEqual(entity.region, .unitedStates)
             XCTAssertEqual(entity.value, "Party-on Wayne!")
         }
 

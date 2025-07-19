@@ -72,11 +72,13 @@ public struct Translation: Codable, Hashable, Identifiable, LocaleRepresentable,
     }
 
     /// The primary `LanguageCode` of the translated `value`
+    @available(*, deprecated, renamed: "language")
     public var languageCode: LanguageCode {
         LanguageCode(rawValue: language.identifier) ?? .default
     }
 
     /// `ScriptCode` that provides precise dialect differentiation.
+    @available(*, deprecated, renamed: "script")
     public var scriptCode: ScriptCode? {
         guard let script else {
             return nil
@@ -86,6 +88,7 @@ public struct Translation: Codable, Hashable, Identifiable, LocaleRepresentable,
     }
 
     /// `RegionCode` that classifies a regional usage of the language.
+    @available(*, deprecated, renamed: "region")
     public var regionCode: RegionCode? {
         guard let region else {
             return nil

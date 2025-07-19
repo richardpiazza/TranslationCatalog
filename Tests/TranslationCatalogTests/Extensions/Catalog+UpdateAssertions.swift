@@ -196,7 +196,7 @@ extension Catalog {
 
         func postConditions(catalog: Catalog) throws {
             let entity = try catalog.translation(translationId)
-            XCTAssertEqual(entity.languageCode, .fr)
+            XCTAssertEqual(entity.language, .french)
         }
 
         try preConditions(catalog: self)
@@ -221,11 +221,11 @@ extension Catalog {
 
         func postConditions(catalog: Catalog) throws {
             var entity = try catalog.translation(id1)
-            XCTAssertEqual(entity.scriptCode, .Deva)
+            XCTAssertEqual(entity.script, .devanagari)
             entity = try catalog.translation(id2)
-            XCTAssertEqual(entity.scriptCode, nil)
+            XCTAssertEqual(entity.script, nil)
             entity = try catalog.translation(id3)
-            XCTAssertEqual(entity.scriptCode, .Hant)
+            XCTAssertEqual(entity.script, .hanTraditional)
         }
 
         try preConditions(catalog: self)
@@ -252,11 +252,11 @@ extension Catalog {
 
         func postConditions(catalog: Catalog) throws {
             var entity = try catalog.translation(id1)
-            XCTAssertEqual(entity.regionCode, .AU)
+            XCTAssertEqual(entity.region, .australia)
             entity = try catalog.translation(id2)
-            XCTAssertEqual(entity.regionCode, nil)
+            XCTAssertEqual(entity.region, nil)
             entity = try catalog.translation(id3)
-            XCTAssertEqual(entity.regionCode, .GB)
+            XCTAssertEqual(entity.region, .unitedKingdom)
         }
 
         try preConditions(catalog: self)

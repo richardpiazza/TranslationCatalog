@@ -29,7 +29,7 @@ public struct ExpressionRenderer {
                     headers: ["ID", "Locale Identifier", "Value"]
                 )
 
-                let translations = expression.translations.sorted(by: { $0.languageCode.rawValue < $1.languageCode.rawValue })
+                let translations = expression.translations.sorted(by: { $0.language.identifier < $1.language.identifier })
                 for translation in translations {
                     table.addRow(translation, strong: translation.language == expression.defaultLanguageCode)
                 }

@@ -44,7 +44,7 @@ extension HTML {
 
 extension Node where Context == HTML.BodyContext {
     static func localization(_ expression: Expression) -> Self {
-        let values = expression.translations.sorted(by: { $0.languageCode.rawValue < $1.languageCode.rawValue })
+        let values = expression.translations.sorted(by: { $0.language.identifier < $1.language.identifier })
 
         return .div(
             .h2(

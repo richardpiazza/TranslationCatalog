@@ -76,6 +76,6 @@ final class SQLiteQueryCatalogTests: QueryCatalogTestCase {
 
     func testQueryTranslationPrimaryKey() throws {
         let translation = try catalog.translation(matching: SQLiteCatalog.TranslationQuery.primaryKey(9))
-        XCTAssertEqual(translation.regionCode, .BR)
+        XCTAssertEqual(translation.region, .brazil)
     }
 }

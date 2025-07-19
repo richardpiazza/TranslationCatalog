@@ -34,9 +34,9 @@ extension TranslationEntity {
 
     init(_ translation: TranslationCatalog.Translation) {
         uuid = translation.id.uuidString
-        language = translation.languageCode.rawValue
-        script = translation.scriptCode?.rawValue
-        region = translation.regionCode?.rawValue
+        language = translation.language.identifier
+        script = translation.script?.identifier
+        region = translation.region?.identifier
         value = translation.value
     }
 

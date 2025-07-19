@@ -543,9 +543,9 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
         try context.performAndWait {
             let entity: TranslationEntity = context.make()
             entity.id = id
-            entity.languageCodeRawValue = translation.languageCode.rawValue
-            entity.regionCodeRawValue = translation.regionCode?.rawValue
-            entity.scriptCodeRawValue = translation.scriptCode?.rawValue
+            entity.languageCodeRawValue = translation.language.identifier
+            entity.regionCodeRawValue = translation.region?.identifier
+            entity.scriptCodeRawValue = translation.script?.identifier
             entity.value = translation.value
             expressionEntity.addToTranslationEntities(entity)
 
@@ -692,9 +692,9 @@ private extension ExpressionEntity {
                 entity = context.make()
                 entity.id = translationId
                 entity.value = translation.value
-                entity.languageCodeRawValue = translation.languageCode.rawValue
-                entity.scriptCodeRawValue = translation.scriptCode?.rawValue
-                entity.regionCodeRawValue = translation.regionCode?.rawValue
+                entity.languageCodeRawValue = translation.language.identifier
+                entity.scriptCodeRawValue = translation.script?.identifier
+                entity.regionCodeRawValue = translation.region?.identifier
             }
 
             addToTranslationEntities(entity)
