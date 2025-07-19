@@ -150,7 +150,6 @@ extension Catalog.Update {
                 try catalog.updateExpression(expression.id, action: GenericExpressionUpdate.name(name))
             }
 
-            // TODO: Locale.LanguageCode
             if let language = defaultLanguage, expression.defaultLanguageCode != language {
                 try catalog.updateExpression(expression.id, action: GenericExpressionUpdate.defaultLanguage(language))
             }
