@@ -1,4 +1,3 @@
-import LocaleSupport
 @testable import TranslationCatalog
 @testable import TranslationCatalogFilesystem
 import XCTest

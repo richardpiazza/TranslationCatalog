@@ -1,5 +1,5 @@
 import ArgumentParser
-import LocaleSupport
+import Foundation
 
 @main struct Command: AsyncParsableCommand {
     static let configuration = {
@@ -9,8 +9,8 @@ import LocaleSupport
             commandName: "localizer",
             abstract: "Utility for interacting with Android 'strings.xml', Apple 'Localizable.strings', and Web '*.json' localization files.",
             discussion: """
-            Default Language Code: \(LanguageCode.default.rawValue)
-            Default Region Code: \(RegionCode.default.rawValue)
+            Default Language Code: \(Locale.LanguageCode.localizerDefault.identifier)
+            Default Region Code: \(Locale.Region.localizerDefault.identifier)
             Default Storage: \(Catalog.Storage.default.rawValue)
             """,
             version: "1.0.0",

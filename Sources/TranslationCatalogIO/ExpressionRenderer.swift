@@ -8,7 +8,6 @@ public struct ExpressionRenderer {
 
     /// Create a string representation of a rendered `Expression` document.
     ///
-    /// - throws: `Error`
     /// - parameters:
     ///   - expressions: The collection of `Expression` which should be rendered into the document.
     ///   - renderFormat: The output format for the document.
@@ -26,13 +25,13 @@ public struct ExpressionRenderer {
 
             for expression in expressions {
                 let table = try MarkdownTable<[Translation]>(
-                    paths: [\.id, \.localeIdentifier, \.value],
+                    paths: [\.id, \.locale.identifier, \.value],
                     headers: ["ID", "Locale Identifier", "Value"]
                 )
 
-                let translations = expression.translations.sorted(by: { $0.languageCode.rawValue < $1.languageCode.rawValue })
+                let translations = expression.translations.sorted(by: { $0.language.identifier < $1.language.identifier })
                 for translation in translations {
-                    table.addRow(translation, strong: translation.languageCode == expression.defaultLanguage)
+                    table.addRow(translation, strong: translation.language == expression.defaultLanguageCode)
                 }
 
                 md += """

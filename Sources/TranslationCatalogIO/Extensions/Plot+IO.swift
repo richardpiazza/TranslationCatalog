@@ -44,7 +44,7 @@ extension HTML {
 
 extension Node where Context == HTML.BodyContext {
     static func localization(_ expression: Expression) -> Self {
-        let values = expression.translations.sorted(by: { $0.languageCode.rawValue < $1.languageCode.rawValue })
+        let values = expression.translations.sorted(by: { $0.language.identifier < $1.language.identifier })
 
         return .div(
             .h2(
@@ -66,7 +66,7 @@ extension Node where Context == HTML.BodyContext {
                     .th("Value")
                 ),
                 .forEach(values) {
-                    .if($0.languageCode == expression.defaultLanguage, .defaultValue($0), else: .value($0))
+                    .if($0.language == expression.defaultLanguageCode, .defaultValue($0), else: .value($0))
                 }
             )
         )
@@ -80,7 +80,7 @@ extension Node where Context == HTML.TableContext {
                 .text("\(translation.id)")
             ),
             .td(
-                .text(translation.localeIdentifier)
+                .text(translation.locale.identifier)
             ),
             .td(
                 .raw(translation.value.addingASCIIEntities())
@@ -97,7 +97,7 @@ extension Node where Context == HTML.TableContext {
             ),
             .td(
                 .b(
-                    .text(translation.localeIdentifier)
+                    .text(translation.locale.identifier)
                 )
             ),
             .td(

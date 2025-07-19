@@ -1,7 +1,6 @@
 #if canImport(CoreData)
 import CoreData
 import Foundation
-import LocaleSupport
 import TranslationCatalog
 
 typealias TranslationEntityCoreDataClassSet = NSSet
@@ -24,29 +23,33 @@ extension TranslationEntity {
     @NSManaged var expressionEntity: ExpressionEntity?
 }
 
-extension TranslationEntity: LocaleRepresentable {
-    public var languageCode: LanguageCode {
+extension TranslationEntity {
+    var language: Locale.LanguageCode {
         guard let languageCodeRawValue else {
-            return .en
+            return .default
         }
 
-        return LanguageCode(rawValue: languageCodeRawValue) ?? .en
+        guard let languageCode = try? Locale.LanguageCode(matching: languageCodeRawValue) else {
+            return .default
+        }
+
+        return languageCode
     }
 
-    public var scriptCode: ScriptCode? {
+    var script: Locale.Script? {
         guard let scriptCodeRawValue else {
             return nil
         }
 
-        return ScriptCode(rawValue: scriptCodeRawValue)
+        return try? Locale.Script(matching: scriptCodeRawValue)
     }
 
-    public var regionCode: RegionCode? {
+    var region: Locale.Region? {
         guard let regionCodeRawValue else {
             return nil
         }
 
-        return RegionCode(rawValue: regionCodeRawValue)
+        return try? Locale.Region(matching: regionCodeRawValue)
     }
 }
 
@@ -63,9 +66,9 @@ extension TranslationCatalog.Translation {
         self.init(
             id: id,
             expressionId: expressionId,
-            languageCode: entity.languageCode,
-            scriptCode: entity.scriptCode,
-            regionCode: entity.regionCode,
+            language: entity.language,
+            script: entity.script,
+            region: entity.region,
             value: entity.value ?? ""
         )
     }

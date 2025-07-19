@@ -1,5 +1,4 @@
 import Foundation
-import LocaleSupport
 import TranslationCatalog
 
 public class ExpressionImporter {

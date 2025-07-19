@@ -33,7 +33,7 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/richardpiazza/LocaleSupport.git", .upToNextMajor(from: "0.6.2")),
+        .package(url: "https://github.com/richardpiazza/LocaleSupport.git", .upToNextMajor(from: "0.7.0")),
         .package(url: "https://github.com/richardpiazza/Statement.git", .upToNextMajor(from: "0.8.1")),
         .package(url: "https://github.com/richardpiazza/CoreDataPlus.git", .upToNextMajor(from: "0.4.2")),
         .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMajor(from: "1.5.1")),
@@ -73,7 +73,6 @@ let package = Package(
             name: "TranslationCatalogSQLite",
             dependencies: [
                 "TranslationCatalog",
-                .product(name: "LocaleSupport", package: "LocaleSupport"),
                 .product(name: "Statement", package: "Statement"),
                 .product(name: "StatementSQLite", package: "Statement"),
                 .product(name: "SQLite", package: "SQLite.swift"),
@@ -83,13 +82,11 @@ let package = Package(
             name: "TranslationCatalogFilesystem",
             dependencies: [
                 "TranslationCatalog",
-                .product(name: "LocaleSupport", package: "LocaleSupport"),
             ]
         ),
         .executableTarget(
             name: "localizer",
             dependencies: [
-                "LocaleSupport",
                 "TranslationCatalog",
                 "TranslationCatalogCoreData",
                 "TranslationCatalogIO",
@@ -114,7 +111,6 @@ let package = Package(
                 "TranslationCatalogIO",
                 "TranslationCatalogFilesystem",
                 "TranslationCatalogSQLite",
-                .product(name: "LocaleSupport", package: "LocaleSupport"),
             ]
         ),
     ],

@@ -53,6 +53,37 @@ extension [String: String] {
     }
 
     func expressions(
+        defaultLanguage: Locale.LanguageCode = .default,
+        comment: String? = nil,
+        feature: String? = nil,
+        language: Locale.LanguageCode,
+        script: Locale.Script? = nil,
+        region: Locale.Region? = nil
+    ) -> [TranslationCatalog.Expression] {
+        map { key, value -> TranslationCatalog.Expression in
+            return TranslationCatalog.Expression(
+                id: .zero,
+                key: key,
+                name: key,
+                defaultLanguageCode: defaultLanguage,
+                context: comment,
+                feature: feature,
+                translations: [
+                    Translation(
+                        id: .zero,
+                        expressionId: .zero,
+                        language: language,
+                        script: script,
+                        region: region,
+                        value: value
+                    ),
+                ]
+            )
+        }
+    }
+
+    @available(*, deprecated, message: "Use `Locale` variant.")
+    func expressions(
         defaultLanguage: LanguageCode = .default,
         comment: String? = nil,
         feature: String? = nil,

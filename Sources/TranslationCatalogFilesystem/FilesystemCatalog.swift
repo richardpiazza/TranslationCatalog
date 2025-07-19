@@ -241,9 +241,9 @@ public class FilesystemCatalog: Catalog {
             while index >= 0 {
                 let expression = expressions[index]
                 if !expression.translations.contains(where: {
-                    $0.languageCode == languageCode &&
-                        $0.scriptCode == nil &&
-                        $0.regionCode == nil
+                    $0.language == languageCode &&
+                        $0.script == nil &&
+                        $0.region == nil
                 }) {
                     expressions.remove(at: index)
                 }
@@ -258,9 +258,9 @@ public class FilesystemCatalog: Catalog {
             while index >= 0 {
                 let expression = expressions[index]
                 if !expression.translations.contains(where: {
-                    $0.languageCode == languageCode &&
-                        $0.scriptCode == scriptCode &&
-                        $0.regionCode == regionCode
+                    $0.language == languageCode &&
+                        $0.script == scriptCode &&
+                        $0.region == regionCode
                 }) {
                     expressions.remove(at: index)
                 }
@@ -330,7 +330,7 @@ public class FilesystemCatalog: Catalog {
             id: id,
             key: expression.key,
             name: expression.name,
-            defaultLanguage: expression.defaultLanguage,
+            defaultLanguage: expression.defaultLanguageCode,
             context: expression.context,
             feature: expression.feature
         )
@@ -476,7 +476,7 @@ public class FilesystemCatalog: Catalog {
             }
         }
 
-        let query = GenericTranslationQuery.having(translation.expressionId, translation.languageCode, translation.scriptCode, translation.regionCode)
+        let query = GenericTranslationQuery.having(translation.expressionId, translation.language, translation.script, translation.region)
         if let existing = try? self.translation(matching: query) {
             if existing.value == translation.value {
                 throw CatalogError.translationExistingWithValue(translation.value, existing)
@@ -490,9 +490,9 @@ public class FilesystemCatalog: Catalog {
         let document = TranslationDocument(
             id: id,
             expressionID: translation.expressionId,
-            languageCode: translation.languageCode,
-            scriptCode: translation.scriptCode,
-            regionCode: translation.regionCode,
+            languageCode: translation.language,
+            scriptCode: translation.script,
+            regionCode: translation.region,
             value: translation.value
         )
 
@@ -533,7 +533,17 @@ public class FilesystemCatalog: Catalog {
 
     // MARK: - Metadata
 
+    public func locales() throws -> Set<Locale> {
+        Set(
+            translationDocuments
+                .map { translation in
+                    Locale(languageCode: translation.languageCode, script: translation.scriptCode, languageRegion: translation.regionCode)
+                }
+        )
+    }
+
+    @available(*, deprecated)
     public func localeIdentifiers() throws -> Set<Locale.Identifier> {
-        Set(translationDocuments.map(\.localeIdentifier))
+        try Set(locales().map(\.identifier))
     }
 }

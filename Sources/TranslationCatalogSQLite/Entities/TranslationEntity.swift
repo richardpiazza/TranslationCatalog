@@ -1,5 +1,4 @@
 import Foundation
-import LocaleSupport
 import Statement
 import TranslationCatalog
 
@@ -35,9 +34,9 @@ extension TranslationEntity {
 
     init(_ translation: TranslationCatalog.Translation) {
         uuid = translation.id.uuidString
-        language = translation.languageCode.rawValue
-        script = translation.scriptCode?.rawValue
-        region = translation.regionCode?.rawValue
+        language = translation.language.identifier
+        script = translation.script?.identifier
+        region = translation.region?.identifier
         value = translation.value
     }
 
@@ -49,40 +48,39 @@ extension TranslationEntity {
             throw CatalogError.dataTypeConversion("Invalid UUID '\(expressionID)'")
         }
 
-        return TranslationCatalog.Translation(id: id, expressionId: foreignID, languageCode: languageCode, scriptCode: scriptCode, regionCode: regionCode, value: value)
+        return TranslationCatalog.Translation(
+            id: id,
+            expressionId: foreignID,
+            language: languageCode,
+            script: scriptCode,
+            region: regionCode,
+            value: value
+        )
     }
 }
 
-extension TranslationEntity: LocaleRepresentable {
-    var languageCode: LanguageCode {
-        guard let language = LanguageCode(rawValue: language) else {
-            fatalError("Invalid LanguageCode '\(language)'")
+extension TranslationEntity {
+    var languageCode: Locale.LanguageCode {
+        guard let languageCode = try? Locale.LanguageCode(matching: language) else {
+            return .default
         }
 
-        return language
+        return languageCode
     }
 
-    var scriptCode: ScriptCode? {
+    var scriptCode: Locale.Script? {
         guard let script else {
             return nil
         }
 
-        guard let code = ScriptCode(rawValue: script) else {
-            return nil
-        }
-
-        return code
+        return try? Locale.Script(matching: script)
     }
 
-    var regionCode: RegionCode? {
+    var regionCode: Locale.Region? {
         guard let region else {
             return nil
         }
 
-        guard let code = RegionCode(rawValue: region) else {
-            return nil
-        }
-
-        return code
+        return try? Locale.Region(matching: region)
     }
 }
