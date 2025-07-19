@@ -36,7 +36,7 @@ public struct Translation: Codable, Hashable, Identifiable, LocaleRepresentable,
     public init(
         id: UUID = .zero,
         expressionId: Expression.ID = .zero,
-        languageCode: LanguageCode = .default,
+        languageCode: LanguageCode,
         scriptCode: ScriptCode? = nil,
         regionCode: RegionCode? = nil,
         value: String = ""
