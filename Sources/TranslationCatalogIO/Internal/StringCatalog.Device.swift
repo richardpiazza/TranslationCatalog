@@ -1,22 +1,6 @@
 extension StringCatalog {
-    struct Device: ExpressibleByStringLiteral, Hashable, Identifiable, Codable, CaseIterable {
+    struct Device: Hashable, Sendable {
         let rawValue: StringLiteralType
-        
-        var id: String { rawValue }
-        
-        init(stringLiteral rawValue: String) {
-            self.rawValue = rawValue
-        }
-        
-        init(from decoder: any Decoder) throws {
-            let container = try decoder.singleValueContainer()
-            rawValue = try container.decode(String.self)
-        }
-        
-        func encode(to encoder: any Encoder) throws {
-            var container = encoder.singleValueContainer()
-            try container.encode(rawValue)
-        }
         
         static let appleTV: Self = "appletv"
         static let appleVision: Self = "applevision"
@@ -26,16 +10,40 @@ extension StringCatalog {
         static let iPod: Self = "ipod"
         static let mac: Self = "mac"
         static let other: Self = "other"
-        
-        static let allCases: [StringCatalog.Device] = [
-            .iPhone,
-            .iPod,
-            .iPad,
-            .appleWatch,
-            .appleTV,
-            .appleVision,
-            .mac,
-            .other
-        ]
     }
+}
+
+extension StringCatalog.Device: ExpressibleByStringLiteral {
+    init(stringLiteral rawValue: String) {
+        self.rawValue = rawValue
+    }
+}
+
+extension StringCatalog.Device: CaseIterable {
+    static let allCases: [StringCatalog.Device] = [
+        .iPhone,
+        .iPod,
+        .iPad,
+        .appleWatch,
+        .appleTV,
+        .appleVision,
+        .mac,
+        .other
+    ]
+}
+
+extension StringCatalog.Device: Codable {
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        rawValue = try container.decode(String.self)
+    }
+    
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(rawValue)
+    }
+}
+
+extension StringCatalog.Device: Identifiable {
+    var id: String { rawValue }
 }

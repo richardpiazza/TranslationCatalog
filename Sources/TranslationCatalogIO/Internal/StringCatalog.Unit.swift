@@ -1,6 +1,8 @@
 extension StringCatalog {
-    struct Unit: Codable {
+    struct Unit: Hashable, Sendable {
         let state: UnitState
         let value: String
     }
 }
+
+extension StringCatalog.Unit: Codable {}
