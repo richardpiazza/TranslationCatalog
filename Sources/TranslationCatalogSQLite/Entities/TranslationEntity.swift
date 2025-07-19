@@ -1,5 +1,4 @@
 import Foundation
-import LocaleSupport
 import Statement
 import TranslationCatalog
 
@@ -49,40 +48,35 @@ extension TranslationEntity {
             throw CatalogError.dataTypeConversion("Invalid UUID '\(expressionID)'")
         }
 
-        return TranslationCatalog.Translation(id: id, expressionId: foreignID, languageCode: languageCode, scriptCode: scriptCode, regionCode: regionCode, value: value)
+        return TranslationCatalog.Translation(
+            id: id,
+            expressionId: foreignID,
+            language: languageCode,
+            script: scriptCode,
+            region: regionCode,
+            value: value
+        )
     }
 }
 
-extension TranslationEntity: LocaleRepresentable {
-    var languageCode: LanguageCode {
-        guard let language = LanguageCode(rawValue: language) else {
-            fatalError("Invalid LanguageCode '\(language)'")
-        }
-
-        return language
+extension TranslationEntity {
+    var languageCode: Locale.LanguageCode {
+        Locale.LanguageCode(language)
     }
 
-    var scriptCode: ScriptCode? {
+    var scriptCode: Locale.Script? {
         guard let script else {
             return nil
         }
 
-        guard let code = ScriptCode(rawValue: script) else {
-            return nil
-        }
-
-        return code
+        return Locale.Script(script)
     }
 
-    var regionCode: RegionCode? {
+    var regionCode: Locale.Region? {
         guard let region else {
             return nil
         }
 
-        guard let code = RegionCode(rawValue: region) else {
-            return nil
-        }
-
-        return code
+        return Locale.Region(region)
     }
 }

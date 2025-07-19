@@ -1,5 +1,4 @@
 import Foundation
-import LocaleSupport
 import Statement
 import StatementSQLite
 import TranslationCatalog
@@ -97,7 +96,7 @@ extension SQLiteStatement {
         )
     }
 
-    static func selectExpressionsHavingOnly(languageCode: LanguageCode) -> Self {
+    static func selectExpressionsHavingOnly(languageCode: Locale.LanguageCode) -> Self {
         .init(
             .SELECT_DISTINCT(
                 .column(ExpressionEntity.self, attribute: ExpressionEntity.id),
@@ -114,7 +113,7 @@ extension SQLiteStatement {
             ),
             .WHERE(
                 .AND(
-                    .column(TranslationEntity.self, attribute: TranslationEntity.language, op: .equal, value: languageCode.rawValue),
+                    .column(TranslationEntity.self, attribute: TranslationEntity.language, op: .equal, value: languageCode.identifier),
                     .logical(op: .isNull, segments: [Segment<WhereContext>.column(TranslationEntity.script)]),
                     .logical(op: .isNull, segments: [Segment<WhereContext>.column(TranslationEntity.region)])
                 )
@@ -122,7 +121,7 @@ extension SQLiteStatement {
         )
     }
 
-    static func selectExpressionsWith(languageCode: LanguageCode, scriptCode: ScriptCode?, regionCode: RegionCode?) -> Self {
+    static func selectExpressionsWith(languageCode: Locale.LanguageCode, scriptCode: Locale.Script?, regionCode: Locale.Region?) -> Self {
         .init(
             .SELECT_DISTINCT(
                 .column(ExpressionEntity.self, attribute: ExpressionEntity.id),
@@ -139,9 +138,9 @@ extension SQLiteStatement {
             ),
             .WHERE(
                 .AND(
-                    .column(TranslationEntity.self, attribute: TranslationEntity.language, op: .equal, value: languageCode.rawValue),
-                    .unwrap(scriptCode, transform: { .column(TranslationEntity.script, op: .equal, value: $0.rawValue) }),
-                    .unwrap(regionCode, transform: { .column(TranslationEntity.region, op: .equal, value: $0.rawValue) })
+                    .column(TranslationEntity.self, attribute: TranslationEntity.language, op: .equal, value: languageCode.identifier),
+                    .unwrap(scriptCode, transform: { .column(TranslationEntity.script, op: .equal, value: $0.identifier) }),
+                    .unwrap(regionCode, transform: { .column(TranslationEntity.region, op: .equal, value: $0.identifier) })
                 )
             )
         )
@@ -265,7 +264,7 @@ extension SQLiteStatement {
         )
     }
 
-    static func updateExpression(_ id: Int, defaultLanguage: LanguageCode) -> Self {
+    static func updateExpression(_ id: Int, defaultLanguage: Locale.LanguageCode) -> Self {
         SQLiteStatement(
             .UPDATE(
                 .TABLE(ExpressionEntity.self)
@@ -273,7 +272,7 @@ extension SQLiteStatement {
             .SET(
                 .comparison(op: .equal, segments: [
                     Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.defaultLanguage),
-                    .value(defaultLanguage.rawValue as DataTypeConvertible),
+                    .value(defaultLanguage.identifier as DataTypeConvertible),
                 ])
             ),
             .WHERE(

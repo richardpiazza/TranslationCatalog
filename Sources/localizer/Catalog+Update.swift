@@ -1,6 +1,5 @@
 import ArgumentParser
 import Foundation
-import LocaleSupport
 import TranslationCatalog
 
 extension Catalog {
@@ -101,7 +100,7 @@ extension Catalog.Update {
         var name: String?
 
         @Option(help: "The default/development language code.")
-        var defaultLanguage: LanguageCode?
+        var defaultLanguage: Locale.LanguageCode?
 
         @Option(help: "Contextual information that guides translators.")
         var context: String?
@@ -151,7 +150,8 @@ extension Catalog.Update {
                 try catalog.updateExpression(expression.id, action: GenericExpressionUpdate.name(name))
             }
 
-            if let language = defaultLanguage, expression.defaultLanguage != language {
+            // TODO: Locale.LanguageCode
+            if let language = defaultLanguage, expression.defaultLanguageCode != language {
                 try catalog.updateExpression(expression.id, action: GenericExpressionUpdate.defaultLanguage(language))
             }
 
@@ -190,13 +190,13 @@ extension Catalog.Update {
         var id: TranslationCatalog.Translation.ID
 
         @Option(help: "Language of the translation.")
-        var language: LanguageCode?
+        var language: Locale.LanguageCode?
 
         @Option(help: "Script code specifier.")
-        var script: ScriptCode?
+        var script: Locale.Script?
 
         @Option(help: "Region code specifier.")
-        var region: RegionCode?
+        var region: Locale.Region?
 
         @Option(help: "The translated string.")
         var value: String?
@@ -221,15 +221,15 @@ extension Catalog.Update {
 
             let translation = try catalog.translation(id)
 
-            if let language, translation.languageCode != language {
+            if let language, translation.language != language {
                 try catalog.updateTranslation(translation.id, action: GenericTranslationUpdate.language(language))
             }
 
-            if let script, translation.scriptCode != script {
+            if let script, translation.script != script {
                 try catalog.updateTranslation(translation.id, action: GenericTranslationUpdate.script(script))
             }
 
-            if let region, translation.regionCode != region {
+            if let region, translation.region != region {
                 try catalog.updateTranslation(translation.id, action: GenericTranslationUpdate.region(region))
             }
 

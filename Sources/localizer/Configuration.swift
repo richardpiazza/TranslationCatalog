@@ -1,9 +1,8 @@
 import Foundation
-import LocaleSupport
 
 struct Configuration: Codable {
-    var defaultLanguageCode: LanguageCode
-    var defaultRegionCode: RegionCode
+    var defaultLanguageCode: Locale.LanguageCode
+    var defaultRegionCode: Locale.Region
     var defaultStorage: Catalog.Storage
 
     init() {
@@ -14,8 +13,8 @@ struct Configuration: Codable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        defaultLanguageCode = try container.decodeIfPresent(LanguageCode.self, forKey: .defaultLanguageCode) ?? .default
-        defaultRegionCode = try container.decodeIfPresent(RegionCode.self, forKey: .defaultRegionCode) ?? .default
+        defaultLanguageCode = try container.decodeIfPresent(Locale.LanguageCode.self, forKey: .defaultLanguageCode) ?? .default
+        defaultRegionCode = try container.decodeIfPresent(Locale.Region.self, forKey: .defaultRegionCode) ?? .default
         defaultStorage = try container.decodeIfPresent(Catalog.Storage.self, forKey: .defaultStorage) ?? .default
     }
 
@@ -40,8 +39,8 @@ struct Configuration: Codable {
     }
 
     static func load(_ configuration: Configuration) throws {
-        LanguageCode.default = configuration.defaultLanguageCode
-        RegionCode.default = configuration.defaultRegionCode
+        Locale.LanguageCode.localizerDefault = configuration.defaultLanguageCode
+        Locale.Region.localizerDefault = configuration.defaultRegionCode
         Catalog.Storage.default = configuration.defaultStorage
     }
 

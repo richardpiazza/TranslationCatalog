@@ -1,12 +1,11 @@
 import Foundation
-import LocaleSupport
 import TranslationCatalog
 
 struct ExpressionDocument: Document {
     let id: UUID
     var key: String
     var name: String
-    var defaultLanguage: LanguageCode
+    var defaultLanguage: Locale.LanguageCode
     var context: String?
     var feature: String?
 }
@@ -17,7 +16,7 @@ extension TranslationCatalog.Expression {
             id: document.id,
             key: document.key,
             name: document.name,
-            defaultLanguage: document.defaultLanguage,
+            defaultLanguageCode: document.defaultLanguage,
             context: document.context,
             feature: document.feature,
             translations: translations

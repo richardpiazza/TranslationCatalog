@@ -66,7 +66,7 @@ extension Node where Context == HTML.BodyContext {
                     .th("Value")
                 ),
                 .forEach(values) {
-                    .if($0.languageCode == expression.defaultLanguage, .defaultValue($0), else: .value($0))
+                    .if($0.language == expression.defaultLanguageCode, .defaultValue($0), else: .value($0))
                 }
             )
         )

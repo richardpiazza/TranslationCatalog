@@ -1,6 +1,5 @@
 import ArgumentParser
 import Foundation
-import LocaleSupport
 
 extension Configure {
     struct Set: AsyncParsableCommand {
@@ -13,10 +12,10 @@ extension Configure {
         )
 
         @Option(help: "The default LanguageCode used when no other option is presented.")
-        var defaultLanguage: LanguageCode?
+        var defaultLanguage: Locale.LanguageCode?
 
         @Option(help: "The default RegionCode used when no other option is presented.")
-        var defaultRegion: RegionCode?
+        var defaultRegion: Locale.Region?
 
         @Option(help: "Storage mechanism used to persist the catalog. (*default) [core-data, filesystem, *sqlite]")
         var defaultStorage: Catalog.Storage?
@@ -25,12 +24,12 @@ extension Configure {
             var config = Configuration.default
 
             if let language = defaultLanguage {
-                print("Set 'defaultLanguageCode' = '\(language.rawValue)'; was \(config.defaultLanguageCode.rawValue)")
+                print("Set 'defaultLanguageCode' = '\(language.identifier)'; was \(config.defaultLanguageCode.identifier)")
                 config.defaultLanguageCode = language
             }
 
             if let region = defaultRegion {
-                print("Set 'defaultRegionCode' = '\(region.rawValue)'; was \(config.defaultRegionCode.rawValue)")
+                print("Set 'defaultRegionCode' = '\(region.identifier)'; was \(config.defaultRegionCode.identifier)")
                 config.defaultRegionCode = region
             }
 

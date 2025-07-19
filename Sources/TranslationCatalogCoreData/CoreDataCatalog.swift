@@ -209,16 +209,16 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
             fetchRequest.predicate = NSPredicate(format: "ANY %K == %@", argumentArray: ["projectEntities.id", projectId])
         case GenericExpressionQuery.translationsHaving(let languageCode, let scriptCode, let regionCode):
             var subpredicates: [NSPredicate] = [
-                NSPredicate(format: "ANY %K == %@", "translationEntities.languageCodeRawValue", languageCode.rawValue),
+                NSPredicate(format: "ANY %K == %@", "translationEntities.languageCodeRawValue", languageCode.identifier),
             ]
             if let scriptCode {
                 subpredicates.append(
-                    NSPredicate(format: "ANY %K == %@", "translationEntities.scriptCodeRawValue", scriptCode.rawValue)
+                    NSPredicate(format: "ANY %K == %@", "translationEntities.scriptCodeRawValue", scriptCode.identifier)
                 )
             }
             if let regionCode {
                 subpredicates.append(
-                    NSPredicate(format: "ANY %K == %@", "translationEntities.regionCodeRawValue", regionCode.rawValue)
+                    NSPredicate(format: "ANY %K == %@", "translationEntities.regionCodeRawValue", regionCode.identifier)
                 )
             }
 
@@ -226,7 +226,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
         case GenericExpressionQuery.translationsHavingOnly(let languageCode):
             fetchRequest.predicate = NSPredicate(
                 format: "SUBQUERY(translationEntities, $translation, $translation.languageCodeRawValue == %@ AND $translation.scriptCodeRawValue == NIL AND $translation.regionCodeRawValue == NIL).@count > 0",
-                languageCode.rawValue
+                languageCode.identifier
             )
         default:
             throw CatalogError.unhandledQuery(query)
@@ -300,7 +300,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
             entity.id = id
             entity.key = expression.key
             entity.name = expression.name
-            entity.defaultLanguageRawValue = expression.defaultLanguage.rawValue
+            entity.defaultLanguageRawValue = expression.defaultLanguageCode.identifier
             entity.context = expression.context
             entity.feature = expression.feature
             try entity.addTranslations(expression.translations, context: context)
@@ -336,7 +336,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
             }
 
             try context.performAndWait {
-                expressionEntity.defaultLanguageRawValue = languageCode.rawValue
+                expressionEntity.defaultLanguageRawValue = languageCode.identifier
                 try context.save()
             }
         case GenericExpressionUpdate.feature(let feature):
@@ -409,16 +409,16 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
         case GenericTranslationQuery.having(let expressionId, let languageCode, let scriptCode, let regionCode):
             var subpredicates: [NSPredicate] = [
                 NSPredicate(format: "%K == %@", argumentArray: ["expressionEntity.id", expressionId]),
-                NSPredicate(format: "%K == %@", "languageCodeRawValue", languageCode.rawValue),
+                NSPredicate(format: "%K == %@", "languageCodeRawValue", languageCode.identifier),
             ]
             if let scriptCode {
                 subpredicates.append(
-                    NSPredicate(format: "%K == %@", "scriptCodeRawValue", scriptCode.rawValue)
+                    NSPredicate(format: "%K == %@", "scriptCodeRawValue", scriptCode.identifier)
                 )
             }
             if let regionCode {
                 subpredicates.append(
-                    NSPredicate(format: "%K == %@", "regionCodeRawValue", regionCode.rawValue)
+                    NSPredicate(format: "%K == %@", "regionCodeRawValue", regionCode.identifier)
                 )
             }
 
@@ -428,7 +428,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
                 type: .and,
                 subpredicates: [
                     NSPredicate(format: "%K == %@", argumentArray: ["expressionEntity.id", expressionId]),
-                    NSPredicate(format: "%K == %@", "languageCodeRawValue", languageCode.rawValue),
+                    NSPredicate(format: "%K == %@", "languageCodeRawValue", languageCode.identifier),
                     NSPredicate(format: "%K == NIL", "scriptCodeRawValue"),
                     NSPredicate(format: "%K == NIL", "regionCodeRawValue"),
                 ]
@@ -459,11 +459,11 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
         case GenericTranslationQuery.having(let expressionId, let languageCode, let scriptCode, let regionCode):
             var subpredicates: [NSPredicate] = [
                 NSPredicate(format: "%K == %@", argumentArray: ["expressionEntity.id", expressionId]),
-                NSPredicate(format: "%K == %@", "languageCodeRawValue", languageCode.rawValue),
+                NSPredicate(format: "%K == %@", "languageCodeRawValue", languageCode.identifier),
             ]
             if let scriptCode {
                 subpredicates.append(
-                    NSPredicate(format: "%K == %@", "scriptCodeRawValue", scriptCode.rawValue)
+                    NSPredicate(format: "%K == %@", "scriptCodeRawValue", scriptCode.identifier)
                 )
             } else {
                 subpredicates.append(
@@ -472,7 +472,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
             }
             if let regionCode {
                 subpredicates.append(
-                    NSPredicate(format: "%K == %@", "regionCodeRawValue", regionCode.rawValue)
+                    NSPredicate(format: "%K == %@", "regionCodeRawValue", regionCode.identifier)
                 )
             } else {
                 subpredicates.append(
@@ -525,7 +525,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
             throw CatalogError.expressionId(translation.expressionId)
         }
 
-        let query = GenericTranslationQuery.having(translation.expressionId, translation.languageCode, translation.scriptCode, translation.regionCode)
+        let query = GenericTranslationQuery.having(translation.expressionId, translation.language, translation.script, translation.region)
         if let existingTranslation = try? self.translation(matching: query) {
             guard existingTranslation.value != translation.value else {
                 throw CatalogError.translationExistingWithValue(translation.value, existingTranslation)
@@ -567,30 +567,30 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
 
         switch action {
         case GenericTranslationUpdate.language(let languageCode):
-            guard translationEntity.languageCode != languageCode else {
+            guard translationEntity.language != languageCode else {
                 return
             }
 
             try context.performAndWait {
-                translationEntity.languageCodeRawValue = languageCode.rawValue
+                translationEntity.languageCodeRawValue = languageCode.identifier
                 try context.save()
             }
         case GenericTranslationUpdate.region(let regionCode):
-            guard translationEntity.regionCode != regionCode else {
+            guard translationEntity.region != regionCode else {
                 return
             }
 
             try context.performAndWait {
-                translationEntity.regionCodeRawValue = regionCode?.rawValue
+                translationEntity.regionCodeRawValue = regionCode?.identifier
                 try context.save()
             }
         case GenericTranslationUpdate.script(let scriptCode):
-            guard translationEntity.scriptCode != scriptCode else {
+            guard translationEntity.script != scriptCode else {
                 return
             }
 
             try context.performAndWait {
-                translationEntity.scriptCodeRawValue = scriptCode?.rawValue
+                translationEntity.scriptCodeRawValue = scriptCode?.identifier
                 try context.save()
             }
         case GenericTranslationUpdate.value(let value):
@@ -623,9 +623,17 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
         }
     }
 
-    public func localeIdentifiers() throws -> Set<Locale.Identifier> {
+    public func locales() throws -> Set<Locale> {
         let translations = try translations()
-        return Set(translations.map(\.localeIdentifier))
+        return Set(
+            translations.map { translation in
+                Locale(languageCode: translation.language, script: translation.script, languageRegion: translation.region)
+            }
+        )
+    }
+
+    public func localeIdentifiers() throws -> Set<Locale.Identifier> {
+        try Set(locales().map(\.identifier))
     }
 }
 
@@ -651,7 +659,7 @@ private extension ProjectEntity {
                 entity.id = expressionId
                 entity.key = expression.key
                 entity.name = expression.name
-                entity.defaultLanguageRawValue = expression.defaultLanguage.rawValue
+                entity.defaultLanguageRawValue = expression.defaultLanguageCode.identifier
                 entity.context = expression.context
                 entity.feature = expression.feature
             }

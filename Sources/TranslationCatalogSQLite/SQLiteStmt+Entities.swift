@@ -1,5 +1,4 @@
 import Foundation
-import LocaleSupport
 import SQLite
 import TranslationCatalog
 
@@ -34,10 +33,6 @@ extension Statement.Element {
         switch T.self {
         case is String.Type:
             return (columnText(position: position) as! T)
-        case is ScriptCode.Type:
-            return (ScriptCode(rawValue: columnText(position: position)) as! T)
-        case is RegionCode.Type:
-            return (RegionCode(rawValue: columnText(position: position)) as! T)
         default:
             return nil
         }
@@ -45,26 +40,6 @@ extension Statement.Element {
 
     func uuid(position: Int) -> UUID {
         UUID(uuidString: columnText(position: position))!
-    }
-
-    func languageCode(position: Int) -> LanguageCode {
-        LanguageCode(rawValue: columnText(position: position)) ?? .default
-    }
-
-    func scriptCode(position: Int) -> ScriptCode? {
-        guard !isNull(position: position) else {
-            return nil
-        }
-
-        return ScriptCode(rawValue: columnText(position: position))
-    }
-
-    func regionCode(position: Int) -> RegionCode? {
-        guard !isNull(position: position) else {
-            return nil
-        }
-
-        return RegionCode(rawValue: columnText(position: position))
     }
 
     var projectEntity: ProjectEntity {
