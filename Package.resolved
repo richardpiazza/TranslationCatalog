@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/richardpiazza/LocaleSupport.git",
       "state" : {
-        "branch" : "feature/foundation-locale",
-        "revision" : "c283a3391e5f93156d0924b62603523f0942c452"
+        "revision" : "b002b4d88f65a5d2c2ea08d27ef78482a1847d92",
+        "version" : "0.7.0"
       }
     },
     {
