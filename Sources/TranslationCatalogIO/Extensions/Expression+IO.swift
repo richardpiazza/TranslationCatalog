@@ -9,7 +9,7 @@ extension TranslationCatalog.Expression {
             id: id,
             key: key,
             name: name,
-            defaultLanguage: defaultLanguage,
+            defaultLanguageCode: defaultLanguageCode,
             context: context,
             feature: feature,
             translations: translations.map { Translation(translation: $0, expressionId: id) }
@@ -18,6 +18,29 @@ extension TranslationCatalog.Expression {
 }
 
 extension [TranslationCatalog.Expression] {
+    func compactMap(
+        locale: Locale?,
+        defaultOrFirst: Bool
+    ) -> [TranslationCatalog.Expression] {
+        compactMap { expression -> TranslationCatalog.Expression? in
+            let translation = defaultOrFirst ? expression.translationOrDefaultOrFirst(with: locale) : expression.translation(with: locale)
+            guard let translation else {
+                return nil
+            }
+
+            return Expression(
+                id: expression.id,
+                key: expression.key,
+                name: expression.name,
+                defaultLanguageCode: expression.defaultLanguageCode,
+                context: expression.context,
+                feature: expression.feature,
+                translations: [translation]
+            )
+        }
+    }
+
+    @available(*, deprecated, renamed: "compactMap(locale:defaultOrFirst:)")
     func compactMap(localeIdentifier: Locale.Identifier?, defaultOrFirst: Bool) -> [TranslationCatalog.Expression] {
         compactMap { expression -> TranslationCatalog.Expression? in
             let translation = defaultOrFirst ? expression.translationOrDefaultOrFirst(with: localeIdentifier) : expression.translation(with: localeIdentifier)

@@ -1,6 +1,5 @@
 import ArgumentParser
 import Foundation
-import LocaleSupport
 import TranslationCatalog
 import TranslationCatalogIO
 
@@ -23,13 +22,13 @@ extension Catalog {
         var format: FileFormat
 
         @Argument(help: "The language code to use for the strings.")
-        var language: LanguageCode
+        var language: Locale.LanguageCode
 
         @Option(help: "The script code to use for the strings.")
-        var script: ScriptCode?
+        var script: Locale.Script?
 
         @Option(help: "The region code to use for the strings.")
-        var region: RegionCode?
+        var region: Locale.Region?
 
         @Option(help: "Identifier of the project for which to limit results.")
         var projectId: Project.ID?
@@ -47,10 +46,11 @@ extension Catalog {
             let catalog = try catalog(forStorage: storage)
             let expressions = try queryExpressions(from: catalog, using: storage, projectId: projectId)
             let defaultOrFirst = (format == .appleStrings || fallback) ? true : false
+            let locale = Locale(languageCode: language)
             let data = try ExpressionEncoder.encodeTranslations(
                 for: expressions,
                 fileFormat: format,
-                localeIdentifier: localeIdentifier,
+                locale: locale,
                 defaultOrFirst: defaultOrFirst
             )
             let output = String(data: data, encoding: .utf8) ?? ""
@@ -82,10 +82,4 @@ extension Catalog {
             return expressions
         }
     }
-}
-
-extension Catalog.Export: LocaleRepresentable {
-    var languageCode: LocaleSupport.LanguageCode { language }
-    var scriptCode: LocaleSupport.ScriptCode? { script }
-    var regionCode: LocaleSupport.RegionCode? { region }
 }

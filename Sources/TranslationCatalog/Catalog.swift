@@ -80,5 +80,7 @@ public protocol Catalog {
 
     // MARK: - Metadata
 
+    func locales() throws -> Set<Locale>
+    @available(*, deprecated, renamed: "locales()")
     func localeIdentifiers() throws -> Set<Locale.Identifier>
 }

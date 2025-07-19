@@ -1,5 +1,4 @@
 #if canImport(CoreData)
-import LocaleSupport
 @testable import TranslationCatalog
 @testable import TranslationCatalogCoreData
 import XCTest

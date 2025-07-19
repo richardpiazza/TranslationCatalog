@@ -120,7 +120,7 @@ extension Catalog.Query {
 
             let table = try MarkdownTable(
                 content: expressions,
-                paths: [\.id.uuidString, \.key, \.name, \.defaultLanguage.rawValue, \.context, \.feature],
+                paths: [\.id.uuidString, \.key, \.name, \.defaultLanguageCode.identifier, \.context, \.feature],
                 headers: ["Expression.ID", "Key", "Name", "Default Language", "Context", "Feature"]
             )
 

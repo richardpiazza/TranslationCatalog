@@ -1,7 +1,6 @@
 #if canImport(CoreData)
 import CoreData
 import Foundation
-import LocaleSupport
 import TranslationCatalog
 
 typealias ExpressionEntityCoreDataClassSet = NSSet
@@ -61,12 +60,16 @@ extension ExpressionEntity {
 }
 
 extension ExpressionEntity {
-    var defaultLanguage: LanguageCode {
+    var defaultLanguage: Locale.LanguageCode {
         guard let defaultLanguageRawValue else {
-            return .en
+            return .default
         }
 
-        return LanguageCode(rawValue: defaultLanguageRawValue) ?? .en
+        guard let languageCode = try? Locale.LanguageCode(matching: defaultLanguageRawValue) else {
+            return .default
+        }
+
+        return languageCode
     }
 }
 
@@ -88,7 +91,7 @@ extension TranslationCatalog.Expression {
             id: id,
             key: key,
             name: name,
-            defaultLanguage: entity.defaultLanguage,
+            defaultLanguageCode: entity.defaultLanguage,
             context: entity.context,
             feature: entity.feature
         )

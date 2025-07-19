@@ -1,6 +1,5 @@
 import ArgumentParser
 import Foundation
-import LocaleSupport
 import TranslationCatalog
 import TranslationCatalogIO
 import TranslationCatalogSQLite
@@ -16,7 +15,7 @@ extension Catalog {
         )
 
         @Argument(help: "The language code for the translations in the imported file.")
-        var language: LanguageCode
+        var language: Locale.LanguageCode
 
         @Argument(help: "The path to the file being imported")
         var filename: String
@@ -25,13 +24,13 @@ extension Catalog {
         var format: FileFormat?
 
         @Option(help: "The script code for the translations in the imported file.")
-        var script: ScriptCode?
+        var script: Locale.Script?
 
         @Option(help: "The region code for the translations in the imported file.")
-        var region: RegionCode?
+        var region: Locale.Region?
 
         @Option(help: "The 'default' Language for the expressions being imported.")
-        var defaultLanguage: LanguageCode = .default
+        var defaultLanguage: Locale.LanguageCode = .localizerDefault
 
         @Option(help: "Storage mechanism used to persist the catalog. (*default) [core-data, filesystem, *sqlite]")
         var storage: Catalog.Storage = .default
@@ -58,9 +57,9 @@ extension Catalog {
                 from: data,
                 fileFormat: fileFormat,
                 defaultLanguage: defaultLanguage,
-                languageCode: language,
-                scriptCode: script,
-                regionCode: region
+                language: language,
+                script: script,
+                region: region
             )
 
             let importer = ExpressionImporter(catalog: catalog)

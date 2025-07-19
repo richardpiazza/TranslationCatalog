@@ -1,13 +1,12 @@
 import Foundation
-import LocaleSupport
 import TranslationCatalog
 
 struct TranslationDocument: Document {
     let id: UUID
     let expressionID: ExpressionDocument.ID
-    var languageCode: LanguageCode
-    var scriptCode: ScriptCode?
-    var regionCode: RegionCode?
+    var languageCode: Locale.LanguageCode
+    var scriptCode: Locale.Script?
+    var regionCode: Locale.Region?
     var value: String
 }
 
@@ -16,12 +15,10 @@ extension Translation {
         self.init(
             id: document.id,
             expressionId: document.expressionID,
-            languageCode: document.languageCode,
-            scriptCode: document.scriptCode,
-            regionCode: document.regionCode,
+            language: document.languageCode,
+            script: document.scriptCode,
+            region: document.regionCode,
             value: document.value
         )
     }
 }
-
-extension TranslationDocument: LocaleRepresentable {}

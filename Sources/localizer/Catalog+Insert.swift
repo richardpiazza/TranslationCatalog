@@ -1,6 +1,5 @@
 import ArgumentParser
 import Foundation
-import LocaleSupport
 import TranslationCatalog
 
 extension Catalog {
@@ -72,7 +71,7 @@ extension Catalog.Insert {
         var name: String
 
         @Option(help: "The default/development language code.")
-        var defaultLanguage: LanguageCode = .default
+        var defaultLanguage: Locale.LanguageCode = .localizerDefault
 
         @Option(help: "Contextual information that guides translators.")
         var context: String?
@@ -103,7 +102,7 @@ extension Catalog.Insert {
                 id: .zero,
                 key: key,
                 name: name,
-                defaultLanguage: defaultLanguage,
+                defaultLanguageCode: defaultLanguage,
                 context: context,
                 feature: feature,
                 translations: []
@@ -127,16 +126,16 @@ extension Catalog.Insert {
         var expression: TranslationCatalog.Expression.ID
 
         @Argument(help: "Language of the translation.")
-        var language: LanguageCode
+        var language: Locale.LanguageCode
 
         @Argument(help: "The translated string.")
         var value: String
 
         @Option(help: "Script code specifier.")
-        var script: ScriptCode?
+        var script: Locale.Script?
 
         @Option(help: "Region code specifier.")
-        var region: RegionCode?
+        var region: Locale.Region?
 
         @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
         var storage: Catalog.Storage = .default
@@ -150,9 +149,9 @@ extension Catalog.Insert {
             let translation = Translation(
                 id: .zero,
                 expressionId: expression,
-                languageCode: language,
-                scriptCode: script,
-                regionCode: region,
+                language: language,
+                script: nil,
+                region: nil,
                 value: value
             )
 
@@ -189,7 +188,7 @@ extension Catalog.Insert {
                 id: .zero,
                 key: key,
                 name: key,
-                defaultLanguage: .default,
+                defaultLanguageCode: .default,
                 context: nil,
                 feature: nil,
                 translations: []
@@ -200,9 +199,9 @@ extension Catalog.Insert {
             let translation = Translation(
                 id: .zero,
                 expressionId: expressionId,
-                languageCode: .default,
-                scriptCode: nil,
-                regionCode: nil,
+                language: .default,
+                script: nil,
+                region: nil,
                 value: value
             )
 

@@ -27,7 +27,14 @@ struct Preview: AsyncParsableCommand {
     func run() async throws {
         let url = try FileManager.default.url(for: input)
         let data = try Data(contentsOf: url)
-        let expressions = try ExpressionDecoder.decodeExpressions(from: data, fileFormat: format, defaultLanguage: .default, languageCode: .default, scriptCode: nil, regionCode: nil)
+        let expressions = try ExpressionDecoder.decodeExpressions(
+            from: data,
+            fileFormat: format,
+            defaultLanguage: .default,
+            language: .default,
+            script: nil,
+            region: nil
+        )
 
         for expression in expressions.sorted(by: { $0.name < $1.name }) {
             switch expression.translations.count {

@@ -277,7 +277,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
 
             try db.run(renderStatement(.updateExpression(entity.id, name: name)))
         case GenericExpressionUpdate.defaultLanguage(let languageCode):
-            guard languageCode.rawValue != entity.defaultLanguage else {
+            guard languageCode.identifier != entity.defaultLanguage else {
                 return
             }
 
@@ -418,7 +418,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             throw CatalogError.expressionId(translation.expressionId)
         }
 
-        let query = GenericTranslationQuery.having(translation.expressionId, translation.languageCode, translation.scriptCode, translation.regionCode)
+        let query = GenericTranslationQuery.having(translation.expressionId, translation.language, translation.script, translation.region)
         if let existing = try? self.translation(matching: query) {
             if existing.value == translation.value {
                 throw CatalogError.translationExistingWithValue(translation.value, existing)
@@ -448,19 +448,19 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
 
         switch action {
         case GenericTranslationUpdate.language(let languageCode):
-            guard languageCode.rawValue != entity.language else {
+            guard languageCode.identifier != entity.language else {
                 return
             }
 
             try db.run(renderStatement(.updateTranslation(entity.id, languageCode: languageCode)))
         case GenericTranslationUpdate.script(let scriptCode):
-            guard scriptCode?.rawValue != entity.script else {
+            guard scriptCode?.identifier != entity.script else {
                 return
             }
 
             try db.run(renderStatement(.updateTranslation(entity.id, scriptCode: scriptCode)))
         case GenericTranslationUpdate.region(let regionCode):
-            guard regionCode?.rawValue != entity.region else {
+            guard regionCode?.identifier != entity.region else {
                 return
             }
 
@@ -488,9 +488,18 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
 
     // MARK: - Metadata
 
-    public func localeIdentifiers() throws -> Set<Locale.Identifier> {
+    public func locales() throws -> Set<Locale> {
         let translationEntities = try db.translationEntities(statement: renderStatement(.selectAllFromTranslation))
-        return Set(translationEntities.map(\.localeIdentifier))
+        return Set(
+            translationEntities
+                .map { translation in
+                    Locale(languageCode: translation.languageCode, script: translation.scriptCode, languageRegion: translation.regionCode)
+                }
+        )
+    }
+
+    public func localeIdentifiers() throws -> Set<Locale.Identifier> {
+        try Set(locales().map(\.identifier))
     }
 }
 

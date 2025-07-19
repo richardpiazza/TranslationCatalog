@@ -8,7 +8,6 @@ public struct ExpressionRenderer {
 
     /// Create a string representation of a rendered `Expression` document.
     ///
-    /// - throws: `Error`
     /// - parameters:
     ///   - expressions: The collection of `Expression` which should be rendered into the document.
     ///   - renderFormat: The output format for the document.
@@ -32,7 +31,7 @@ public struct ExpressionRenderer {
 
                 let translations = expression.translations.sorted(by: { $0.languageCode.rawValue < $1.languageCode.rawValue })
                 for translation in translations {
-                    table.addRow(translation, strong: translation.languageCode == expression.defaultLanguage)
+                    table.addRow(translation, strong: translation.language == expression.defaultLanguageCode)
                 }
 
                 md += """

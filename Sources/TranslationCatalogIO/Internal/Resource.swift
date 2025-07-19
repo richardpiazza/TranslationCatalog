@@ -1,3 +1,4 @@
+import Foundation
 import LocaleSupport
 import TranslationCatalog
 import XMLCoder
@@ -25,15 +26,45 @@ struct Resource: Decodable, DynamicNodeDecoding {
 
 extension Resource {
     func expression(
-        uuid: Expression.ID,
+        uuid: TranslationCatalog.Expression.ID,
+        defaultLanguage: Locale.LanguageCode,
+        comment: String? = nil,
+        feature: String? = nil,
+        language: Locale.LanguageCode,
+        script: Locale.Script? = nil,
+        region: Locale.Region? = nil
+    ) -> TranslationCatalog.Expression {
+        TranslationCatalog.Expression(
+            id: uuid,
+            key: name,
+            name: name,
+            defaultLanguageCode: defaultLanguage,
+            context: comment,
+            feature: feature,
+            translations: [
+                Translation(
+                    id: .zero,
+                    expressionId: uuid,
+                    language: language,
+                    script: script,
+                    region: region,
+                    value: value
+                ),
+            ]
+        )
+    }
+
+    @available(*, deprecated, message: "Use `Locale` variant.")
+    func expression(
+        uuid: TranslationCatalog.Expression.ID,
         defaultLanguage: LanguageCode = .default,
         comment: String? = nil,
         feature: String? = nil,
         language: LanguageCode,
         script: ScriptCode? = nil,
         region: RegionCode? = nil
-    ) -> Expression {
-        Expression(
+    ) -> TranslationCatalog.Expression {
+        TranslationCatalog.Expression(
             id: uuid,
             key: name,
             name: name,

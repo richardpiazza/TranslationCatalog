@@ -26,7 +26,7 @@ extension Catalog {
         let projectId = UUID(uuidString: "305EFF45-DC61-4129-8BE7-D11FA03ABAA8")!
         let project = Project(id: projectId, name: "Project")
         let expressionId = UUID(uuidString: "966D8BFF-607C-4C8D-9F84-59B21DD5B25E")!
-        let expression = Expression(id: expressionId, key: "TEST_KEY", name: "Test", defaultLanguage: .en)
+        let expression = Expression(id: expressionId, key: "TEST_KEY", name: "Test", defaultLanguageCode: .english)
 
         func preConditions(catalog: Catalog) throws {
             try catalog.createProject(project)
@@ -47,7 +47,7 @@ extension Catalog {
     func assertUpdateProject_UnlinkExpression() throws {
         let projectId = UUID(uuidString: "305EFF45-DC61-4129-8BE7-D11FA03ABAA8")!
         let expressionId = UUID(uuidString: "966D8BFF-607C-4C8D-9F84-59B21DD5B25E")!
-        let expression = Expression(id: expressionId, key: "TEST_KEY", name: "Test", defaultLanguage: .en)
+        let expression = Expression(id: expressionId, key: "TEST_KEY", name: "Test", defaultLanguageCode: .english)
         let project = Project(id: projectId, name: "Project", expressions: [expression])
 
         func preConditions(catalog: Catalog) throws {
@@ -67,7 +67,7 @@ extension Catalog {
     /// Verify an `Expression.key` can be updated.
     func assertUpdateExpressionKey() throws {
         let expressionId = UUID(uuidString: "966D8BFF-607C-4C8D-9F84-59B21DD5B25E")!
-        let expression = Expression(id: expressionId, key: "TEST_KEY", name: "Test", defaultLanguage: .en)
+        let expression = Expression(id: expressionId, key: "TEST_KEY", name: "Test", defaultLanguageCode: .english)
 
         func preConditions(catalog: Catalog) throws {
             try catalog.createExpression(expression)
@@ -86,7 +86,7 @@ extension Catalog {
     /// Verify an `Expression.name` can be updated.
     func assertUpdateExpressionName() throws {
         let expressionId = UUID(uuidString: "966D8BFF-607C-4C8D-9F84-59B21DD5B25E")!
-        let expression = Expression(id: expressionId, key: "TEST_KEY", name: "Test", defaultLanguage: .en)
+        let expression = Expression(id: expressionId, key: "TEST_KEY", name: "Test", defaultLanguageCode: .english)
 
         func preConditions(catalog: Catalog) throws {
             try catalog.createExpression(expression)
@@ -105,7 +105,7 @@ extension Catalog {
     /// Verify an `Expression.defaultLanguage` can be updated.
     func assertUpdateExpressionDefaultLanguage() throws {
         let expressionId = UUID(uuidString: "966D8BFF-607C-4C8D-9F84-59B21DD5B25E")!
-        let expression = Expression(id: expressionId, key: "TEST_KEY", name: "Test", defaultLanguage: .en)
+        let expression = Expression(id: expressionId, key: "TEST_KEY", name: "Test", defaultLanguageCode: .english)
 
         func preConditions(catalog: Catalog) throws {
             try catalog.createExpression(expression)
@@ -113,11 +113,11 @@ extension Catalog {
 
         func postConditions(catalog: Catalog) throws {
             let entity = try catalog.expression(expressionId)
-            XCTAssertEqual(entity.defaultLanguage, .fr)
+            XCTAssertEqual(entity.defaultLanguageCode, .french)
         }
 
         try preConditions(catalog: self)
-        try updateExpression(expressionId, action: GenericExpressionUpdate.defaultLanguage(.fr))
+        try updateExpression(expressionId, action: GenericExpressionUpdate.defaultLanguage(.french))
         try postConditions(catalog: self)
     }
 
@@ -126,9 +126,9 @@ extension Catalog {
         let id1 = UUID(uuidString: "966D8BFF-607C-4C8D-9F84-59B21DD5B25E")!
         let id2 = UUID(uuidString: "0059A713-BDAD-4CEB-8D30-E0A9F332B151")!
         let id3 = UUID(uuidString: "BA8D479D-79F6-4A34-B17A-76446D44D408")!
-        let expression1 = Expression(id: id1, key: "KEY_ONE", name: "Test 1", defaultLanguage: .en, context: nil)
-        let expression2 = Expression(id: id2, key: "KEY_TWO", name: "Test 2", defaultLanguage: .en, context: "General")
-        let expression3 = Expression(id: id3, key: "KEY_THREE", name: "Test 3", defaultLanguage: .en, context: "Common")
+        let expression1 = Expression(id: id1, key: "KEY_ONE", name: "Test 1", defaultLanguageCode: .english, context: nil)
+        let expression2 = Expression(id: id2, key: "KEY_TWO", name: "Test 2", defaultLanguageCode: .english, context: "General")
+        let expression3 = Expression(id: id3, key: "KEY_THREE", name: "Test 3", defaultLanguageCode: .english, context: "Common")
 
         func preConditions(catalog: Catalog) throws {
             try catalog.createExpression(expression1)
@@ -157,9 +157,9 @@ extension Catalog {
         let id1 = UUID(uuidString: "966D8BFF-607C-4C8D-9F84-59B21DD5B25E")!
         let id2 = UUID(uuidString: "0059A713-BDAD-4CEB-8D30-E0A9F332B151")!
         let id3 = UUID(uuidString: "BA8D479D-79F6-4A34-B17A-76446D44D408")!
-        let expression1 = Expression(id: id1, key: "KEY_ONE", name: "Test 1", defaultLanguage: .en, feature: nil)
-        let expression2 = Expression(id: id2, key: "KEY_TWO", name: "Test 2", defaultLanguage: .en, feature: "General")
-        let expression3 = Expression(id: id3, key: "KEY_THREE", name: "Test 3", defaultLanguage: .en, feature: "Common")
+        let expression1 = Expression(id: id1, key: "KEY_ONE", name: "Test 1", defaultLanguageCode: .english, feature: nil)
+        let expression2 = Expression(id: id2, key: "KEY_TWO", name: "Test 2", defaultLanguageCode: .english, feature: "General")
+        let expression3 = Expression(id: id3, key: "KEY_THREE", name: "Test 3", defaultLanguageCode: .english, feature: "Common")
 
         func preConditions(catalog: Catalog) throws {
             try catalog.createExpression(expression1)
@@ -187,8 +187,8 @@ extension Catalog {
     func assertUpdateTranslationLanguage() throws {
         let expressionId = UUID(uuidString: "CC8AB0A7-E786-4789-A239-9EB958F8E803")!
         let translationId = UUID(uuidString: "83238FAC-5AFB-4F3A-85E8-B72153FAE5C8")!
-        let translation = TranslationCatalog.Translation(id: translationId, expressionId: expressionId, languageCode: .en, scriptCode: nil, regionCode: nil, value: "Test")
-        let expression = Expression(id: expressionId, key: "TEST_KEY", name: "A Expression", defaultLanguage: .en, translations: [translation])
+        let translation = TranslationCatalog.Translation(id: translationId, expressionId: expressionId, language: .english, script: nil, region: nil, value: "Test")
+        let expression = Expression(id: expressionId, key: "TEST_KEY", name: "A Expression", defaultLanguageCode: .english, translations: [translation])
 
         func preConditions(catalog: Catalog) throws {
             try catalog.createExpression(expression)
@@ -200,7 +200,7 @@ extension Catalog {
         }
 
         try preConditions(catalog: self)
-        try updateTranslation(translationId, action: GenericTranslationUpdate.language(.fr))
+        try updateTranslation(translationId, action: GenericTranslationUpdate.language(.french))
         try postConditions(catalog: self)
     }
 
@@ -210,10 +210,10 @@ extension Catalog {
         let id1 = UUID(uuidString: "83238FAC-5AFB-4F3A-85E8-B72153FAE5C8")!
         let id2 = UUID(uuidString: "F6A31A8E-325A-4DFC-B499-CE32725D2C37")!
         let id3 = UUID(uuidString: "C60193F0-C412-4405-A57A-8669E449307A")!
-        let t1 = TranslationCatalog.Translation(id: id1, expressionId: expressionId, languageCode: .en, scriptCode: nil, regionCode: nil, value: "Test")
-        let t2 = TranslationCatalog.Translation(id: id2, expressionId: expressionId, languageCode: .en, scriptCode: .Arab, regionCode: nil, value: "Test")
-        let t3 = TranslationCatalog.Translation(id: id3, expressionId: expressionId, languageCode: .en, scriptCode: .Hans, regionCode: nil, value: "Test")
-        let expression = Expression(id: expressionId, key: "TEST_KEY", name: "A Expression", defaultLanguage: .en, translations: [t1, t2, t3])
+        let t1 = TranslationCatalog.Translation(id: id1, expressionId: expressionId, language: .english, script: nil, region: nil, value: "Test")
+        let t2 = TranslationCatalog.Translation(id: id2, expressionId: expressionId, language: .english, script: .arabic, region: nil, value: "Test")
+        let t3 = TranslationCatalog.Translation(id: id3, expressionId: expressionId, language: .english, script: .hanSimplified, region: nil, value: "Test")
+        let expression = Expression(id: expressionId, key: "TEST_KEY", name: "A Expression", defaultLanguageCode: .english, translations: [t1, t2, t3])
 
         func preConditions(catalog: Catalog) throws {
             try catalog.createExpression(expression)
@@ -229,9 +229,9 @@ extension Catalog {
         }
 
         try preConditions(catalog: self)
-        try updateTranslation(id1, action: GenericTranslationUpdate.script(.Deva))
-        try updateTranslation(id2, action: GenericTranslationUpdate.script(nil))
-        try updateTranslation(id3, action: GenericTranslationUpdate.script(.Hant))
+        try updateTranslation(id1, action: GenericTranslationUpdate.script(.devanagari))
+        try updateTranslation(id2, action: GenericTranslationUpdate.script(Locale.Script?.none))
+        try updateTranslation(id3, action: GenericTranslationUpdate.script(.hanTraditional))
         try postConditions(catalog: self)
     }
 
@@ -241,10 +241,10 @@ extension Catalog {
         let id1 = UUID(uuidString: "83238FAC-5AFB-4F3A-85E8-B72153FAE5C8")!
         let id2 = UUID(uuidString: "F6A31A8E-325A-4DFC-B499-CE32725D2C37")!
         let id3 = UUID(uuidString: "C60193F0-C412-4405-A57A-8669E449307A")!
-        let t1 = TranslationCatalog.Translation(id: id1, expressionId: expressionId, languageCode: .en, regionCode: nil, value: "Test")
-        let t2 = TranslationCatalog.Translation(id: id2, expressionId: expressionId, languageCode: .en, regionCode: .GB, value: "Test")
-        let t3 = TranslationCatalog.Translation(id: id3, expressionId: expressionId, languageCode: .en, regionCode: .AU, value: "Test")
-        let expression = Expression(id: expressionId, key: "TEST_KEY", name: "A Expression", defaultLanguage: .en, translations: [t1, t2, t3])
+        let t1 = TranslationCatalog.Translation(id: id1, expressionId: expressionId, language: .english, region: nil, value: "Test")
+        let t2 = TranslationCatalog.Translation(id: id2, expressionId: expressionId, language: .english, region: .unitedKingdom, value: "Test")
+        let t3 = TranslationCatalog.Translation(id: id3, expressionId: expressionId, language: .english, region: .australia, value: "Test")
+        let expression = Expression(id: expressionId, key: "TEST_KEY", name: "A Expression", defaultLanguageCode: .english, translations: [t1, t2, t3])
 
         func preConditions(catalog: Catalog) throws {
             try catalog.createExpression(expression)
@@ -260,9 +260,9 @@ extension Catalog {
         }
 
         try preConditions(catalog: self)
-        try updateTranslation(id1, action: GenericTranslationUpdate.region(.AU))
-        try updateTranslation(id2, action: GenericTranslationUpdate.region(nil))
-        try updateTranslation(id3, action: GenericTranslationUpdate.region(.GB))
+        try updateTranslation(id1, action: GenericTranslationUpdate.region(.australia))
+        try updateTranslation(id2, action: GenericTranslationUpdate.region(Locale.Region?.none))
+        try updateTranslation(id3, action: GenericTranslationUpdate.region(.unitedKingdom))
         try postConditions(catalog: self)
     }
 
@@ -270,8 +270,8 @@ extension Catalog {
     func assertUpdateTranslationValue() throws {
         let expressionId = UUID(uuidString: "CF4964F5-B074-40FF-AB2F-F943DFB78276")!
         let translationId = UUID(uuidString: "55C175DC-3DE8-4783-9CA1-1A970B63C9C7")!
-        let translation = TranslationCatalog.Translation(id: translationId, expressionId: expressionId, languageCode: .en, value: "Initial")
-        let expression = Expression(id: expressionId, key: "KEY", name: "Name", defaultLanguage: .en, translations: [translation])
+        let translation = TranslationCatalog.Translation(id: translationId, expressionId: expressionId, language: .english, value: "Initial")
+        let expression = Expression(id: expressionId, key: "KEY", name: "Name", defaultLanguageCode: .english, translations: [translation])
 
         func preConditions(catalog: Catalog) throws {
             try catalog.createExpression(expression)

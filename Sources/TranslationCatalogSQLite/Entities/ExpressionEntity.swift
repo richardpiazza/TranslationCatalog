@@ -1,5 +1,4 @@
 import Foundation
-import LocaleSupport
 import Statement
 import TranslationCatalog
 
@@ -24,6 +23,16 @@ struct ExpressionEntity: Entity {
 }
 
 extension ExpressionEntity {
+    var languageCode: Locale.LanguageCode {
+        guard let languageCode = try? Locale.LanguageCode(matching: defaultLanguage) else {
+            return .default
+        }
+
+        return languageCode
+    }
+}
+
+extension ExpressionEntity {
     static let entity = ExpressionEntity()
     static var id: Attribute { entity["id"]! }
     static var uuid: Attribute { entity["uuid"]! }
@@ -37,7 +46,7 @@ extension ExpressionEntity {
         uuid = expression.id.uuidString
         key = expression.key
         name = expression.name
-        defaultLanguage = expression.defaultLanguage.rawValue
+        defaultLanguage = expression.defaultLanguageCode.identifier
         context = expression.context
         feature = expression.feature
     }
@@ -46,10 +55,15 @@ extension ExpressionEntity {
         guard let id = UUID(uuidString: uuid) else {
             throw CatalogError.dataTypeConversion("Invalid UUID '\(uuid)'")
         }
-        guard let languageCode = LanguageCode(rawValue: defaultLanguage) else {
-            throw CatalogError.dataTypeConversion("Invalid LangaugeCode '\(defaultLanguage)'")
-        }
 
-        return Expression(id: id, key: key, name: name, defaultLanguage: languageCode, context: context, feature: feature, translations: translations)
+        return Expression(
+            id: id,
+            key: key,
+            name: name,
+            defaultLanguageCode: languageCode,
+            context: context,
+            feature: feature,
+            translations: translations
+        )
     }
 }

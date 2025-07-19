@@ -73,7 +73,6 @@ let package = Package(
             name: "TranslationCatalogSQLite",
             dependencies: [
                 "TranslationCatalog",
-                .product(name: "LocaleSupport", package: "LocaleSupport"),
                 .product(name: "Statement", package: "Statement"),
                 .product(name: "StatementSQLite", package: "Statement"),
                 .product(name: "SQLite", package: "SQLite.swift"),
@@ -83,13 +82,11 @@ let package = Package(
             name: "TranslationCatalogFilesystem",
             dependencies: [
                 "TranslationCatalog",
-                .product(name: "LocaleSupport", package: "LocaleSupport"),
             ]
         ),
         .executableTarget(
             name: "localizer",
             dependencies: [
-                "LocaleSupport",
                 "TranslationCatalog",
                 "TranslationCatalogCoreData",
                 "TranslationCatalogIO",
@@ -114,7 +111,6 @@ let package = Package(
                 "TranslationCatalogIO",
                 "TranslationCatalogFilesystem",
                 "TranslationCatalogSQLite",
-                .product(name: "LocaleSupport", package: "LocaleSupport"),
             ]
         ),
     ],
