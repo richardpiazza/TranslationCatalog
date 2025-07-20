@@ -112,6 +112,9 @@ let package = Package(
                 "TranslationCatalogIO",
                 "TranslationCatalogFilesystem",
                 "TranslationCatalogSQLite",
+            ],
+            resources: [
+                .process("Resources"),
             ]
         ),
     ],
