@@ -2,138 +2,17 @@
 import XCTest
 
 final class StringCatalogTests: XCTestCase {
-    let xcStrings = """
-    {
-      "sourceLanguage" : "en",
-      "strings" : {
-        "CANCEL" : {
-          "localizations" : {
-            "en" : {
-              "stringUnit" : {
-                "state" : "translated",
-                "value" : "Cancel"
-              }
-            },
-            "es" : {
-              "stringUnit" : {
-                "state" : "needs_review",
-                "value" : "Cancelar"
-              }
-            }
-          }
-        },
-        "Catalog" : {
-          "comment" : "A comment about this expression.",
-          "localizations" : {
-            "en" : {
-              "variations" : {
-                "device" : {
-                  "ipad" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "Super Catalog"
-                    }
-                  },
-                  "other" : {
-                    "stringUnit" : {
-                      "state" : "new",
-                      "value" : "Catalog"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "Expression" : {
-
-        },
-        "EXPRESSION_COUNT" : {
-          "localizations" : {
-            "en" : {
-              "variations" : {
-                "device" : {
-                  "applevision" : {
-                    "variations" : {
-                      "plural" : {
-                        "one" : {
-                          "stringUnit" : {
-                            "state" : "needs_review",
-                            "value" : "%lld Expression"
-                          }
-                        },
-                        "other" : {
-                          "stringUnit" : {
-                            "state" : "translated",
-                            "value" : "%lld Expressions Total"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "other" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%lld Expressions Count"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "Localization Catalog" : {
-          "localizations" : {
-            "en-GB" : {
-              "stringUnit" : {
-                "state" : "translated",
-                "value" : "Localisation Catalog"
-              }
-            }
-          }
-        },
-        "Localization Key" : {
-          "localizations" : {
-            "en-GB" : {
-              "stringUnit" : {
-                "state" : "translated",
-                "value" : "Localisation Key"
-              }
-            }
-          }
-        },
-        "New Expression" : {
-          "comment" : "Action used to begin the creation of a new Expression.",
-          "localizations" : {
-            "en" : {
-              "stringUnit" : {
-                "state" : "needs_review",
-                "value" : "New Expression"
-              }
-            }
-          }
-        },
-        "None" : {
-          "localizations" : {
-            "en" : {
-              "stringUnit" : {
-                "state" : "translated",
-                "value" : "None"
-              }
-            }
-          }
-        },
-        "OK" : {
-          "shouldTranslate" : false
-        }
-      },
-      "version" : "1.1"
-    }
-    """
-    
-    func testStringCatalogDecoding() throws {
-        let data = try XCTUnwrap(xcStrings.data(using: .utf8))
+    func testStringCatalog0Decoding() throws {
+        let url = try XCTUnwrap(Bundle.module.url(forResource: "Localizable0.xcstrings", withExtension: "json"))
+        let data = try Data(contentsOf: url)
         let catalog = try JSONDecoder().decode(StringCatalog.self, from: data)
         XCTAssertEqual(catalog.strings.count, 9)
+    }
+    
+    func testStringCatalog1Decoding() throws {
+        let url = try XCTUnwrap(Bundle.module.url(forResource: "Localizable1.xcstrings", withExtension: "json"))
+        let data = try Data(contentsOf: url)
+        let catalog = try JSONDecoder().decode(StringCatalog.self, from: data)
+        XCTAssertEqual(catalog.strings.count, 6)
     }
 }
