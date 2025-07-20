@@ -1,7 +1,7 @@
 extension StringCatalog {
     enum Variation: Hashable, Sendable {
-        case device(variations: [Device: Localization])
-        case plural(variations: [Pluralization: Localization])
+        case device(variations: [Device: Translation])
+        case plural(variations: [Pluralization: Translation])
     }
 }
 
@@ -14,15 +14,15 @@ extension StringCatalog.Variation: Codable {
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         if container.contains(.device) {
-            let dictionary = try container.decode([String: StringCatalog.Localization].self, forKey: .device)
-            var variations: [StringCatalog.Device: StringCatalog.Localization] = [:]
+            let dictionary = try container.decode([String: StringCatalog.Translation].self, forKey: .device)
+            var variations: [StringCatalog.Device: StringCatalog.Translation] = [:]
             for (key, value) in dictionary {
                 variations[StringCatalog.Device(stringLiteral: key)] = value
             }
             self = .device(variations: variations)
         } else if container.contains(.plural) {
-            let dictionary = try container.decode([String: StringCatalog.Localization].self, forKey: .plural)
-            var variations: [StringCatalog.Pluralization: StringCatalog.Localization] = [:]
+            let dictionary = try container.decode([String: StringCatalog.Translation].self, forKey: .plural)
+            var variations: [StringCatalog.Pluralization: StringCatalog.Translation] = [:]
             for (key, value) in dictionary {
                 variations[StringCatalog.Pluralization(stringLiteral: key)] = value
             }

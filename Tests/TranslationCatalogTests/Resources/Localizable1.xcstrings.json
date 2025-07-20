@@ -1,6 +1,59 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "ARGUMENTS" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$(one)@ %#@arg2@ %#@arg3@ %4$(four)lf"
+          },
+          "substitutions" : {
+            "arg2" : {
+              "argNum" : 2,
+              "formatSpecifier" : "(two)lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg"
+                    }
+                  }
+                }
+              }
+            },
+            "arg3" : {
+              "argNum" : 3,
+              "formatSpecifier" : "(three)llu",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "DEVICE_TYPE" : {
       "comment" : "Localization which varies it’s value based on device.",
       "extractionState" : "manual",

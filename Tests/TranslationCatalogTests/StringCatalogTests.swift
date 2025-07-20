@@ -13,6 +13,6 @@ final class StringCatalogTests: XCTestCase {
         let url = try XCTUnwrap(Bundle.module.url(forResource: "Localizable1.xcstrings", withExtension: "json"))
         let data = try Data(contentsOf: url)
         let catalog = try JSONDecoder().decode(StringCatalog.self, from: data)
-        XCTAssertEqual(catalog.strings.count, 6)
+        XCTAssertEqual(catalog.strings.count, 7)
     }
 }
