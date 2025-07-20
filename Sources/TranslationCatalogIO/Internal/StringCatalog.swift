@@ -1,5 +1,7 @@
+import Foundation
+
 struct StringCatalog: Hashable, Sendable {
-    let sourceLanguage: Language
+    let sourceLanguage: Locale.LanguageCode
     let strings: [String: Expression]
     let version: Version
 }

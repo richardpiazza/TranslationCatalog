@@ -1,0 +1,334 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "DEVICE_TYPE" : {
+      "comment" : "Localization which varies it’s value based on device.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "device" : {
+              "appletv" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Apple TV"
+                }
+              },
+              "applevision" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Apple Vision"
+                }
+              },
+              "applewatch" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Apple Watch"
+                }
+              },
+              "ipad" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "iPad"
+                }
+              },
+              "iphone" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "iPhone"
+                }
+              },
+              "ipod" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "iPod"
+                }
+              },
+              "mac" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Mac"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Other"
+                }
+              }
+            }
+          }
+        },
+        "es" : {
+          "variations" : {
+            "device" : {
+              "appletv" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Apple TV"
+                }
+              },
+              "applevision" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Apple Vision"
+                }
+              },
+              "applewatch" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Apple Watch"
+                }
+              },
+              "ipad" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "iPad"
+                }
+              },
+              "iphone" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "iPhone"
+                }
+              },
+              "ipod" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "iPod"
+                }
+              },
+              "mac" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Mac"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Other"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "GREETING" : {
+      "comment" : "String with a single typed replacement value.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hello, %1$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hola, %1$@"
+          }
+        }
+      }
+    },
+    "Hello, world!" : {
+      "comment" : "This is a basic string which has zero customization options.",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Hola, mundo!"
+          }
+        }
+      }
+    },
+    "HIGHLY_VARIABLE" : {
+      "comment" : "A localization that changes for both pluralization and device.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "substitutions" : {
+            "arg1_mac" : {
+              "argNum" : 1,
+              "formatSpecifier" : "(low)llu",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg (Single-Low)"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg (Multi-Low)"
+                    }
+                  }
+                }
+              }
+            },
+            "arg2_mac" : {
+              "argNum" : 2,
+              "formatSpecifier" : "(high)lf",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg (Single-High)"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg (Multi-High)"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "variations" : {
+            "device" : {
+              "mac" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%#@arg1_mac@ is less than %#@arg2_mac@"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(low)llu < %2$(high)lf"
+                }
+              }
+            }
+          }
+        },
+        "es" : {
+          "substitutions" : {
+            "arg1_mac" : {
+              "argNum" : 1,
+              "formatSpecifier" : "(low)llu",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg (Single-Mínimo)"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg (Multi-Mínimo)"
+                    }
+                  }
+                }
+              }
+            },
+            "arg2_mac" : {
+              "argNum" : 2,
+              "formatSpecifier" : "(high)lf",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg (Single-Instituto)"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg (Multi-Instituto)"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "variations" : {
+            "device" : {
+              "mac" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%#@arg1_mac@ es menos que %#@arg2_mac@"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "new",
+                  "value" : "%1$(low)llu < %2$(high)lf"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "THE_COUNT_SAYS" : {
+      "comment" : "String with a integer replacement with variants for pluralization.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(value)lld Item!"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(value)lld Items! Ah! Ah! Ah!"
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "No Items."
+                }
+              }
+            }
+          }
+        },
+        "es" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(value)lld Item!"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(value)lld Items! Ah! Ah! Ah!"
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "No Items."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "UNTRANSLATABLE" : {
+      "comment" : "This should not be translated.",
+      "extractionState" : "manual",
+      "shouldTranslate" : false
+    }
+  },
+  "version" : "1.1"
+}
