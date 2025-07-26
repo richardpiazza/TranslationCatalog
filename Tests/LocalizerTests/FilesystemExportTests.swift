@@ -5,8 +5,8 @@ final class FilesystemExportTests: LocalizerTestCase {
     override var resource: TestResource {
         .directory(
             Bundle.module.resourceURL?
-                .appendingPathComponent("StructuredResources", conformingTo: .directory)
-                .appendingPathComponent("MultiLanguageCatalog", conformingTo: .directory)
+                .appending(path: "StructuredResources", directoryHint: .isDirectory)
+                .appending(path: "MultiLanguageCatalog", directoryHint: .isDirectory)
         )
     }
     
