@@ -1,10 +1,10 @@
 import XCTest
 
-final class LocalizerTests: _LocalizerTestCase {
+final class HelpTests: XCTestCase {
 
-    func testExecute() throws {
-        try process.run()
-        process.waitUntilExit()
+    func testNoArguments() throws {
+        let process = LocalizerProcess()
+        let output = try process.runOutputting()
 
         XCTAssertEqual(output, """
         OVERVIEW: Utility for interacting with Android 'strings.xml', Apple
