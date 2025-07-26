@@ -1,15 +1,18 @@
 import XCTest
 
-final class CatalogGenerateTests: _LocalizerTestCase {
+final class CatalogGenerateTests: XCTestCase {
 
     func testExecute() throws {
-        process.arguments = ["catalog", "generate", "markdown", "--path", path]
-        try process.run()
-        process.waitUntilExit()
+        let process = LocalizerProcess()
+        let output = try process.runOutputting(with: [
+            "catalog", "generate", "markdown", "--path", process.url.lastPathComponent
+        ])
 
         XCTAssertEqual(output, """
         # Strings
 
         """)
+        
+        try process.recycle()
     }
 }
