@@ -331,6 +331,7 @@ public class FilesystemCatalog: Catalog {
             key: expression.key,
             name: expression.name,
             defaultLanguage: expression.defaultLanguageCode,
+            defaultValue: expression.defaultValue,
             context: expression.context,
             feature: expression.feature
         )
@@ -356,6 +357,8 @@ public class FilesystemCatalog: Catalog {
             expressionDocuments[index].feature = feature
         case GenericExpressionUpdate.defaultLanguage(let languageCode):
             expressionDocuments[index].defaultLanguage = languageCode
+        case GenericExpressionUpdate.defaultValue(let value):
+            expressionDocuments[index].defaultValue = value
         default:
             throw CatalogError.unhandledUpdate(action)
         }

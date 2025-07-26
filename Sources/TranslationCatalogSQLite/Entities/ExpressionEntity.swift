@@ -16,6 +16,8 @@ struct ExpressionEntity: Entity {
     var name: String = ""
     @Field("default_language")
     var defaultLanguage: String = ""
+    @Field("default_value")
+    var defaultValue: String = ""
     @Field("context")
     var context: String? = nil
     @Field("feature")
@@ -39,6 +41,7 @@ extension ExpressionEntity {
     static var key: Attribute { entity["key"]! }
     static var name: Attribute { entity["name"]! }
     static var defaultLanguage: Attribute { entity["default_language"]! }
+    static var defaultValue: Attribute { entity["default_value"]! }
     static var context: Attribute { entity["context"]! }
     static var feature: Attribute { entity["feature"]! }
 
@@ -47,6 +50,7 @@ extension ExpressionEntity {
         key = expression.key
         name = expression.name
         defaultLanguage = expression.defaultLanguageCode.identifier
+        defaultValue = expression.defaultValue
         context = expression.context
         feature = expression.feature
     }
@@ -61,6 +65,7 @@ extension ExpressionEntity {
             key: key,
             name: name,
             defaultLanguageCode: languageCode,
+            defaultValue: defaultValue,
             context: context,
             feature: feature,
             translations: translations

@@ -16,7 +16,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
     /// of the instance is required, provide a URL where a store can be created.
     public init() throws {
         container = try CatalogContainer(
-            version: .v1,
+            version: .v2,
             persistence: .memory,
             name: "CatalogModel"
         )
@@ -29,10 +29,13 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
         }
 
         container = try CatalogContainer(
-            version: .v1,
+            version: .v2,
             persistence: .store(storeURL),
-            name: "CatalogModel"
+            name: "CatalogModel",
+            silentMigration: false
         )
+        
+        try migrateDefaultExpressionValues()
     }
 
     public func projects() throws -> [TranslationCatalog.Project] {
@@ -339,6 +342,15 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
                 expressionEntity.defaultLanguageRawValue = languageCode.identifier
                 try context.save()
             }
+        case GenericExpressionUpdate.defaultValue(let value):
+            guard value != expressionEntity.value else {
+                return
+            }
+            
+            try context.performAndWait {
+                expressionEntity.defaultValue = value
+                try context.save()
+            }
         case GenericExpressionUpdate.feature(let feature):
             guard feature != expressionEntity.feature else {
                 return
@@ -635,6 +647,41 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
     @available(*, deprecated)
     public func localeIdentifiers() throws -> Set<Locale.Identifier> {
         try Set(locales().map(\.identifier))
+    }
+}
+
+private extension CoreDataCatalog {
+    func migrateDefaultExpressionValues() throws {
+        let context = container.persistentContainer.newBackgroundContext()
+        try context.performAndWait {
+            let expressionRequest = ExpressionEntity.fetchRequest()
+            expressionRequest.predicate = NSPredicate(format: "%K == %@", argumentArray: ["defaultValue", ""])
+            
+            let expressionEntities = try context.fetch(expressionRequest)
+            for expression in expressionEntities {
+                guard let language = expression.defaultLanguageRawValue, !language.isEmpty else {
+                    continue
+                }
+                
+                let translationRequest = TranslationEntity.fetchRequest()
+                translationRequest.predicate = NSCompoundPredicate(
+                    type: .and,
+                    subpredicates: [
+                        NSPredicate(format: "%K == %@", argumentArray: ["expressionEntity", expression]),
+                        NSPredicate(format: "%K == %@", argumentArray: ["languageCodeRawValue", language]),
+                        NSPredicate(format: "%K == NIL", "scriptCodeRawValue"),
+                        NSPredicate(format: "%K == NIL", "regionCodeRawValue"),
+                    ]
+                )
+                
+                if let translationEntity = try context.fetch(translationRequest).first {
+                    expression.defaultValue = translationEntity.value ?? ""
+                    context.delete(translationEntity)
+                }
+            }
+            
+            try context.save()
+        }
     }
 }
 

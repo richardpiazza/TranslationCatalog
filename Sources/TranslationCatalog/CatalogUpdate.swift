@@ -14,6 +14,7 @@ public enum GenericExpressionUpdate: CatalogUpdate {
     case key(String)
     case name(String)
     case defaultLanguage(Locale.LanguageCode)
+    case defaultValue(String)
     case context(String?)
     case feature(String?)
 

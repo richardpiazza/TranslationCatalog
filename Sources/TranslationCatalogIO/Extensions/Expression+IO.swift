@@ -18,6 +18,21 @@ extension TranslationCatalog.Expression {
 }
 
 extension [TranslationCatalog.Expression] {
+    /// Has value for the `locale` or should fallback
+    func compactMap(
+        locale: Locale,
+        fallback: Bool
+    ) -> [TranslationCatalog.Expression] {
+        compactMap { expression -> TranslationCatalog.Expression? in
+            if expression.value(for: locale) != nil || fallback {
+                return expression
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    @available(*, deprecated, renamed: "compactMap(locale:fallback:)")
     func compactMap(
         locale: Locale?,
         defaultOrFirst: Bool

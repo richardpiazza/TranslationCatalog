@@ -61,8 +61,9 @@ extension Statement.Element {
             key: columnText(position: 2),
             name: columnText(position: 3),
             defaultLanguage: columnText(position: 4),
-            context: optional(position: 5),
-            feature: optional(position: 6)
+            defaultValue: columnText(position: 5),
+            context: optional(position: 6),
+            feature: optional(position: 7)
         )
     }
 

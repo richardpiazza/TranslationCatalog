@@ -13,7 +13,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
     public var statementHook: RenderedStatementHook?
 
     public init(url: URL) throws {
-        db = try Connection(path: url.path, schema: .current)
+        db = try Connection(url: url)
     }
 
     // MARK: - Project
@@ -282,6 +282,12 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             }
 
             try db.run(renderStatement(.updateExpression(entity.id, defaultLanguage: languageCode)))
+        case GenericExpressionUpdate.defaultValue(let value):
+            guard value != entity.defaultValue else {
+                return
+            }
+            
+            try db.run(renderStatement(.updateExpression(entity.id, defaultValue: value)))
         case GenericExpressionUpdate.context(let context):
             guard context != entity.context else {
                 return
