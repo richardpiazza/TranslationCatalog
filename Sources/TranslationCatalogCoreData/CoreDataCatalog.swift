@@ -34,7 +34,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
             name: "CatalogModel",
             silentMigration: false
         )
-        
+
         try migrateDefaultExpressionValues()
     }
 
@@ -346,7 +346,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
             guard value != expressionEntity.value else {
                 return
             }
-            
+
             try context.performAndWait {
                 expressionEntity.defaultValue = value
                 try context.save()
@@ -656,13 +656,13 @@ private extension CoreDataCatalog {
         try context.performAndWait {
             let expressionRequest = ExpressionEntity.fetchRequest()
             expressionRequest.predicate = NSPredicate(format: "%K == %@", argumentArray: ["defaultValue", ""])
-            
+
             let expressionEntities = try context.fetch(expressionRequest)
             for expression in expressionEntities {
                 guard let language = expression.defaultLanguageRawValue, !language.isEmpty else {
                     continue
                 }
-                
+
                 let translationRequest = TranslationEntity.fetchRequest()
                 translationRequest.predicate = NSCompoundPredicate(
                     type: .and,
@@ -673,13 +673,13 @@ private extension CoreDataCatalog {
                         NSPredicate(format: "%K == NIL", "regionCodeRawValue"),
                     ]
                 )
-                
+
                 if let translationEntity = try context.fetch(translationRequest).first {
                     expression.defaultValue = translationEntity.value ?? ""
                     context.delete(translationEntity)
                 }
             }
-            
+
             try context.save()
         }
     }

@@ -9,22 +9,22 @@ final class FilesystemImportTests: XCTestCase {
         )
         var process = try LocalizerProcess(copying: resource)
         var output = try process.runOutputting(with: [
-            "catalog", "import", "en", process.url.path(), "--format", "apple", "--storage", "filesystem", "--path", process.directory.path()
+            "catalog", "import", "en", process.url.path(), "--format", "apple", "--storage", "filesystem", "--path", process.directory.path(),
         ])
-        
+
         XCTAssertEqual(output, """
         Expression Created 'FIRST_NAME'
         Expression Created 'LAST_NAME'
         Expression Created 'TITLE'
 
         """)
-        
+
         let id = process.executionIdentifier
         try process.recycle()
-        
+
         process = try LocalizerProcess(copying: resource, cleanupDirectory: true, id: id)
         output = try process.runOutputting(with: [
-            "catalog", "import", "en", process.url.path(), "--format", "apple", "--storage", "filesystem", "--path", process.directory.path()
+            "catalog", "import", "en", process.url.path(), "--format", "apple", "--storage", "filesystem", "--path", process.directory.path(),
         ])
 
         XCTAssertEqual(output, """
@@ -36,7 +36,7 @@ final class FilesystemImportTests: XCTestCase {
         Translation Skipped \'Title\'
 
         """)
-        
+
         try process.recycle()
     }
 
@@ -47,9 +47,9 @@ final class FilesystemImportTests: XCTestCase {
         )
         var process = try LocalizerProcess(copying: resource)
         var output = try process.runOutputting(with: [
-            "catalog", "import", "en", process.url.path(), "--format", "apple", "--storage", "filesystem", "--path", process.directory.path()
+            "catalog", "import", "en", process.url.path(), "--format", "apple", "--storage", "filesystem", "--path", process.directory.path(),
         ])
-        
+
         XCTAssertEqual(output, """
         Expression Created 'FIRST_NAME'
         Expression Created 'LAST_NAME'
@@ -59,13 +59,13 @@ final class FilesystemImportTests: XCTestCase {
 
         let id = process.executionIdentifier
         try process.recycle()
-        
+
         resource = .file(
             Bundle.module.url(forResource: "Import2", withExtension: "strings")
         )
         process = try LocalizerProcess(copying: resource, cleanupDirectory: true, id: id)
         output = try process.runOutputting(with: [
-            "catalog", "import", "en", process.url.path(), "--format", "apple", "--storage", "filesystem", "--path", process.directory.path()
+            "catalog", "import", "en", process.url.path(), "--format", "apple", "--storage", "filesystem", "--path", process.directory.path(),
         ])
 
         XCTAssertEqual(output, """
@@ -75,7 +75,7 @@ final class FilesystemImportTests: XCTestCase {
         Translation Skipped 'Title'
 
         """)
-        
+
         try process.recycle()
     }
 }

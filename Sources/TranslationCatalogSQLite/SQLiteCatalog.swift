@@ -286,7 +286,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             guard value != entity.defaultValue else {
                 return
             }
-            
+
             try db.run(renderStatement(.updateExpression(entity.id, defaultValue: value)))
         case GenericExpressionUpdate.context(let context):
             guard context != entity.context else {

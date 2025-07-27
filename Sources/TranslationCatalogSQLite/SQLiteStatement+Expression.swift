@@ -291,7 +291,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func updateExpression(_ id: Int, defaultValue: String) -> Self {
         SQLiteStatement(
             .UPDATE(

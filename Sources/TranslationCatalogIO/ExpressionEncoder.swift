@@ -50,7 +50,7 @@ public struct ExpressionEncoder {
                 .data(using: .utf8) ?? Data()
         case .json:
             let filtered = expressions.compactMap(locale: locale, fallback: fallback)
-            let sequence = filtered.map { [$0.key: $0.translations.first?.value ?? ""] }
+            let sequence = filtered.map { [$0.key: $0.valueOrDefault(for: locale)] }
             let dictionary = sequence.reduce(into: [String: String]()) { partialResult, pair in
                 partialResult[pair.keys.first!] = pair.values.first!
             }
@@ -61,7 +61,7 @@ public struct ExpressionEncoder {
             return try encoder.encode(dictionary)
         }
     }
-    
+
     /// Encode the a `Translation` of each `Expression` in the collection.
     ///
     /// - parameters:

@@ -5,6 +5,14 @@ import TranslationCatalog
 /// Implementation of `Catalog` the reads/writes data from/to a filesystem directory.
 public class FilesystemCatalog: Catalog {
 
+    enum SchemaVersion: Int {
+        case v1 = 1
+        /// Expression Default Value
+        case v2 = 2
+
+        static var current: Self { .v2 }
+    }
+
     private let fileManager = FileManager.default
     private let decoder: JSONDecoder = JSONDecoder()
     private let encoder: JSONEncoder = {
@@ -14,9 +22,36 @@ public class FilesystemCatalog: Catalog {
     }()
 
     private let directory: URL
-    private let translationsDirectory: URL
-    private let expressionsDirectory: URL
-    private let projectsDirectory: URL
+    private var translationsDirectory: URL {
+        directory.appending(path: "Translations", directoryHint: .isDirectory)
+    }
+
+    private var expressionsDirectory: URL {
+        directory.appending(path: "Expressions", directoryHint: .isDirectory)
+    }
+
+    private var projectsDirectory: URL {
+        directory.appending(path: "Projects", directoryHint: .isDirectory)
+    }
+
+    private var catalogVersion: URL {
+        directory.appending(path: ".catalog-version", directoryHint: .notDirectory)
+    }
+
+    private var schemaVersion: SchemaVersion {
+        guard fileManager.fileExists(atPath: catalogVersion.path()) else {
+            setSchemaVersion(.v1)
+            return .v1
+        }
+
+        do {
+            let data = try Data(contentsOf: catalogVersion)
+            let rawValue = try decoder.decode(Int.self, from: data)
+            return SchemaVersion(rawValue: rawValue) ?? .v1
+        } catch {
+            return .v1
+        }
+    }
 
     private var translationDocuments: [TranslationDocument] = []
     private var expressionDocuments: [ExpressionDocument] = []
@@ -28,33 +63,24 @@ public class FilesystemCatalog: Catalog {
         }
 
         directory = url
+        try createDirectories()
+        try migrateSchema(from: schemaVersion, to: .current)
+        try loadDocuments()
+    }
 
-        #if swift(>=5.7.1) && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS))
-        if #available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *) {
-            translationsDirectory = directory.appending(path: "Translations", directoryHint: .isDirectory)
-            expressionsDirectory = directory.appending(path: "Expressions", directoryHint: .isDirectory)
-            projectsDirectory = directory.appending(path: "Projects", directoryHint: .isDirectory)
-        } else {
-            translationsDirectory = directory.appendingPathComponent("Translations", isDirectory: true)
-            expressionsDirectory = directory.appendingPathComponent("Expressions", isDirectory: true)
-            projectsDirectory = directory.appendingPathComponent("Projects", isDirectory: true)
-        }
-        #else
-        translationsDirectory = directory.appendingPathComponent("Translations", isDirectory: true)
-        expressionsDirectory = directory.appendingPathComponent("Expressions", isDirectory: true)
-        projectsDirectory = directory.appendingPathComponent("Projects", isDirectory: true)
-        #endif
-
-        if !fileManager.fileExists(atPath: translationsDirectory.path) {
+    private func createDirectories() throws {
+        if !fileManager.fileExists(atPath: translationsDirectory.path()) {
             try fileManager.createDirectory(at: translationsDirectory, withIntermediateDirectories: true)
         }
-        if !fileManager.fileExists(atPath: expressionsDirectory.path) {
+        if !fileManager.fileExists(atPath: expressionsDirectory.path()) {
             try fileManager.createDirectory(at: expressionsDirectory, withIntermediateDirectories: true)
         }
-        if !fileManager.fileExists(atPath: projectsDirectory.path) {
+        if !fileManager.fileExists(atPath: projectsDirectory.path()) {
             try fileManager.createDirectory(at: projectsDirectory, withIntermediateDirectories: true)
         }
+    }
 
+    private func loadDocuments() throws {
         let translationUrls = try fileManager.contentsOfDirectory(at: translationsDirectory, includingPropertiesForKeys: nil)
         try translationUrls.forEach {
             let data = try Data(contentsOf: $0)
@@ -74,6 +100,83 @@ public class FilesystemCatalog: Catalog {
             let data = try Data(contentsOf: $0)
             let project = try decoder.decode(ProjectDocument.self, from: data)
             projectDocuments.append(project)
+        }
+    }
+
+    private func migrateSchema(from: SchemaVersion, to: SchemaVersion) throws {
+        guard to.rawValue != from.rawValue else {
+            // Migration complete
+            return
+        }
+
+        guard to.rawValue > from.rawValue else {
+            throw CocoaError(.featureUnsupported)
+        }
+
+        switch from {
+        case .v1:
+            var translations: [TranslationDocument] = []
+            let translationUrls = try fileManager.contentsOfDirectory(at: translationsDirectory, includingPropertiesForKeys: nil)
+            try translationUrls.forEach {
+                let data = try Data(contentsOf: $0)
+                let translation = try decoder.decode(TranslationDocument.self, from: data)
+                translations.append(translation)
+            }
+
+            var expressions: [ExpressionDocumentV1] = []
+            let expressionUrls = try fileManager.contentsOfDirectory(at: expressionsDirectory, includingPropertiesForKeys: nil)
+            try expressionUrls.forEach {
+                let data = try Data(contentsOf: $0)
+                let expression = try decoder.decode(ExpressionDocumentV1.self, from: data)
+                expressions.append(expression)
+            }
+
+            for expression in expressions {
+                var translationDocuments = translations.filter { $0.expressionID == expression.id }
+                let index = translationDocuments.firstIndex(where: {
+                    $0.languageCode == expression.defaultLanguage &&
+                        $0.scriptCode == nil &&
+                        $0.regionCode == nil
+                })
+
+                var value: String = ""
+                if let index {
+                    let translation = translationDocuments.remove(at: index)
+                    value = translation.value
+                    try translation.remove(from: translationsDirectory)
+                }
+
+                let document = ExpressionDocument(
+                    id: expression.id,
+                    key: expression.key,
+                    name: expression.name,
+                    defaultLanguage: expression.defaultLanguage,
+                    defaultValue: value,
+                    context: expression.context,
+                    feature: expression.feature
+                )
+
+                try document.write(to: expressionsDirectory, using: encoder)
+            }
+
+            setSchemaVersion(.v2)
+        case .v2:
+            return
+        }
+
+        guard let next = SchemaVersion(rawValue: from.rawValue + 1) else {
+            throw CocoaError(.featureUnsupported)
+        }
+
+        try migrateSchema(from: next, to: to)
+    }
+
+    private func setSchemaVersion(_ version: SchemaVersion) {
+        do {
+            let data = try encoder.encode(version.rawValue)
+            try data.write(to: catalogVersion)
+        } catch {
+            print(error)
         }
     }
 

@@ -10,7 +10,7 @@ extension XML {
         fallback: Bool
     ) -> Self {
         let filtered = expressions.compactMap(locale: locale, fallback: fallback)
-        
+
         return XML(
             .element(named: "resources", nodes: [
                 .forEach(filtered) {
@@ -27,7 +27,7 @@ extension XML {
             ])
         )
     }
-    
+
     @available(*, deprecated, renamed: "make(with:locale:fallback:)")
     static func make(
         with expressions: [TranslationCatalog.Expression],

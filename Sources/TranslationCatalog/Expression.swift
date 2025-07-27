@@ -3,7 +3,8 @@ import LocaleSupport
 
 /// A word or phrase.
 ///
-/// - note: Expressions can exist outside the context of a Project and a single expression can be associated with multiple projects.
+/// - note: Expressions can exist outside the context of a Project
+/// and a single expression can be associated with multiple projects.
 public struct Expression: Codable, Hashable, Identifiable, Sendable {
     /// Identifier that universally identifies this `Expression`
     public let id: UUID
@@ -77,7 +78,7 @@ public struct Expression: Codable, Hashable, Identifiable, Sendable {
         feature = expression.feature
         self.translations = translations
     }
-    
+
     /// `Locale` representing the `defaultLanguageCode`.
     public var locale: Locale {
         Locale(languageCode: defaultLanguageCode)
@@ -87,71 +88,71 @@ public struct Expression: Codable, Hashable, Identifiable, Sendable {
     public func translation(with locale: Locale?) -> Translation? {
         translations.first(where: { $0.locale == locale })
     }
-    
+
     /// The translation string for the provided `Locale`.
     public func value(for locale: Locale?) -> String? {
         guard let locale else {
             return nil
         }
-        
+
         if locale == self.locale {
             return defaultValue
         }
-        
+
         return translation(with: locale)?.value
     }
-    
+
     /// The translation string for the provided `Locale`. Fallback to the `defaultValue`.
     public func valueOrDefault(for locale: Locale) -> String {
         guard locale != self.locale else {
             return defaultValue
         }
-        
+
         guard let translation = translation(with: locale) else {
             return defaultValue
         }
-        
+
         return translation.value
     }
 }
 
-extension Expression {
+public extension Expression {
     /// The language to be used when a `Translation` can not be found
     @available(*, deprecated, renamed: "defaultLanguageCode")
-    public var defaultLanguage: LanguageCode {
+    var defaultLanguage: LanguageCode {
         LanguageCode(rawValue: defaultLanguageCode.identifier) ?? .default
     }
 
     /// The `Translation` that matches the `defaultLanguage` code of this instance.
     @available(*, deprecated, message: "Use `defaultValue` for the base expression value.")
-    public var defaultTranslation: Translation? {
+    var defaultTranslation: Translation? {
         translations.first(where: { $0.language == defaultLanguageCode })
     }
 
     @available(*, deprecated, message: "Use `with: Locale?` variant.")
-    public func translation(with identifier: Locale.Identifier?) -> Translation? {
+    func translation(with identifier: Locale.Identifier?) -> Translation? {
         translations.first(where: { $0.locale.identifier == identifier })
     }
 
     @available(*, deprecated)
-    public func translationOrDefault(with identifier: Locale.Identifier?) -> Translation? {
+    func translationOrDefault(with identifier: Locale.Identifier?) -> Translation? {
         translation(with: identifier) ?? defaultTranslation
     }
 
     @available(*, deprecated)
-    public func translationOrDefaultOrFirst(with identifier: Locale.Identifier?) -> Translation? {
+    func translationOrDefaultOrFirst(with identifier: Locale.Identifier?) -> Translation? {
         translationOrDefault(with: identifier) ?? translations.first
     }
 
     /// The `Translation` matching the `Locale.Identifier` or `defaultTranslation` if no matches found.
     @available(*, deprecated)
-    public func translationOrDefault(with locale: Locale?) -> Translation? {
+    func translationOrDefault(with locale: Locale?) -> Translation? {
         translation(with: locale) ?? defaultTranslation
     }
 
     /// The `Translation` that best matches the provided identifier, default if none, or first in the collection.
     @available(*, deprecated)
-    public func translationOrDefaultOrFirst(with locale: Locale?) -> Translation? {
+    func translationOrDefaultOrFirst(with locale: Locale?) -> Translation? {
         translationOrDefault(with: locale) ?? translations.first
     }
 }

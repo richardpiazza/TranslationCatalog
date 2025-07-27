@@ -31,7 +31,7 @@ extension [TranslationCatalog.Expression] {
             }
         }
     }
-    
+
     @available(*, deprecated, renamed: "compactMap(locale:fallback:)")
     func compactMap(
         locale: Locale?,

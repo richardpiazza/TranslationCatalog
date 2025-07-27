@@ -28,7 +28,7 @@ enum ManagedModel: String, CaseIterable, ModelVersion, ModelCatalog {
         if let mapping = Self.mappings[self] {
             return mapping
         }
-        
+
         let resource: String
         switch self {
         case .v1:
@@ -36,19 +36,19 @@ enum ManagedModel: String, CaseIterable, ModelVersion, ModelCatalog {
         case .v2:
             resource = "Model_1_to_2"
         }
-        
+
         guard let mapping = try? Bundle.module.mappingModel(forResource: resource, subdirectory: "PrecompiledResources") else {
             preconditionFailure("Update to load mapping for resource '\(resource)'.")
         }
-        
+
         Self.mappings[self] = mapping
         return mapping
     }
 
     var previousVersion: (any ModelVersion)? {
         switch self {
-        case .v1: return nil
-        case .v2: return ManagedModel.v1
+        case .v1: nil
+        case .v2: ManagedModel.v1
         }
     }
 }

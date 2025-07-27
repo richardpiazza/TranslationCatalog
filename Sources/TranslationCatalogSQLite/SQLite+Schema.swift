@@ -181,11 +181,11 @@ extension Connection {
             """)
         }
     }
-    
+
     private func addSchemeV4Fields() throws {
         try run("ALTER TABLE expression ADD COLUMN default_value TEXT NOT NULL DEFAULT '';")
     }
-    
+
     private func migrateDefaultTranslationsToExpression() throws {
         let expressionEntities = try expressionEntities(statement: SQLiteStatement.selectAllFromExpression.render())
         for expression in expressionEntities {
@@ -193,18 +193,16 @@ extension Connection {
             let translationStatement = SQLiteStatement.selectTranslationsHavingOnly(expression.id, languageCode: expression.languageCode)
             if let translationEntity = try translationEntity(statement: translationStatement.render()) {
                 print("Default Value: \(translationEntity.value)")
-                try run ("""
+                try run("""
                 UPDATE expression
                 SET default_value = '\(translationEntity.value)'
                 WHERE id = \(expression.id);
                 """)
-                
-                try run ("""
+
+                try run("""
                 DELETE FROM translation
                 WHERE id = \(translationEntity.id);
                 """)
-            } else {
-                print("FAILED")
             }
         }
     }

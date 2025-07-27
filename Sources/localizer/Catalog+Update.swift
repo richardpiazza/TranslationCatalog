@@ -101,7 +101,7 @@ extension Catalog.Update {
 
         @Option(help: "The default/development language code.")
         var defaultLanguage: Locale.LanguageCode?
-        
+
         @Option(help: "The base value expressed using the `defaultLanguage`")
         var defaultValue: String?
 
@@ -156,7 +156,7 @@ extension Catalog.Update {
             if let defaultLanguage, expression.defaultLanguageCode != defaultLanguage {
                 try catalog.updateExpression(expression.id, action: GenericExpressionUpdate.defaultLanguage(defaultLanguage))
             }
-            
+
             if let defaultValue, expression.defaultValue != defaultValue {
                 try catalog.updateExpression(expression.id, action: GenericExpressionUpdate.defaultValue(defaultValue))
             }

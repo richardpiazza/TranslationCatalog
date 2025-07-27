@@ -72,7 +72,7 @@ extension ExpressionEntity {
 
         return languageCode
     }
-    
+
     var value: String {
         defaultValue ?? ""
     }
