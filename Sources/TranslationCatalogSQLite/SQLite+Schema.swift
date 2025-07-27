@@ -126,9 +126,17 @@ extension Connection {
         case .v3:
             print("Migrating schema from '\(from.rawValue)' to '\(to.rawValue)'.")
             try transaction {
-                try addSchemeV4Fields()
-                try migrateDefaultTranslationsToExpression()
-                try setSchemaVersion(.v4)
+                do {
+                    try addSchemeV4Fields()
+                    try migrateDefaultTranslationsToExpression()
+                    try setSchemaVersion(.v4)
+                } catch let result as SQLite.Result {
+                    print("Migration Failed: \(result.description)")
+                    throw result
+                } catch {
+                    print("Migration Failed: \(error.localizedDescription)")
+                    throw error
+                }
             }
         case .v4:
             return
@@ -192,17 +200,18 @@ extension Connection {
             print("Migrate Expression '\(expression.key) (\(expression.id))'")
             let translationStatement = SQLiteStatement.selectTranslationsHavingOnly(expression.id, languageCode: expression.languageCode)
             if let translationEntity = try translationEntity(statement: translationStatement.render()) {
-                print("Default Value: \(translationEntity.value)")
-                try run("""
+                let update = """
                 UPDATE expression
-                SET default_value = '\(translationEntity.value)'
+                SET default_value = (SELECT value FROM translation WHERE id = \(translationEntity.id))
                 WHERE id = \(expression.id);
-                """)
+                """
+                try run(update)
 
-                try run("""
+                let delete = """
                 DELETE FROM translation
                 WHERE id = \(translationEntity.id);
-                """)
+                """
+                try run(delete)
             }
         }
     }

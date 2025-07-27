@@ -69,10 +69,6 @@ extension Catalog {
                 try catalog.expressions()
             }
 
-            if storage == .filesystem {
-                return expressions
-            }
-
             let enumerated = expressions.enumerated()
             for (index, expression) in enumerated {
                 let translations = try catalog.translations(matching: GenericTranslationQuery.expressionId(expression.id))

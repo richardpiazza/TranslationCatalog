@@ -31,14 +31,16 @@ public struct ExpressionRenderer {
 
                 let translations = expression.translations.sorted(by: { $0.language.identifier < $1.language.identifier })
                 for translation in translations {
-                    table.addRow(translation, strong: translation.language == expression.defaultLanguageCode)
+                    table.addRow(translation, strong: translation.locale == expression.locale)
                 }
 
                 md += """
                 \n
-                ## \(expression.name)
+                ## \(expression.key)
                 Id: \(expression.id)
-                Key: \(expression.key)
+                Value: \(expression.defaultValue)
+                Language: \(expression.defaultLanguageCode.identifier)
+                Name: \(expression.name)
                 Context: \(expression.context ?? "")
                 Feature: \(expression.feature ?? "")
 

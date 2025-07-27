@@ -299,13 +299,7 @@ public class FilesystemCatalog: Catalog {
 
     public func expressions() throws -> [TranslationCatalog.Expression] {
         expressionDocuments.map { document in
-            let translations = translationDocuments
-                .filter { $0.expressionID == document.id }
-                .map {
-                    Translation(document: $0)
-                }
-
-            return Expression(document: document, translations: translations)
+            TranslationCatalog.Expression(document: document, translations: [])
         }
     }
 
@@ -350,39 +344,39 @@ public class FilesystemCatalog: Catalog {
                     return Expression(document: document, translations: translations)
                 }
         case GenericExpressionQuery.translationsHavingOnly(let languageCode):
-            // TODO: Find a better/optimized way of doing this
-            var expressions = try expressions()
-            var index = expressions.count - 1
-            while index >= 0 {
-                let expression = expressions[index]
-                if !expression.translations.contains(where: {
-                    $0.language == languageCode &&
-                        $0.script == nil &&
-                        $0.region == nil
-                }) {
-                    expressions.remove(at: index)
-                }
+            return expressionDocuments
+                .map { document in
+                    let translations = translationDocuments
+                        .filter {
+                            $0.expressionID == document.id &&
+                                $0.languageCode == languageCode &&
+                                $0.scriptCode == nil &&
+                                $0.regionCode == nil
+                        }
+                        .map {
+                            Translation(document: $0)
+                        }
 
-                index -= 1
-            }
-            return expressions
+                    return TranslationCatalog.Expression(document: document, translations: translations)
+                }
+                .filter { !$0.translations.isEmpty }
         case GenericExpressionQuery.translationsHaving(let languageCode, let scriptCode, let regionCode):
-            // TODO: Find a better/optimized way of doing this
-            var expressions = try expressions()
-            var index = expressions.count - 1
-            while index >= 0 {
-                let expression = expressions[index]
-                if !expression.translations.contains(where: {
-                    $0.language == languageCode &&
-                        $0.script == scriptCode &&
-                        $0.region == regionCode
-                }) {
-                    expressions.remove(at: index)
-                }
+            return expressionDocuments
+                .map { document in
+                    let translations = translationDocuments
+                        .filter {
+                            $0.expressionID == document.id &&
+                                $0.languageCode == languageCode &&
+                                $0.scriptCode == scriptCode &&
+                                $0.regionCode == regionCode
+                        }
+                        .map {
+                            Translation(document: $0)
+                        }
 
-                index -= 1
-            }
-            return expressions
+                    return TranslationCatalog.Expression(document: document, translations: translations)
+                }
+                .filter { !$0.translations.isEmpty }
         default:
             throw CatalogError.unhandledQuery(query)
         }
