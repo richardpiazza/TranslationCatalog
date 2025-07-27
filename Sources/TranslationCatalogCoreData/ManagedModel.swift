@@ -4,6 +4,7 @@ import CoreDataPlus
 
 enum ManagedModel: String, CaseIterable, ModelVersion, ModelCatalog {
     case v1 = "1"
+    /// Expression Default Value
     case v2 = "2"
 
     static var allVersions: [ManagedModel] { allCases }
