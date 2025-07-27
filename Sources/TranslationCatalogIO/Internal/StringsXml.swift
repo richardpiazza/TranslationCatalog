@@ -31,7 +31,15 @@ extension StringsXml {
         script: Locale.Script?,
         region: Locale.Region?
     ) -> [TranslationCatalog.Expression] {
-        resources.map { $0.expression(uuid: .zero, defaultLanguage: defaultLanguage, language: language, script: script, region: region) }
+        resources.map {
+            $0.expression(
+                uuid: .zero,
+                defaultLanguage: defaultLanguage,
+                language: language,
+                script: script,
+                region: region
+            )
+        }
     }
 
     @available(*, deprecated, message: "Use `Locale` variant.")

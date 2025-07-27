@@ -204,8 +204,10 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
         let fetchRequest = ExpressionEntity.fetchRequest()
 
         switch query {
-        case GenericExpressionQuery.key(let named):
-            fetchRequest.predicate = NSPredicate(format: "%K CONTAINS[cd] %@", "key", named)
+        case GenericExpressionQuery.key(let key):
+            fetchRequest.predicate = NSPredicate(format: "%K CONTAINS[cd] %@", "key", key)
+        case GenericExpressionQuery.value(let value):
+            fetchRequest.predicate = NSPredicate(format: "%K CONTAINS[cd] %@", "defaultValue", value)
         case GenericExpressionQuery.named(let named):
             fetchRequest.predicate = NSPredicate(format: "%K CONTAINS[cd] %@", "name", named)
         case GenericExpressionQuery.projectId(let projectId):
@@ -303,6 +305,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
             entity.id = id
             entity.key = expression.key
             entity.name = expression.name
+            entity.defaultValue = expression.defaultValue
             entity.defaultLanguageRawValue = expression.defaultLanguageCode.identifier
             entity.context = expression.context
             entity.feature = expression.feature
@@ -636,12 +639,19 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
     }
 
     public func locales() throws -> Set<Locale> {
+        let expressions = try expressions()
+        let expressionLocales = Set(
+            expressions.map { Locale(languageCode: $0.defaultLanguageCode) }
+        )
+
         let translations = try translations()
-        return Set(
+        let translationLocales = Set(
             translations.map { translation in
                 Locale(languageCode: translation.language, script: translation.script, languageRegion: translation.region)
             }
         )
+
+        return expressionLocales.union(translationLocales)
     }
 
     @available(*, deprecated)
@@ -706,8 +716,9 @@ private extension ProjectEntity {
                 entity = context.make()
                 entity.id = expressionId
                 entity.key = expression.key
-                entity.name = expression.name
+                entity.defaultValue = expression.defaultValue
                 entity.defaultLanguageRawValue = expression.defaultLanguageCode.identifier
+                entity.name = expression.name
                 entity.context = expression.context
                 entity.feature = expression.feature
             }

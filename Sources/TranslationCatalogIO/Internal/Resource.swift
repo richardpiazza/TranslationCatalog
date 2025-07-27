@@ -34,24 +34,37 @@ extension Resource {
         script: Locale.Script? = nil,
         region: Locale.Region? = nil
     ) -> TranslationCatalog.Expression {
-        TranslationCatalog.Expression(
-            id: uuid,
-            key: name,
-            name: name,
-            defaultLanguageCode: defaultLanguage,
-            context: comment,
-            feature: feature,
-            translations: [
-                Translation(
-                    id: .zero,
-                    expressionId: uuid,
-                    language: language,
-                    script: script,
-                    region: region,
-                    value: value
-                ),
-            ]
-        )
+        if defaultLanguage == language, script == nil, region == nil {
+            TranslationCatalog.Expression(
+                id: uuid,
+                key: name,
+                value: value,
+                languageCode: defaultLanguage,
+                name: name,
+                context: comment,
+                feature: feature
+            )
+        } else {
+            TranslationCatalog.Expression(
+                id: uuid,
+                key: name,
+                value: "",
+                languageCode: defaultLanguage,
+                name: name,
+                context: comment,
+                feature: feature,
+                translations: [
+                    Translation(
+                        id: .zero,
+                        expressionId: uuid,
+                        language: language,
+                        script: script,
+                        region: region,
+                        value: value
+                    ),
+                ]
+            )
+        }
     }
 
     @available(*, deprecated, message: "Use `Locale` variant.")

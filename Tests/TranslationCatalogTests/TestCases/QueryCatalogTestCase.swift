@@ -23,8 +23,8 @@ class QueryCatalogTestCase: XCTestCase {
     func testExpressionQueries() throws {
         try catalog.assertQueryExpressions()
         try catalog.assertQueryExpressionsProjectID()
-        try catalog.assertQueryExpressionsNamed()
         try catalog.assertQueryExpressionsKeyed()
+        try catalog.assertQueryExpressionsValued()
         try catalog.assertQueryExpressionsHaving()
         try catalog.assertQueryExpressionsHavingOnly()
         try catalog.assertQueryExpressionId()

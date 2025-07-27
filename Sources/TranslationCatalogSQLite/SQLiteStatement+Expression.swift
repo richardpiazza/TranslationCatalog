@@ -79,6 +79,27 @@ extension SQLiteStatement {
         )
     }
 
+    static func selectExpressions(withValueLike value: String) -> Self {
+        .init(
+            .SELECT(
+                .column(ExpressionEntity.id),
+                .column(ExpressionEntity.uuid),
+                .column(ExpressionEntity.key),
+                .column(ExpressionEntity.name),
+                .column(ExpressionEntity.defaultLanguage),
+                .column(ExpressionEntity.defaultValue),
+                .column(ExpressionEntity.context),
+                .column(ExpressionEntity.feature)
+            ),
+            .FROM(
+                .TABLE(ExpressionEntity.self)
+            ),
+            .WHERE(
+                .column(ExpressionEntity.defaultValue, op: .like, value: "%\(value)%")
+            )
+        )
+    }
+
     static func selectExpressions(withNameLike name: String) -> Self {
         SQLiteStatement(
             .SELECT(

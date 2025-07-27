@@ -95,9 +95,9 @@ extension TranslationCatalog.Expression {
         self.init(
             id: id,
             key: key,
+            value: entity.value,
+            languageCode: entity.defaultLanguage,
             name: name,
-            defaultLanguageCode: entity.defaultLanguage,
-            defaultValue: entity.value,
             context: entity.context,
             feature: entity.feature
         )

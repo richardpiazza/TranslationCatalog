@@ -63,9 +63,9 @@ extension ExpressionEntity {
         return Expression(
             id: id,
             key: key,
+            value: defaultValue,
+            languageCode: languageCode,
             name: name,
-            defaultLanguageCode: languageCode,
-            defaultValue: defaultValue,
             context: context,
             feature: feature,
             translations: translations

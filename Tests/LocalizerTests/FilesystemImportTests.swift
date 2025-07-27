@@ -28,12 +28,9 @@ final class FilesystemImportTests: XCTestCase {
         ])
 
         XCTAssertEqual(output, """
-        Expression Exists with Key \'FIRST_NAME\'; checking translations…
-        Translation Skipped \'First Name\'
-        Expression Exists with Key \'LAST_NAME\'; checking translations…
-        Translation Skipped \'Last Name\'
-        Expression Exists with Key \'TITLE\'; checking translations…
-        Translation Skipped \'Title\'
+        Expression Exists with Key \'FIRST_NAME\'
+        Expression Exists with Key \'LAST_NAME\'
+        Expression Exists with Key \'TITLE\'
 
         """)
 
@@ -71,8 +68,7 @@ final class FilesystemImportTests: XCTestCase {
         XCTAssertEqual(output, """
         Expression Created 'FAMILY_NAME'
         Expression Created 'GIVEN_NAME'
-        Expression Exists with Key 'TITLE'; checking translations…
-        Translation Skipped 'Title'
+        Expression Exists with Key 'TITLE'
 
         """)
 

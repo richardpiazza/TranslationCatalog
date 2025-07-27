@@ -47,7 +47,7 @@ extension Catalog {
                 expressions = try catalog.expressions(matching: SQLiteCatalog.ExpressionQuery.hierarchy)
             }
 
-            let sortedExpressions = expressions.sorted(by: { $0.name < $1.name })
+            let sortedExpressions = expressions.sorted(by: { $0.key < $1.key })
             let render = try ExpressionRenderer.render(expressions: sortedExpressions, renderFormat: format)
             print(render)
         }

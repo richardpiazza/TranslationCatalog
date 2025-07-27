@@ -10,12 +10,12 @@ public struct Expression: Codable, Hashable, Identifiable, Sendable {
     public let id: UUID
     /// Localization file unique key identifier
     public let key: String
-    /// Description of this `Expression`
-    public let name: String
-    /// The language from which the original `Translation` value is expressed.
-    public let defaultLanguageCode: Locale.LanguageCode
     /// Value used as a base translation, expressed in the `defaultLanguageCode`
     public let defaultValue: String
+    /// The language from which the original `Translation` value is expressed.
+    public let defaultLanguageCode: Locale.LanguageCode
+    /// Description of this `Expression`
+    public let name: String
     /// Comments and information around the usage of the `Expression`
     ///
     /// For instance, the word 'Start' could be used as a verb or a noun.
@@ -25,6 +25,41 @@ public struct Expression: Codable, Hashable, Identifiable, Sendable {
     /// The translated values for the `Expression`
     public let translations: [Translation]
 
+    public init(
+        id: UUID,
+        key: String,
+        value: String,
+        languageCode: Locale.LanguageCode,
+        name: String = "",
+        context: String? = nil,
+        feature: String? = nil,
+        translations: [Translation] = []
+    ) {
+        self.id = id
+        self.key = key
+        defaultValue = value
+        defaultLanguageCode = languageCode
+        self.name = name
+        self.context = context
+        self.feature = feature
+        self.translations = translations
+    }
+
+    public init(
+        expression: Expression,
+        translations: [Translation]
+    ) {
+        id = expression.id
+        key = expression.key
+        name = expression.name
+        defaultLanguageCode = expression.defaultLanguageCode
+        defaultValue = expression.defaultValue
+        context = expression.context
+        feature = expression.feature
+        self.translations = translations
+    }
+
+    @available(*, deprecated, renamed: "init(id:key:value:languageCode:name:context:feature:translations:)")
     public init(
         id: UUID = .zero,
         key: String = "",
@@ -62,20 +97,6 @@ public struct Expression: Codable, Hashable, Identifiable, Sendable {
         defaultValue = translations.first(where: { $0.languageCode == defaultLanguage })?.value ?? ""
         self.context = context
         self.feature = feature
-        self.translations = translations
-    }
-
-    public init(
-        expression: Expression,
-        translations: [Translation]
-    ) {
-        id = expression.id
-        key = expression.key
-        name = expression.name
-        defaultLanguageCode = expression.defaultLanguageCode
-        defaultValue = expression.defaultValue
-        context = expression.context
-        feature = expression.feature
         self.translations = translations
     }
 

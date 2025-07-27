@@ -8,8 +8,9 @@ extension TranslationCatalog.Expression {
         Expression(
             id: id,
             key: key,
+            value: defaultValue,
+            languageCode: defaultLanguageCode,
             name: name,
-            defaultLanguageCode: defaultLanguageCode,
             context: context,
             feature: feature,
             translations: translations.map { Translation(translation: $0, expressionId: id) }

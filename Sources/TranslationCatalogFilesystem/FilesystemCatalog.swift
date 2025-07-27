@@ -325,6 +325,18 @@ public class FilesystemCatalog: Catalog {
 
                     return Expression(document: document, translations: translations)
                 }
+        case GenericExpressionQuery.value(let value):
+            return expressionDocuments
+                .filter { $0.defaultValue.lowercased().contains(value.lowercased()) }
+                .map { document in
+                    let translations = translationDocuments
+                        .filter { $0.expressionID == document.id }
+                        .map {
+                            Translation(document: $0)
+                        }
+
+                    return Expression(document: document, translations: translations)
+                }
         case GenericExpressionQuery.named(let name):
             return expressionDocuments
                 .filter { $0.name.lowercased().contains(name.lowercased()) }
@@ -640,12 +652,18 @@ public class FilesystemCatalog: Catalog {
     // MARK: - Metadata
 
     public func locales() throws -> Set<Locale> {
-        Set(
+        let expressionLocales = Set(
+            expressionDocuments.map { Locale(languageCode: $0.defaultLanguage) }
+        )
+
+        let translationLocales = Set(
             translationDocuments
                 .map { translation in
                     Locale(languageCode: translation.languageCode, script: translation.scriptCode, languageRegion: translation.regionCode)
                 }
         )
+
+        return expressionLocales.union(translationLocales)
     }
 
     @available(*, deprecated)

@@ -67,11 +67,14 @@ extension Catalog.Insert {
         @Argument(help: "Unique key that identifies the expression in translation files.")
         var key: String
 
-        @Argument(help: "Name that identifies a collection of translations.")
-        var name: String
+        @Argument(help: "Value used as a base translation, expressed in the default language code.")
+        var value: String
 
-        @Option(help: "The default/development language code.")
+        @Argument(help: "The default/development language code.")
         var defaultLanguage: Locale.LanguageCode = .localizerDefault
+
+        @Option(help: "Name that identifies a collection of translations.")
+        var name: String = ""
 
         @Option(help: "Contextual information that guides translators.")
         var context: String?
@@ -101,8 +104,9 @@ extension Catalog.Insert {
             let expression = Expression(
                 id: .zero,
                 key: key,
+                value: value,
+                languageCode: defaultLanguage,
                 name: name,
-                defaultLanguageCode: defaultLanguage,
                 context: context,
                 feature: feature,
                 translations: []
@@ -160,11 +164,12 @@ extension Catalog.Insert {
         }
     }
 
+    @available(*, deprecated)
     struct KeyValueCommand: CatalogCommand {
 
         static let configuration = CommandConfiguration(
             commandName: "key-value",
-            abstract: "Quickly add a Expression=Translation pairing to the catalog.",
+            abstract: "[DEPRECATED] Quickly add a Expression=Translation pairing to the catalog.",
             version: "1.0.0",
             helpNames: .shortAndLong
         )
@@ -187,8 +192,9 @@ extension Catalog.Insert {
             let expression = Expression(
                 id: .zero,
                 key: key,
-                name: key,
-                defaultLanguageCode: .default,
+                value: value,
+                languageCode: .default,
+                name: "",
                 context: nil,
                 feature: nil,
                 translations: []
@@ -196,18 +202,7 @@ extension Catalog.Insert {
 
             let expressionId = try catalog.createExpression(expression)
 
-            let translation = Translation(
-                id: .zero,
-                expressionId: expressionId,
-                language: .default,
-                script: nil,
-                region: nil,
-                value: value
-            )
-
-            let translationId = try catalog.createTranslation(translation)
-
-            print("Inserted Expression / Translation [\(expressionId) / \(translationId)]")
+            print("Inserted Expression [\(expressionId)]")
             print("\(key)='\(value)'")
         }
     }

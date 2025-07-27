@@ -14,6 +14,7 @@ public enum GenericExpressionQuery: CatalogQuery {
     case id(Expression.ID)
     case projectId(Project.ID)
     case key(String)
+    case value(String)
     case named(String)
     /// Expressions with Translations that only match the provided LanguageCode. (Script == Null & Region == Null)
     case translationsHavingOnly(Locale.LanguageCode)

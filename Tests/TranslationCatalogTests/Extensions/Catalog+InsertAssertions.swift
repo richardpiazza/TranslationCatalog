@@ -28,7 +28,14 @@ extension Catalog {
     /// Verify that a `Expression` can be added to the catalog.
     func assertInsertExpression() throws {
         let expressionId = UUID(uuidString: "A2A5A62D-D532-4FEB-8905-9DBFFC77C07E")!
-        let expression = Expression(id: expressionId, key: "EXP_1", name: "Test Expression", defaultLanguageCode: .english, context: "Generic Message", feature: "Settings")
+        let expression = Expression(
+            id: expressionId,
+            key: "EXP_1",
+            value: "Test Expression",
+            languageCode: .english,
+            context: "Generic Message",
+            feature: "Settings"
+        )
 
         func preConditions(catalog: Catalog) throws {
             let expressions = try catalog.expressions()
@@ -41,7 +48,7 @@ extension Catalog {
             let entity = try XCTUnwrap(expressions.first)
             XCTAssertEqual(entity.id, expressionId)
             XCTAssertEqual(entity.key, "EXP_1")
-            XCTAssertEqual(entity.name, "Test Expression")
+            XCTAssertEqual(entity.defaultValue, "Test Expression")
             XCTAssertEqual(entity.defaultLanguageCode, .english)
             XCTAssertEqual(entity.context, "Generic Message")
             XCTAssertEqual(entity.feature, "Settings")
@@ -55,7 +62,14 @@ extension Catalog {
     /// Verify that a `Translation` can be added to the catalog.
     func assertInsertTranslation() throws {
         let expressionId = UUID(uuidString: "A2A5A62D-D532-4FEB-8905-9DBFFC77C07E")!
-        let expression = Expression(id: expressionId, key: "EXP_1", name: "Test Expression", defaultLanguageCode: .english, context: "Generic Message", feature: "Settings")
+        let expression = Expression(
+            id: expressionId,
+            key: "EXP_1",
+            value: "Test Expression",
+            languageCode: .english,
+            context: "Generic Message",
+            feature: "Settings"
+        )
         let translationId = UUID(uuidString: "80F9B7D4-BFF5-41CC-8BB6-28A990864046")!
         let translation = TranslationCatalog.Translation(id: translationId, expressionId: expressionId, language: .english, script: nil, region: .unitedStates, value: "Party-on Wayne!")
 
@@ -85,7 +99,14 @@ extension Catalog {
     /// Verify that a `Project` can be added to the catalog, and the related `Expression`s are created as well.
     func assertInsertProject_CascadeExpressions() throws {
         let expressionId = UUID(uuidString: "1721B307-9A67-4FC1-A529-3A128695E802")!
-        let expression = Expression(id: expressionId, key: "BUTTON_NEXT", name: "Next", defaultLanguageCode: .english, context: "Button Title", feature: "Buttons")
+        let expression = Expression(
+            id: expressionId,
+            key: "BUTTON_NEXT",
+            value: "Next",
+            languageCode: .english,
+            context: "Button Title",
+            feature: "Buttons"
+        )
         let projectId = UUID(uuidString: "CB3900B9-C4A8-4953-9CF7-C737323954E9")!
         let project = Project(id: projectId, name: "", expressions: [expression])
 
@@ -114,7 +135,15 @@ extension Catalog {
         // It shouldn't matter that the correct expressionId is set here... the catalog will auto-override
         let translation = TranslationCatalog.Translation(id: translationId, expressionId: .zero, language: .english, script: nil, region: .unitedStates, value: "Next")
         let expressionId = UUID(uuidString: "1721B307-9A67-4FC1-A529-3A128695E802")!
-        let expression = Expression(id: expressionId, key: "BUTTON_NEXT", name: "Next", defaultLanguageCode: .english, context: "Button Title", feature: "Buttons", translations: [translation])
+        let expression = Expression(
+            id: expressionId,
+            key: "BUTTON_NEXT",
+            value: "Next",
+            languageCode: .english,
+            context: "Button Title",
+            feature: "Buttons",
+            translations: [translation]
+        )
 
         func preConditions(catalog: Catalog) throws {
             let expressions = try catalog.expressions()

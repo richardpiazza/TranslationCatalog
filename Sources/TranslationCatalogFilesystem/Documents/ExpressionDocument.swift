@@ -36,9 +36,9 @@ extension TranslationCatalog.Expression {
         self.init(
             id: document.id,
             key: document.key,
+            value: document.defaultValue,
+            languageCode: document.defaultLanguage,
             name: document.name,
-            defaultLanguageCode: document.defaultLanguage,
-            defaultValue: document.defaultValue,
             context: document.context,
             feature: document.feature,
             translations: translations
