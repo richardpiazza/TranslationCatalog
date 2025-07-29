@@ -57,15 +57,15 @@ extension Catalog {
         XCTAssertEqual(expressions.count, 2)
     }
 
-    /// Verify `Expression` entities can be retrieved using a loose `name`.
-    func assertQueryExpressionsNamed() throws {
-        let expressions = try expressions(matching: GenericExpressionQuery.named("ull"))
-        XCTAssertEqual(expressions.count, 2)
-    }
-
     /// Verify `Expression` entities can be retrieved using a loose `key`.
     func assertQueryExpressionsKeyed() throws {
         let expressions = try expressions(matching: GenericExpressionQuery.key("button"))
+        XCTAssertEqual(expressions.count, 2)
+    }
+
+    /// Verify `Expression` entities can be retrieved using a loose `defaultValue`.
+    func assertQueryExpressionsValued() throws {
+        let expressions = try expressions(matching: GenericExpressionQuery.value("ull"))
         XCTAssertEqual(expressions.count, 2)
     }
 
@@ -86,7 +86,7 @@ extension Catalog {
     /// Verify a `Expression` entity can be retrieved by `id`.
     func assertQueryExpressionId() throws {
         let expression = try expression(.expression4)
-        XCTAssertEqual(expression.name, "Fully Qualified Domain Name")
+        XCTAssertEqual(expression.defaultValue, "Fully Qualified Domain Name")
     }
 
     /// Verify a `Expression` entity can be retrieved by `key`.
@@ -129,9 +129,10 @@ extension Catalog {
 
     func assertLocaleIdentifiers() throws {
         let localeIdentifiers = try locales().map(\.identifier)
-        XCTAssertEqual(localeIdentifiers.count, 6)
+        XCTAssertEqual(localeIdentifiers.count, 7)
         XCTAssertEqual(localeIdentifiers.sorted(), [
             "en",
+            "en_GB",
             "es",
             "fr",
             "fr_CA",
@@ -160,8 +161,8 @@ enum CatalogData {
     static let expression1 = Expression(
         id: .expression1,
         key: "BUTTON_SAVE",
-        name: "Save",
-        defaultLanguageCode: .english,
+        value: "Save",
+        languageCode: .english,
         context: "Button/Action Title",
         feature: "Buttons",
         translations: [translation1, translation2, translation3]
@@ -169,8 +170,8 @@ enum CatalogData {
     static let expression2 = Expression(
         id: .expression2,
         key: "BUTTON_DELETE",
-        name: "Delete",
-        defaultLanguageCode: .english,
+        value: "Delete",
+        languageCode: .english,
         context: "Button/Action Title",
         feature: "Buttons",
         translations: [translation4, translation5, translation6]
@@ -178,8 +179,9 @@ enum CatalogData {
     static let expression3 = Expression(
         id: .expression3,
         key: "COMMON_PULL_TO_REFRESH",
+        value: "Pull to Refresh",
+        languageCode: .english,
         name: "Pull to Refresh",
-        defaultLanguageCode: .english,
         context: "Manual Refresh Action",
         feature: "Common",
         translations: [translation7, translation8, translation9]
@@ -187,8 +189,9 @@ enum CatalogData {
     static let expression4 = Expression(
         id: .expression4,
         key: "GIT_FQDN",
+        value: "Fully Qualified Domain Name",
+        languageCode: .english,
         name: "Fully Qualified Domain Name",
-        defaultLanguageCode: .english,
         context: "Test Entry Prompt",
         feature: "Git,Internet",
         translations: [translation10]
@@ -196,23 +199,24 @@ enum CatalogData {
     static let expression5 = Expression(
         id: .expression5,
         key: "AUTH_FAILURE_MESSAGE",
+        value: "The server '%@' rejected the provided credentials.",
+        languageCode: .english,
         name: "Authentication Failure Message",
-        defaultLanguageCode: .english,
         context: "Authentication Alert Message",
         feature: "Alert,Auth",
         translations: [translation11, translation12, translation13]
     )
-    static let translation1 = TranslationCatalog.Translation(id: .translation1, expressionId: .expression1, language: .english, script: nil, region: nil, value: "Save")
+    static let translation1 = TranslationCatalog.Translation(id: .translation1, expressionId: .expression1, language: .english, script: nil, region: .unitedKingdom, value: "Save")
     static let translation2 = TranslationCatalog.Translation(id: .translation2, expressionId: .expression1, language: .spanish, script: nil, region: nil, value: "Guardar")
     static let translation3 = TranslationCatalog.Translation(id: .translation3, expressionId: .expression1, language: .french, script: nil, region: nil, value: "Sauvegarder")
-    static let translation4 = TranslationCatalog.Translation(id: .translation4, expressionId: .expression2, language: .english, script: nil, region: nil, value: "Delete")
+    static let translation4 = TranslationCatalog.Translation(id: .translation4, expressionId: .expression2, language: .english, script: nil, region: .unitedKingdom, value: "Delete")
     static let translation5 = TranslationCatalog.Translation(id: .translation5, expressionId: .expression2, language: .spanish, script: nil, region: nil, value: "Eliminar")
     static let translation6 = TranslationCatalog.Translation(id: .translation6, expressionId: .expression2, language: .french, script: nil, region: nil, value: "Effacer")
-    static let translation7 = TranslationCatalog.Translation(id: .translation7, expressionId: .expression3, language: .english, script: nil, region: nil, value: "Pull to Refresh")
+    static let translation7 = TranslationCatalog.Translation(id: .translation7, expressionId: .expression3, language: .english, script: nil, region: .unitedKingdom, value: "Pull to Refresh")
     static let translation8 = TranslationCatalog.Translation(id: .translation8, expressionId: .expression3, language: .chinese, script: .hanSimplified, region: nil, value: "拉刷新")
     static let translation9 = TranslationCatalog.Translation(id: .translation9, expressionId: .expression3, language: .portuguese, script: nil, region: .brazil, value: "Puxe para Atualizar")
-    static let translation10 = TranslationCatalog.Translation(id: .translation10, expressionId: .expression4, language: .english, script: nil, region: nil, value: "Fully Qualified Domain Name")
-    static let translation11 = TranslationCatalog.Translation(id: .translation11, expressionId: .expression5, language: .english, script: nil, region: nil, value: "The server '%@' rejected the provided credentials.")
+    static let translation10 = TranslationCatalog.Translation(id: .translation10, expressionId: .expression4, language: .english, script: nil, region: .unitedKingdom, value: "Fully Qualified Domain Name")
+    static let translation11 = TranslationCatalog.Translation(id: .translation11, expressionId: .expression5, language: .english, script: nil, region: .unitedKingdom, value: "The server '%@' rejected the provided credentials.")
     static let translation12 = TranslationCatalog.Translation(id: .translation12, expressionId: .expression5, language: .french, script: nil, region: nil, value: "Le serveur '%@' a rejeté les informations d'identification fournies.")
     static let translation13 = TranslationCatalog.Translation(id: .translation13, expressionId: .expression5, language: .french, script: nil, region: .canada, value: "Le serveur '%@' a rejeté les informations d'identification fournies, eh.")
 }

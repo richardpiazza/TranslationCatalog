@@ -16,7 +16,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
     /// of the instance is required, provide a URL where a store can be created.
     public init() throws {
         container = try CatalogContainer(
-            version: .v1,
+            version: .v2,
             persistence: .memory,
             name: "CatalogModel"
         )
@@ -29,10 +29,13 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
         }
 
         container = try CatalogContainer(
-            version: .v1,
+            version: .v2,
             persistence: .store(storeURL),
-            name: "CatalogModel"
+            name: "CatalogModel",
+            silentMigration: false
         )
+
+        try migrateDefaultExpressionValues()
     }
 
     public func projects() throws -> [TranslationCatalog.Project] {
@@ -201,8 +204,10 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
         let fetchRequest = ExpressionEntity.fetchRequest()
 
         switch query {
-        case GenericExpressionQuery.key(let named):
-            fetchRequest.predicate = NSPredicate(format: "%K CONTAINS[cd] %@", "key", named)
+        case GenericExpressionQuery.key(let key):
+            fetchRequest.predicate = NSPredicate(format: "%K CONTAINS[cd] %@", "key", key)
+        case GenericExpressionQuery.value(let value):
+            fetchRequest.predicate = NSPredicate(format: "%K CONTAINS[cd] %@", "defaultValue", value)
         case GenericExpressionQuery.named(let named):
             fetchRequest.predicate = NSPredicate(format: "%K CONTAINS[cd] %@", "name", named)
         case GenericExpressionQuery.projectId(let projectId):
@@ -300,6 +305,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
             entity.id = id
             entity.key = expression.key
             entity.name = expression.name
+            entity.defaultValue = expression.defaultValue
             entity.defaultLanguageRawValue = expression.defaultLanguageCode.identifier
             entity.context = expression.context
             entity.feature = expression.feature
@@ -337,6 +343,15 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
 
             try context.performAndWait {
                 expressionEntity.defaultLanguageRawValue = languageCode.identifier
+                try context.save()
+            }
+        case GenericExpressionUpdate.defaultValue(let value):
+            guard value != expressionEntity.value else {
+                return
+            }
+
+            try context.performAndWait {
+                expressionEntity.defaultValue = value
                 try context.save()
             }
         case GenericExpressionUpdate.feature(let feature):
@@ -624,17 +639,59 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
     }
 
     public func locales() throws -> Set<Locale> {
+        let expressions = try expressions()
+        let expressionLocales = Set(
+            expressions.map { Locale(languageCode: $0.defaultLanguageCode) }
+        )
+
         let translations = try translations()
-        return Set(
+        let translationLocales = Set(
             translations.map { translation in
                 Locale(languageCode: translation.language, script: translation.script, languageRegion: translation.region)
             }
         )
+
+        return expressionLocales.union(translationLocales)
     }
 
     @available(*, deprecated)
     public func localeIdentifiers() throws -> Set<Locale.Identifier> {
         try Set(locales().map(\.identifier))
+    }
+}
+
+private extension CoreDataCatalog {
+    func migrateDefaultExpressionValues() throws {
+        let context = container.persistentContainer.newBackgroundContext()
+        try context.performAndWait {
+            let expressionRequest = ExpressionEntity.fetchRequest()
+            expressionRequest.predicate = NSPredicate(format: "%K == %@", argumentArray: ["defaultValue", ""])
+
+            let expressionEntities = try context.fetch(expressionRequest)
+            for expression in expressionEntities {
+                guard let language = expression.defaultLanguageRawValue, !language.isEmpty else {
+                    continue
+                }
+
+                let translationRequest = TranslationEntity.fetchRequest()
+                translationRequest.predicate = NSCompoundPredicate(
+                    type: .and,
+                    subpredicates: [
+                        NSPredicate(format: "%K == %@", argumentArray: ["expressionEntity", expression]),
+                        NSPredicate(format: "%K == %@", argumentArray: ["languageCodeRawValue", language]),
+                        NSPredicate(format: "%K == NIL", "scriptCodeRawValue"),
+                        NSPredicate(format: "%K == NIL", "regionCodeRawValue"),
+                    ]
+                )
+
+                if let translationEntity = try context.fetch(translationRequest).first {
+                    expression.defaultValue = translationEntity.value ?? ""
+                    context.delete(translationEntity)
+                }
+            }
+
+            try context.save()
+        }
     }
 }
 
@@ -659,8 +716,9 @@ private extension ProjectEntity {
                 entity = context.make()
                 entity.id = expressionId
                 entity.key = expression.key
-                entity.name = expression.name
+                entity.defaultValue = expression.defaultValue
                 entity.defaultLanguageRawValue = expression.defaultLanguageCode.identifier
+                entity.name = expression.name
                 entity.context = expression.context
                 entity.feature = expression.feature
             }

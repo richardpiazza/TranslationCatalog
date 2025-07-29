@@ -13,7 +13,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
     public var statementHook: RenderedStatementHook?
 
     public init(url: URL) throws {
-        db = try Connection(path: url.path, schema: .current)
+        db = try Connection(url: url)
     }
 
     // MARK: - Project
@@ -176,6 +176,9 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
         case GenericExpressionQuery.key(let key):
             let entities = try db.expressionEntities(statement: renderStatement(.selectExpressions(withKeyLike: key)))
             return try entities.map { try $0.expression() }
+        case GenericExpressionQuery.value(let value):
+            let entities = try db.expressionEntities(statement: renderStatement(.selectExpressions(withValueLike: value)))
+            return try entities.map { try $0.expression() }
         case GenericExpressionQuery.named(let name):
             let entities = try db.expressionEntities(statement: renderStatement(.selectExpressions(withNameLike: name)))
             return try entities.map { try $0.expression() }
@@ -282,6 +285,12 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             }
 
             try db.run(renderStatement(.updateExpression(entity.id, defaultLanguage: languageCode)))
+        case GenericExpressionUpdate.defaultValue(let value):
+            guard value != entity.defaultValue else {
+                return
+            }
+
+            try db.run(renderStatement(.updateExpression(entity.id, defaultValue: value)))
         case GenericExpressionUpdate.context(let context):
             guard context != entity.context else {
                 return
@@ -489,13 +498,20 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
     // MARK: - Metadata
 
     public func locales() throws -> Set<Locale> {
+        let expressionEntities = try db.expressionEntities(statement: renderStatement(.selectAllFromExpression))
+        let expressionLocales = Set(
+            expressionEntities.map { Locale(languageCode: $0.languageCode) }
+        )
+
         let translationEntities = try db.translationEntities(statement: renderStatement(.selectAllFromTranslation))
-        return Set(
+        let translationLocales = Set(
             translationEntities
                 .map { translation in
                     Locale(languageCode: translation.languageCode, script: translation.scriptCode, languageRegion: translation.regionCode)
                 }
         )
+
+        return expressionLocales.union(translationLocales)
     }
 
     @available(*, deprecated)

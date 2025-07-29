@@ -81,6 +81,9 @@ extension Catalog.Query {
         @Option(help: "Unique key used in localization files.")
         var key: String?
 
+        @Option(help: "Value used as a base translation, expressed in the default language code.")
+        var value: String?
+
         @Option(help: "A descriptive human-readable identification.")
         var named: String?
 
@@ -112,6 +115,8 @@ extension Catalog.Query {
 
             if let key {
                 expressions = try catalog.expressions(matching: GenericExpressionQuery.key(key))
+            } else if let value {
+                expressions = try catalog.expressions(matching: GenericExpressionQuery.value(value))
             } else if let named {
                 expressions = try catalog.expressions(matching: GenericExpressionQuery.named(named))
             } else {
@@ -120,8 +125,8 @@ extension Catalog.Query {
 
             let table = try MarkdownTable(
                 content: expressions,
-                paths: [\.id.uuidString, \.key, \.name, \.defaultLanguageCode.identifier, \.context, \.feature],
-                headers: ["Expression.ID", "Key", "Name", "Default Language", "Context", "Feature"]
+                paths: [\.id.uuidString, \.key, \.defaultValue, \.defaultLanguageCode.identifier, \.name, \.context, \.feature],
+                headers: ["Expression.ID", "Key", "Default Value", "Default Language", "Name", "Context", "Feature"]
             )
 
             print(table)

@@ -17,6 +17,7 @@ extension ExpressionEntity {
 
     @NSManaged var context: String?
     @NSManaged var defaultLanguageRawValue: String?
+    @NSManaged var defaultValue: String?
     @NSManaged var feature: String?
     @NSManaged var id: UUID?
     @NSManaged var key: String?
@@ -71,6 +72,10 @@ extension ExpressionEntity {
 
         return languageCode
     }
+
+    var value: String {
+        defaultValue ?? ""
+    }
 }
 
 extension TranslationCatalog.Expression {
@@ -90,8 +95,9 @@ extension TranslationCatalog.Expression {
         self.init(
             id: id,
             key: key,
+            value: entity.value,
+            languageCode: entity.defaultLanguage,
             name: name,
-            defaultLanguageCode: entity.defaultLanguage,
             context: entity.context,
             feature: entity.feature
         )

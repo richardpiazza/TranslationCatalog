@@ -45,15 +45,15 @@ extension Catalog {
         func run() async throws {
             let catalog = try catalog(forStorage: storage)
             let expressions = try queryExpressions(from: catalog, using: storage, projectId: projectId)
-            let defaultOrFirst = (format == .appleStrings || fallback) ? true : false
-            let locale = Locale(languageCode: language)
-            let data = try ExpressionEncoder.encodeTranslations(
+            let shouldFallback = (format == .appleStrings || fallback) ? true : false
+            let locale = Locale(languageCode: language, script: script, languageRegion: region)
+            let data = try ExpressionEncoder.encodeValues(
                 for: expressions,
-                fileFormat: format,
                 locale: locale,
-                defaultOrFirst: defaultOrFirst
+                fallback: shouldFallback,
+                format: format
             )
-            let output = String(data: data, encoding: .utf8) ?? ""
+            let output = String(decoding: data, as: UTF8.self)
 
             print(output)
         }
@@ -67,10 +67,6 @@ extension Catalog {
                 try catalog.expressions(matching: GenericExpressionQuery.projectId(id))
             } else {
                 try catalog.expressions()
-            }
-
-            if storage == .filesystem {
-                return expressions
             }
 
             let enumerated = expressions.enumerated()

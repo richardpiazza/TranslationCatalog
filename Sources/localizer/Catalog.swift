@@ -22,13 +22,13 @@ struct Catalog: AsyncParsableCommand {
         abstract: "Interact with the translation catalog.",
         version: "1.0.0",
         subcommands: [
-            Import.self,
             Export.self,
-            Generate.self,
-            Query.self,
-            Insert.self,
-            Update.self,
             Delete.self,
+            Generate.self,
+            Import.self,
+            Insert.self,
+            Query.self,
+            Update.self,
         ],
         helpNames: .shortAndLong
     )

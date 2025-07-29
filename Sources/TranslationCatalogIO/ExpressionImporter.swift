@@ -14,9 +14,9 @@ public class ExpressionImporter {
         public var description: String {
             switch self {
             case .createdExpression(let expression):
-                "Expression Created '\(expression.name)'"
+                "Expression Created '\(expression.key)'"
             case .skippedExpression(let expression):
-                "Expression Exists with Key '\(expression.key)'; checking translations…"
+                "Expression Exists with Key '\(expression.key)'"
             case .failedExpression(let expression, let error):
                 "Expression Failure '\(expression.key)'; \(error.localizedDescription)"
             case .createdTranslation(let translation):
@@ -47,7 +47,7 @@ public class ExpressionImporter {
     }
 
     private func importExpressions(_ expressions: [TranslationCatalog.Expression]) {
-        let sortedExpressions = expressions.sorted(by: { $0.name < $1.name })
+        let sortedExpressions = expressions.sorted(by: { $0.key < $1.key })
         for expression in sortedExpressions {
             importExpression(expression, into: catalog)
         }

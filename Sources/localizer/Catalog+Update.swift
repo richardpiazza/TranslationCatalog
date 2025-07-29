@@ -102,6 +102,9 @@ extension Catalog.Update {
         @Option(help: "The default/development language code.")
         var defaultLanguage: Locale.LanguageCode?
 
+        @Option(help: "The base value expressed using the `defaultLanguage`")
+        var defaultValue: String?
+
         @Option(help: "Contextual information that guides translators.")
         var context: String?
 
@@ -150,8 +153,12 @@ extension Catalog.Update {
                 try catalog.updateExpression(expression.id, action: GenericExpressionUpdate.name(name))
             }
 
-            if let language = defaultLanguage, expression.defaultLanguageCode != language {
-                try catalog.updateExpression(expression.id, action: GenericExpressionUpdate.defaultLanguage(language))
+            if let defaultLanguage, expression.defaultLanguageCode != defaultLanguage {
+                try catalog.updateExpression(expression.id, action: GenericExpressionUpdate.defaultLanguage(defaultLanguage))
+            }
+
+            if let defaultValue, expression.defaultValue != defaultValue {
+                try catalog.updateExpression(expression.id, action: GenericExpressionUpdate.defaultValue(defaultValue))
             }
 
             if let context, expression.context != context {

@@ -13,8 +13,10 @@ extension Connection {
         case v2 = 2
         /// UUIDs / Project Entity
         case v3 = 3
+        /// Expression Default Value
+        case v4 = 4
 
-        static var current: Self { .v3 }
+        static var current: Self { .v4 }
     }
 
     var schemaVersion: SchemaVersion {
@@ -35,8 +37,8 @@ extension Connection {
         return schemaVersion
     }
 
-    convenience init(path: String, schema: SchemaVersion = .current) throws {
-        try self.init(path)
+    convenience init(url: URL, schema: SchemaVersion = .current) throws {
+        try self.init(url.path())
         try migrateSchema(from: schemaVersion, to: schema)
     }
 }
@@ -122,6 +124,21 @@ extension Connection {
                 try setSchemaVersion(.v3)
             }
         case .v3:
+            print("Migrating schema from '\(from.rawValue)' to '\(to.rawValue)'.")
+            try transaction {
+                do {
+                    try addSchemeV4Fields()
+                    try migrateDefaultTranslationsToExpression()
+                    try setSchemaVersion(.v4)
+                } catch let result as SQLite.Result {
+                    print("Migration Failed: \(result.description)")
+                    throw result
+                } catch {
+                    print("Migration Failed: \(error.localizedDescription)")
+                    throw error
+                }
+            }
+        case .v4:
             return
         }
 
@@ -170,6 +187,32 @@ extension Connection {
             WHERE id = \(entity.id)
             LIMIT 1;
             """)
+        }
+    }
+
+    private func addSchemeV4Fields() throws {
+        try run("ALTER TABLE expression ADD COLUMN default_value TEXT NOT NULL DEFAULT '';")
+    }
+
+    private func migrateDefaultTranslationsToExpression() throws {
+        let expressionEntities = try expressionEntities(statement: SQLiteStatement.selectAllFromExpression.render())
+        for expression in expressionEntities {
+            print("Migrate Expression '\(expression.key) (\(expression.id))'")
+            let translationStatement = SQLiteStatement.selectTranslationsHavingOnly(expression.id, languageCode: expression.languageCode)
+            if let translationEntity = try translationEntity(statement: translationStatement.render()) {
+                let update = """
+                UPDATE expression
+                SET default_value = (SELECT value FROM translation WHERE id = \(translationEntity.id))
+                WHERE id = \(expression.id);
+                """
+                try run(update)
+
+                let delete = """
+                DELETE FROM translation
+                WHERE id = \(translationEntity.id);
+                """
+                try run(delete)
+            }
         }
     }
 }

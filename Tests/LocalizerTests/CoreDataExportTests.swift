@@ -2,34 +2,34 @@
 import XCTest
 
 final class CoreDataExportTests: LocalizerTestCase {
-    
+
     override var resource: TestResource {
         .file(
-            Bundle.module.url(forResource: "test_multi_language_core_data", withExtension: "sqlite")
+            Bundle.module.url(forResource: "test_multi_language_core_data_v2", withExtension: "sqlite")
         )
     }
-    
+
     func testAppleStringsEnglish() throws {
         let output = try process.runOutputting(with: [
             "catalog", "export", "apple-strings", "en", "--storage", "core-data", "--path", url.path(),
         ])
-        
+
         XCTAssertEqual(output, """
         "APPLICATION_NAME" = "Lingua";
         "GREETING" = "Hello World!";
-        "HIDDEN_MESSAGE" = "solo en español";
+        "HIDDEN_MESSAGE" = "";
         "PLATFORM_ANDROID" = "Android";
         "PLATFORM_APPLE" = "Apple";
         "PLATFORM_WEB" = "Web";
 
         """)
     }
-    
+
     func testAppleStringsSpanish() throws {
         let output = try process.runOutputting(with: [
-            "catalog", "export", "apple-strings", "es", "--storage", "core-data", "--path", url.path()
+            "catalog", "export", "apple-strings", "es", "--storage", "core-data", "--path", url.path(),
         ])
-        
+
         XCTAssertEqual(output, """
         "APPLICATION_NAME" = "Lingua";
         "GREETING" = "Hola Mundo!";
@@ -40,19 +40,19 @@ final class CoreDataExportTests: LocalizerTestCase {
 
         """)
     }
-    
+
     func testAndroidXMLEnglish() throws {
         let output = try process.runOutputting(with: [
-            "catalog", "export", "android-xml", "en", "--storage", "core-data", "--path", url.path()
+            "catalog", "export", "android-xml", "en", "--storage", "core-data", "--path", url.path(),
         ])
-        
-        // TODO: Should this produce a line for 'HIDDEN_MESSAGE' in 'default language' instance?
+
         XCTAssertEqual(output, """
         <?xml version="1.0" encoding="UTF-8"?>
 
           <resources>
             <string name="APPLICATION_NAME">Lingua</string>
             <string name="GREETING">Hello World!</string>
+            <string name="HIDDEN_MESSAGE"></string>
             <string name="PLATFORM_ANDROID">Android</string>
             <string name="PLATFORM_APPLE">Apple</string>
             <string name="PLATFORM_WEB">Web</string>
@@ -60,12 +60,12 @@ final class CoreDataExportTests: LocalizerTestCase {
 
         """)
     }
-    
+
     func testAndroidXMLSpanish() throws {
         let output = try process.runOutputting(with: [
-            "catalog", "export", "android-xml", "es", "--storage", "core-data", "--path", url.path()
+            "catalog", "export", "android-xml", "es", "--storage", "core-data", "--path", url.path(),
         ])
-        
+
         XCTAssertEqual(output, """
         <?xml version="1.0" encoding="UTF-8"?>
 
@@ -76,12 +76,12 @@ final class CoreDataExportTests: LocalizerTestCase {
 
         """)
     }
-    
+
     func testAndroidXMLSpanishWithFallback() throws {
         let output = try process.runOutputting(with: [
-            "catalog", "export", "android-xml", "es", "--fallback", "--storage", "core-data", "--path", url.path()
+            "catalog", "export", "android-xml", "es", "--fallback", "--storage", "core-data", "--path", url.path(),
         ])
-        
+
         XCTAssertEqual(output, """
         <?xml version="1.0" encoding="UTF-8"?>
 
@@ -96,17 +96,17 @@ final class CoreDataExportTests: LocalizerTestCase {
 
         """)
     }
-    
+
     func testJSONEnglish() throws {
         let output = try process.runOutputting(with: [
-            "catalog", "export", "json", "en", "--storage", "core-data", "--path", url.path()
+            "catalog", "export", "json", "en", "--storage", "core-data", "--path", url.path(),
         ])
-        
-        // TODO: Should this produce a line for 'HIDDEN_MESSAGE' in 'default language' instance?
+
         XCTAssertEqual(output, """
         {
           "APPLICATION_NAME" : "Lingua",
           "GREETING" : "Hello World!",
+          "HIDDEN_MESSAGE" : "",
           "PLATFORM_ANDROID" : "Android",
           "PLATFORM_APPLE" : "Apple",
           "PLATFORM_WEB" : "Web"
@@ -114,12 +114,12 @@ final class CoreDataExportTests: LocalizerTestCase {
 
         """)
     }
-    
+
     func testJSONSpanish() throws {
         let output = try process.runOutputting(with: [
-            "catalog", "export", "json", "es", "--storage", "core-data", "--path", url.path()
+            "catalog", "export", "json", "es", "--storage", "core-data", "--path", url.path(),
         ])
-        
+
         XCTAssertEqual(output, """
         {
           "GREETING" : "Hola Mundo!",
@@ -128,12 +128,12 @@ final class CoreDataExportTests: LocalizerTestCase {
 
         """)
     }
-    
+
     func testJSONSpanishWithFallback() throws {
         let output = try process.runOutputting(with: [
-            "catalog", "export", "json", "es", "--storage", "core-data", "--fallback", "--path", url.path()
+            "catalog", "export", "json", "es", "--storage", "core-data", "--fallback", "--path", url.path(),
         ])
-        
+
         XCTAssertEqual(output, """
         {
           "APPLICATION_NAME" : "Lingua",

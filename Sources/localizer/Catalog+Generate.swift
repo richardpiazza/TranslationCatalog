@@ -29,26 +29,17 @@ extension Catalog {
         var path: String?
 
         func run() async throws {
-            let url = try catalogURL(forStorage: storage)
-
-            let expressions: [TranslationCatalog.Expression]
-
-            switch storage {
-            #if os(macOS)
-            case .coreData:
-                let catalog = try CoreDataCatalog(url: url)
-                expressions = try catalog.expressions()
-            #endif
-            case .filesystem:
-                let catalog = try FilesystemCatalog(url: url)
-                expressions = try catalog.expressions()
-            case .sqlite:
-                let catalog = try SQLiteCatalog(url: url)
-                expressions = try catalog.expressions(matching: SQLiteCatalog.ExpressionQuery.hierarchy)
+            let catalog = try catalog(forStorage: storage)
+            let expressions = try catalog.expressions()
+            let sortedExpressions = expressions.sorted(by: { $0.key < $1.key })
+            let expressionsWithTranslations = try sortedExpressions.map { expression in
+                let translations = try catalog.translations(matching: GenericTranslationQuery.expressionId(expression.id))
+                return TranslationCatalog.Expression(
+                    expression: expression,
+                    translations: translations
+                )
             }
-
-            let sortedExpressions = expressions.sorted(by: { $0.name < $1.name })
-            let render = try ExpressionRenderer.render(expressions: sortedExpressions, renderFormat: format)
+            let render = try ExpressionRenderer.render(expressions: expressionsWithTranslations, renderFormat: format)
             print(render)
         }
     }

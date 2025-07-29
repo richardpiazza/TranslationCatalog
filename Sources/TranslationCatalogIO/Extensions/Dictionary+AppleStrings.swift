@@ -61,24 +61,36 @@ extension [String: String] {
         region: Locale.Region? = nil
     ) -> [TranslationCatalog.Expression] {
         map { key, value -> TranslationCatalog.Expression in
-            return TranslationCatalog.Expression(
-                id: .zero,
-                key: key,
-                name: key,
-                defaultLanguageCode: defaultLanguage,
-                context: comment,
-                feature: feature,
-                translations: [
-                    Translation(
-                        id: .zero,
-                        expressionId: .zero,
-                        language: language,
-                        script: script,
-                        region: region,
-                        value: value
-                    ),
-                ]
-            )
+            if defaultLanguage == language, script == nil, region == nil {
+                return TranslationCatalog.Expression(
+                    id: .zero,
+                    key: key,
+                    value: value,
+                    languageCode: defaultLanguage,
+                    context: comment,
+                    feature: feature
+                )
+            } else {
+                return TranslationCatalog.Expression(
+                    id: .zero,
+                    key: key,
+                    value: "",
+                    languageCode: defaultLanguage,
+                    name: key,
+                    context: comment,
+                    feature: feature,
+                    translations: [
+                        Translation(
+                            id: .zero,
+                            expressionId: .zero,
+                            language: language,
+                            script: script,
+                            region: region,
+                            value: value
+                        ),
+                    ]
+                )
+            }
         }
     }
 

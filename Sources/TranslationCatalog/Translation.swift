@@ -70,7 +70,7 @@ public struct Translation: Codable, Hashable, Identifiable, Sendable {
         region = translation.region
         value = translation.value
     }
-    
+
     /// The `Locale` represented by this instance.
     public var locale: Locale {
         Locale(languageCode: language, script: script, languageRegion: region)

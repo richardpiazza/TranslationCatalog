@@ -15,6 +15,15 @@ struct Preview: AsyncParsableCommand {
     @Argument(help: "The source of the file 'android-xml', 'apple-strings', 'json'.")
     var format: FileFormat
 
+    @Option(help: "The 'default' Language for the expressions being imported.")
+    var language: Locale.LanguageCode = .localizerDefault
+
+    @Option(help: "The script code for the translations in the imported file.")
+    var script: Locale.Script?
+
+    @Option(help: "The region code for the translations in the imported file.")
+    var region: Locale.Region?
+
     @Argument(help: "The path to the file being imported")
     var input: String
 
@@ -30,19 +39,19 @@ struct Preview: AsyncParsableCommand {
         let expressions = try ExpressionDecoder.decodeExpressions(
             from: data,
             fileFormat: format,
-            defaultLanguage: .default,
-            language: .default,
-            script: nil,
-            region: nil
+            defaultLanguage: language,
+            language: language,
+            script: script,
+            region: region
         )
 
-        for expression in expressions.sorted(by: { $0.name < $1.name }) {
+        for expression in expressions.sorted(by: { $0.key < $1.key }) {
             switch expression.translations.count {
             case .zero:
-                print("\(expression.name) NO TRANSLATIONS")
+                print("\(expression.key) = \(expression.defaultValue)")
             default:
                 for translation in expression.translations {
-                    print("\(expression.name) = \(translation.value)")
+                    print("\(expression.key) = \(translation.value)")
                 }
             }
         }
