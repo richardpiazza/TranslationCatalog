@@ -1,5 +1,4 @@
 import Foundation
-import LocaleSupport
 
 /// Interface providing storage and retrieval of the `Expression`s and associated `Translation`s.
 public protocol Catalog {
@@ -81,6 +80,4 @@ public protocol Catalog {
     // MARK: - Metadata
 
     func locales() throws -> Set<Locale>
-    @available(*, deprecated, renamed: "locales()")
-    func localeIdentifiers() throws -> Set<Locale.Identifier>
 }

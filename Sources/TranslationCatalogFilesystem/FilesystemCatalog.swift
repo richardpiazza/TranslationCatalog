@@ -1,5 +1,4 @@
 import Foundation
-import LocaleSupport
 import TranslationCatalog
 
 /// Implementation of `Catalog` the reads/writes data from/to a filesystem directory.
@@ -658,10 +657,5 @@ public class FilesystemCatalog: Catalog {
         )
 
         return expressionLocales.union(translationLocales)
-    }
-
-    @available(*, deprecated)
-    public func localeIdentifiers() throws -> Set<Locale.Identifier> {
-        try Set(locales().map(\.identifier))
     }
 }

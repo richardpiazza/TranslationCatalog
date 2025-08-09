@@ -1,5 +1,4 @@
 import Foundation
-import LocaleSupport
 
 /// A word or phrase.
 ///
@@ -59,47 +58,6 @@ public struct Expression: Codable, Hashable, Identifiable, Sendable {
         self.translations = translations
     }
 
-    @available(*, deprecated, renamed: "init(id:key:value:languageCode:name:context:feature:translations:)")
-    public init(
-        id: UUID = .zero,
-        key: String = "",
-        name: String = "",
-        defaultLanguageCode: Locale.LanguageCode = .default,
-        defaultValue: String = "",
-        context: String? = nil,
-        feature: String? = nil,
-        translations: [Translation] = []
-    ) {
-        self.id = id
-        self.key = key
-        self.name = name
-        self.defaultLanguageCode = defaultLanguageCode
-        self.defaultValue = defaultValue
-        self.context = context
-        self.feature = feature
-        self.translations = translations
-    }
-
-    @available(*, deprecated, renamed: "init(id:key:name:defaultLanguageCode:context:feature:translations:)")
-    public init(
-        id: UUID = .zero,
-        key: String = "",
-        name: String = "",
-        defaultLanguage: LanguageCode = .default,
-        context: String? = nil,
-        feature: String? = nil,
-        translations: [Translation] = []
-    ) {
-        self.id = id
-        self.key = key
-        self.name = name
-        defaultLanguageCode = Locale.LanguageCode(defaultLanguage.rawValue)
-        defaultValue = translations.first(where: { $0.languageCode == defaultLanguage })?.value ?? ""
-        self.context = context
-        self.feature = feature
-        self.translations = translations
-    }
-
     /// `Locale` representing the `defaultLanguageCode`.
     public var locale: Locale {
         Locale(languageCode: defaultLanguageCode)
@@ -134,46 +92,5 @@ public struct Expression: Codable, Hashable, Identifiable, Sendable {
         }
 
         return translation.value
-    }
-}
-
-public extension Expression {
-    /// The language to be used when a `Translation` can not be found
-    @available(*, deprecated, renamed: "defaultLanguageCode")
-    var defaultLanguage: LanguageCode {
-        LanguageCode(rawValue: defaultLanguageCode.identifier) ?? .default
-    }
-
-    /// The `Translation` that matches the `defaultLanguage` code of this instance.
-    @available(*, deprecated, message: "Use `defaultValue` for the base expression value.")
-    var defaultTranslation: Translation? {
-        translations.first(where: { $0.language == defaultLanguageCode })
-    }
-
-    @available(*, deprecated, message: "Use `with: Locale?` variant.")
-    func translation(with identifier: Locale.Identifier?) -> Translation? {
-        translations.first(where: { $0.locale.identifier == identifier })
-    }
-
-    @available(*, deprecated)
-    func translationOrDefault(with identifier: Locale.Identifier?) -> Translation? {
-        translation(with: identifier) ?? defaultTranslation
-    }
-
-    @available(*, deprecated)
-    func translationOrDefaultOrFirst(with identifier: Locale.Identifier?) -> Translation? {
-        translationOrDefault(with: identifier) ?? translations.first
-    }
-
-    /// The `Translation` matching the `Locale.Identifier` or `defaultTranslation` if no matches found.
-    @available(*, deprecated)
-    func translationOrDefault(with locale: Locale?) -> Translation? {
-        translation(with: locale) ?? defaultTranslation
-    }
-
-    /// The `Translation` that best matches the provided identifier, default if none, or first in the collection.
-    @available(*, deprecated)
-    func translationOrDefaultOrFirst(with locale: Locale?) -> Translation? {
-        translationOrDefault(with: locale) ?? translations.first
     }
 }

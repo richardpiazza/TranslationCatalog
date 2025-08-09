@@ -1,5 +1,4 @@
 import Foundation
-import LocaleSupport
 import TranslationCatalog
 
 extension [String: String] {
@@ -91,37 +90,6 @@ extension [String: String] {
                     ]
                 )
             }
-        }
-    }
-
-    @available(*, deprecated, message: "Use `Locale` variant.")
-    func expressions(
-        defaultLanguage: LanguageCode = .default,
-        comment: String? = nil,
-        feature: String? = nil,
-        language: LanguageCode,
-        script: ScriptCode? = nil,
-        region: RegionCode? = nil
-    ) -> [TranslationCatalog.Expression] {
-        map { key, value -> TranslationCatalog.Expression in
-            return TranslationCatalog.Expression(
-                id: .zero,
-                key: key,
-                name: key,
-                defaultLanguage: defaultLanguage,
-                context: comment,
-                feature: feature,
-                translations: [
-                    Translation(
-                        id: .zero,
-                        expressionId: .zero,
-                        languageCode: language,
-                        scriptCode: script,
-                        regionCode: region,
-                        value: value
-                    ),
-                ]
-            )
         }
     }
 }

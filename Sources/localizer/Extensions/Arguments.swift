@@ -4,31 +4,31 @@ import Foundation
 #if hasFeature(RetroactiveAttribute)
 extension Locale.LanguageCode: @retroactive ExpressibleByArgument {
     public init?(argument: String) {
-        guard let languageCode = try? Locale.LanguageCode(matching: argument) else {
+        guard Locale.LanguageCode.allCases.contains(where: { $0.identifier == argument }) else {
             return nil
         }
 
-        self = languageCode
+        self = Locale.LanguageCode(argument)
     }
 }
 
 extension Locale.Region: @retroactive ExpressibleByArgument {
     public init?(argument: String) {
-        guard let region = try? Locale.Region(matching: argument) else {
+        guard Locale.Region.allCases.contains(where: { $0.identifier == argument }) else {
             return nil
         }
 
-        self = region
+        self = Locale.Region(argument)
     }
 }
 
 extension Locale.Script: @retroactive ExpressibleByArgument {
     public init?(argument: String) {
-        guard let script = try? Locale.Script(matching: argument) else {
+        guard Locale.Script.allCases.contains(where: { $0.identifier == argument }) else {
             return nil
         }
 
-        self = script
+        self = Locale.Script(argument)
     }
 }
 

@@ -26,11 +26,7 @@ struct ExpressionEntity: Entity {
 
 extension ExpressionEntity {
     var languageCode: Locale.LanguageCode {
-        guard let languageCode = try? Locale.LanguageCode(matching: defaultLanguage) else {
-            return .default
-        }
-
-        return languageCode
+        Locale.LanguageCode(defaultLanguage)
     }
 }
 

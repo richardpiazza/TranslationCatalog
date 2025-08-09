@@ -1,5 +1,4 @@
 import Foundation
-import LocaleSupport
 
 /// A specific language/region variation of an `Expression`.
 public struct Translation: Codable, Hashable, Identifiable, Sendable {
@@ -32,31 +31,6 @@ public struct Translation: Codable, Hashable, Identifiable, Sendable {
         self.value = value
     }
 
-    @available(*, deprecated, renamed: "init(id:expressionId:language:script:region:value:)")
-    public init(
-        id: UUID = .zero,
-        expressionId: Expression.ID = .zero,
-        languageCode: LanguageCode,
-        scriptCode: ScriptCode? = nil,
-        regionCode: RegionCode? = nil,
-        value: String = ""
-    ) {
-        self.id = id
-        self.expressionId = expressionId
-        language = Locale.LanguageCode(languageCode.rawValue)
-        if let scriptCode {
-            script = Locale.Script(scriptCode.rawValue)
-        } else {
-            script = nil
-        }
-        if let regionCode {
-            region = Locale.Region(regionCode.rawValue)
-        } else {
-            region = nil
-        }
-        self.value = value
-    }
-
     /// Convenience initializer to assigns all values from the provided `Translation`,
     /// while overriding the `Expression.ID`.
     public init(
@@ -74,31 +48,5 @@ public struct Translation: Codable, Hashable, Identifiable, Sendable {
     /// The `Locale` represented by this instance.
     public var locale: Locale {
         Locale(languageCode: language, script: script, languageRegion: region)
-    }
-
-    /// The primary `LanguageCode` of the translated `value`
-    @available(*, deprecated, renamed: "language")
-    public var languageCode: LanguageCode {
-        LanguageCode(rawValue: language.identifier) ?? .default
-    }
-
-    /// `ScriptCode` that provides precise dialect differentiation.
-    @available(*, deprecated, renamed: "script")
-    public var scriptCode: ScriptCode? {
-        guard let script else {
-            return nil
-        }
-
-        return ScriptCode(rawValue: script.identifier)
-    }
-
-    /// `RegionCode` that classifies a regional usage of the language.
-    @available(*, deprecated, renamed: "region")
-    public var regionCode: RegionCode? {
-        guard let region else {
-            return nil
-        }
-
-        return RegionCode(rawValue: region.identifier)
     }
 }

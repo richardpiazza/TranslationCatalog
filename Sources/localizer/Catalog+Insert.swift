@@ -12,7 +12,6 @@ extension Catalog {
                 ProjectCommand.self,
                 ExpressionCommand.self,
                 TranslationCommand.self,
-                KeyValueCommand.self,
             ],
             helpNames: .shortAndLong
         )
@@ -161,49 +160,6 @@ extension Catalog.Insert {
 
             let id = try catalog.createTranslation(translation)
             print("Inserted Translation [\(id)] '\(value)'")
-        }
-    }
-
-    @available(*, deprecated)
-    struct KeyValueCommand: CatalogCommand {
-
-        static let configuration = CommandConfiguration(
-            commandName: "key-value",
-            abstract: "[DEPRECATED] Quickly add a Expression=Translation pairing to the catalog.",
-            version: "1.0.0",
-            helpNames: .shortAndLong
-        )
-
-        @Argument(help: "Unique key that identifies the expression in translation files.")
-        var key: String
-
-        @Argument(help: "The translated string.")
-        var value: String
-
-        @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
-        var storage: Catalog.Storage = .default
-
-        @Option(help: "Path to catalog to use in place of the application library.")
-        var path: String?
-
-        func run() async throws {
-            let catalog = try catalog(forStorage: storage)
-
-            let expression = Expression(
-                id: .zero,
-                key: key,
-                value: value,
-                languageCode: .default,
-                name: "",
-                context: nil,
-                feature: nil,
-                translations: []
-            )
-
-            let expressionId = try catalog.createExpression(expression)
-
-            print("Inserted Expression [\(expressionId)]")
-            print("\(key)='\(value)'")
         }
     }
 }

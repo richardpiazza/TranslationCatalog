@@ -1,5 +1,4 @@
 import Foundation
-import LocaleSupport
 import TranslationCatalog
 import XMLCoder
 
@@ -65,35 +64,5 @@ extension Resource {
                 ]
             )
         }
-    }
-
-    @available(*, deprecated, message: "Use `Locale` variant.")
-    func expression(
-        uuid: TranslationCatalog.Expression.ID,
-        defaultLanguage: LanguageCode = .default,
-        comment: String? = nil,
-        feature: String? = nil,
-        language: LanguageCode,
-        script: ScriptCode? = nil,
-        region: RegionCode? = nil
-    ) -> TranslationCatalog.Expression {
-        TranslationCatalog.Expression(
-            id: uuid,
-            key: name,
-            name: name,
-            defaultLanguage: defaultLanguage,
-            context: comment,
-            feature: feature,
-            translations: [
-                Translation(
-                    id: .zero,
-                    expressionId: uuid,
-                    languageCode: language,
-                    scriptCode: script,
-                    regionCode: region,
-                    value: value
-                ),
-            ]
-        )
     }
 }

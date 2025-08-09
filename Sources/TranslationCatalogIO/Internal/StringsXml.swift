@@ -1,5 +1,4 @@
 import Foundation
-import LocaleSupport
 import TranslationCatalog
 import XMLCoder
 
@@ -40,10 +39,5 @@ extension StringsXml {
                 region: region
             )
         }
-    }
-
-    @available(*, deprecated, message: "Use `Locale` variant.")
-    func expressions(defaultLanguage: LanguageCode = .default, language: LanguageCode, script: ScriptCode?, region: RegionCode?) -> [TranslationCatalog.Expression] {
-        resources.map { $0.expression(uuid: .zero, defaultLanguage: defaultLanguage, language: language, script: script, region: region) }
     }
 }

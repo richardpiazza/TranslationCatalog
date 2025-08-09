@@ -93,10 +93,6 @@ extension Catalog.Query {
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
 
-        @available(*, deprecated, renamed: "verbose")
-        @Flag(help: "Outputs detailed execution")
-        var noisy: Bool = false
-
         @Flag(help: "Additional execution details in the standard output.")
         var verbose: Bool = false
 
