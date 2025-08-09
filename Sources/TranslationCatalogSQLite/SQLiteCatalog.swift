@@ -1,5 +1,4 @@
 import Foundation
-import LocaleSupport
 import SQLite
 import StatementSQLite
 import TranslationCatalog
@@ -512,11 +511,6 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
         )
 
         return expressionLocales.union(translationLocales)
-    }
-
-    @available(*, deprecated)
-    public func localeIdentifiers() throws -> Set<Locale.Identifier> {
-        try Set(locales().map(\.identifier))
     }
 }
 

@@ -65,12 +65,8 @@ extension ExpressionEntity {
         guard let defaultLanguageRawValue else {
             return .default
         }
-
-        guard let languageCode = try? Locale.LanguageCode(matching: defaultLanguageRawValue) else {
-            return .default
-        }
-
-        return languageCode
+        
+        return Locale.LanguageCode(defaultLanguageRawValue)
     }
 
     var value: String {

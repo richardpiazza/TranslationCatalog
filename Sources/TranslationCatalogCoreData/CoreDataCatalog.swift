@@ -2,7 +2,6 @@
 import CoreData
 import CoreDataPlus
 import Foundation
-import LocaleSupport
 import TranslationCatalog
 
 public class CoreDataCatalog: TranslationCatalog.Catalog {
@@ -652,11 +651,6 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
         )
 
         return expressionLocales.union(translationLocales)
-    }
-
-    @available(*, deprecated)
-    public func localeIdentifiers() throws -> Set<Locale.Identifier> {
-        try Set(locales().map(\.identifier))
     }
 }
 

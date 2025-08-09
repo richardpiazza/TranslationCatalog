@@ -1,5 +1,4 @@
 import Foundation
-import LocaleSupport
 import Plot
 import TranslationCatalog
 
@@ -22,52 +21,6 @@ extension XML {
                             ignoreIfValueIsEmpty: true
                         ),
                         .text($0.valueOrDefault(for: locale).simpleAndroidXMLEscaped()),
-                    ])
-                },
-            ])
-        )
-    }
-
-    @available(*, deprecated, renamed: "make(with:locale:fallback:)")
-    static func make(
-        with expressions: [TranslationCatalog.Expression],
-        locale: Locale?,
-        defaultOrFirst: Bool
-    ) -> Self {
-        let filtered = expressions.compactMap(locale: locale, defaultOrFirst: defaultOrFirst)
-
-        return XML(
-            .element(named: "resources", nodes: [
-                .forEach(filtered) {
-                    .element(named: "string", nodes: [
-                        .attribute(named: "name", value: $0.key),
-                        .attribute(
-                            named: "formatted",
-                            value: $0.translations.first?.value.hasMultipleReplacements == true ? "false" : "",
-                            ignoreIfValueIsEmpty: true
-                        ),
-                        .text(($0.translations.first?.value ?? "").simpleAndroidXMLEscaped()),
-                    ])
-                },
-            ])
-        )
-    }
-
-    @available(*, deprecated, renamed: "make(with:locale:defaultOrFirst:)")
-    static func make(with expressions: [TranslationCatalog.Expression], localeIdentifier: Locale.Identifier?, defaultOrFirst: Bool) -> Self {
-        let filtered = expressions.compactMap(localeIdentifier: localeIdentifier, defaultOrFirst: defaultOrFirst)
-
-        return XML(
-            .element(named: "resources", nodes: [
-                .forEach(filtered) {
-                    .element(named: "string", nodes: [
-                        .attribute(named: "name", value: $0.key),
-                        .attribute(
-                            named: "formatted",
-                            value: $0.translations.first?.value.hasMultipleReplacements == true ? "false" : "",
-                            ignoreIfValueIsEmpty: true
-                        ),
-                        .text(($0.translations.first?.value ?? "").simpleAndroidXMLEscaped()),
                     ])
                 },
             ])
