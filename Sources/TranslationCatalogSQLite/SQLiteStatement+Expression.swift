@@ -172,6 +172,28 @@ extension SQLiteStatement {
             )
         )
     }
+    
+    static func selectExpressionsWith(state: TranslationState) -> Self {
+        .init(
+            .SELECT_DISTINCT(
+                .column(ExpressionEntity.self, attribute: ExpressionEntity.id),
+                .column(ExpressionEntity.self, attribute: ExpressionEntity.uuid),
+                .column(ExpressionEntity.key),
+                .column(ExpressionEntity.name),
+                .column(ExpressionEntity.defaultLanguage),
+                .column(ExpressionEntity.defaultValue),
+                .column(ExpressionEntity.context),
+                .column(ExpressionEntity.feature)
+            ),
+            .FROM(
+                .TABLE(ExpressionEntity.self),
+                .JOIN_ON(TranslationEntity.self, attribute: TranslationEntity.expressionID, equals: ExpressionEntity.self, attribute: ExpressionEntity.id)
+            ),
+            .WHERE(
+                .column(TranslationEntity.self, attribute: TranslationEntity.stateRawValue, op: .equal, value: state.rawValue)
+            )
+        )
+    }
 
     // MARK: Select Expression
 

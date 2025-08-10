@@ -625,6 +625,15 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
                 translationEntity.value = value
                 try context.save()
             }
+        case GenericTranslationUpdate.state(let state):
+            guard translationEntity.state != state else {
+                return
+            }
+            
+            try context.performAndWait {
+                translationEntity.stateRawValue = state.rawValue
+                try context.save()
+            }
         default:
             throw CatalogError.unhandledUpdate(action)
         }

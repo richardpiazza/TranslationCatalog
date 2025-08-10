@@ -666,6 +666,8 @@ public class FilesystemCatalog: Catalog {
             translationDocuments[index].regionCode = regionCode
         case GenericTranslationUpdate.value(let value):
             translationDocuments[index].value = value
+        case GenericTranslationUpdate.state(let state):
+            translationDocuments[index].state = state
         default:
             throw CatalogError.unhandledUpdate(action)
         }

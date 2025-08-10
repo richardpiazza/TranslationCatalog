@@ -75,7 +75,8 @@ extension Statement.Element {
             language: columnText(position: 3),
             script: optional(position: 4),
             region: optional(position: 5),
-            value: columnText(position: 6)
+            value: columnText(position: 6),
+            stateRawValue: columnText(position: 7)
         )
     }
 }

@@ -187,6 +187,9 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
         case GenericExpressionQuery.translationsHaving(let languageCode, let scriptCode, let regionCode):
             let entities = try db.expressionEntities(statement: renderStatement(.selectExpressionsWith(languageCode: languageCode, scriptCode: scriptCode, regionCode: regionCode)))
             return try entities.map { try $0.expression() }
+        case GenericExpressionQuery.translationsHavingState(let state):
+            let entities = try db.expressionEntities(statement: renderStatement(.selectExpressionsWith(state: state)))
+            return try entities.map { try $0.expression() }
         default:
             throw CatalogError.unhandledQuery(query)
         }
@@ -479,6 +482,12 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             }
 
             try db.run(renderStatement(.updateTranslation(entity.id, value: value)))
+        case GenericTranslationUpdate.state(let state):
+            guard state != entity.state else {
+                return
+            }
+            
+            try db.run(renderStatement(.updateTranslation(entity.id, state: state)))
         default:
             throw CatalogError.unhandledUpdate(action)
         }
