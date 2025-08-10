@@ -82,10 +82,11 @@ extension [String: String] {
                         Translation(
                             id: .zero,
                             expressionId: .zero,
+                            value: value,
                             language: language,
                             script: script,
                             region: region,
-                            value: value
+                            state: .new
                         ),
                     ]
                 )
