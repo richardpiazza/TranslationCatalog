@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/richardpiazza/CoreDataPlus.git",
       "state" : {
-        "revision" : "224cda394e5f6d89c6c0f240e480fe0d7aa367b9",
-        "version" : "0.4.2"
+        "revision" : "1bdd8b6f9af4b4ef0b75280498180c04b601f5ea",
+        "version" : "0.5.0"
       }
     },
     {
