@@ -266,7 +266,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func updateTranslation(_ id: Int, state: TranslationState) -> Self {
         SQLiteStatement(
             .UPDATE(

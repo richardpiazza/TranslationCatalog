@@ -29,7 +29,7 @@ extension TranslationEntity {
         guard let languageCodeRawValue else {
             return .default
         }
-        
+
         return Locale.LanguageCode(languageCodeRawValue)
     }
 
@@ -48,12 +48,12 @@ extension TranslationEntity {
 
         return Locale.Region(regionCodeRawValue)
     }
-    
+
     var state: TranslationState {
         guard let stateRawValue else {
             return .new
         }
-        
+
         return TranslationState(stringLiteral: stateRawValue)
     }
 }

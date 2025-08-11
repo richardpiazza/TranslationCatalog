@@ -172,7 +172,7 @@ extension SQLiteStatement {
             )
         )
     }
-    
+
     static func selectExpressionsWith(state: TranslationState) -> Self {
         .init(
             .SELECT_DISTINCT(

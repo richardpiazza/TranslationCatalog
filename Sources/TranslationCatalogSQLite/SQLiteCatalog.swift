@@ -486,7 +486,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             guard state != entity.state else {
                 return
             }
-            
+
             try db.run(renderStatement(.updateTranslation(entity.id, state: state)))
         default:
             throw CatalogError.unhandledUpdate(action)

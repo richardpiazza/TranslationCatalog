@@ -630,7 +630,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
             guard translationEntity.state != state else {
                 return
             }
-            
+
             try context.performAndWait {
                 translationEntity.stateRawValue = state.rawValue
                 try context.save()
@@ -705,7 +705,7 @@ private extension CoreDataCatalog {
             try context.save()
         }
     }
-    
+
     static func migrateTranslationState(context: NSManagedObjectContext) throws {
         try context.performAndWait {
             let translationRequest = TranslationEntity.fetchRequest()
@@ -716,12 +716,12 @@ private extension CoreDataCatalog {
                     NSPredicate(format: "%K == %@", argumentArray: ["stateRawValue", ""]),
                 ]
             )
-                    
+
             let translationEntities = try context.fetch(translationRequest)
             for translation in translationEntities {
                 translation.stateRawValue = TranslationState.needsReview.rawValue
             }
-            
+
             try context.save()
         }
     }

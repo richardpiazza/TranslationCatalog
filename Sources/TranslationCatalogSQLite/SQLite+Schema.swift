@@ -232,11 +232,11 @@ extension Connection {
             }
         }
     }
-    
+
     private func addSchemaV5Fields() throws {
-        try run ("ALTER TABLE translation ADD COLUMN state_raw_value TEXT NOT NULL DEFAULT '';")
+        try run("ALTER TABLE translation ADD COLUMN state_raw_value TEXT NOT NULL DEFAULT '';")
     }
-    
+
     private func migrateTranslationState() throws {
         let update = """
         UPDATE translation

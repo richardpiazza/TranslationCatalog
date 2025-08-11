@@ -34,7 +34,7 @@ public struct Translation: Codable, Hashable, Identifiable, Sendable {
         self.region = region
         self.state = state
     }
-    
+
     @available(*, deprecated, renamed: "init(id:expressionId:value:language:script:region:state:)")
     public init(
         id: UUID = .zero,

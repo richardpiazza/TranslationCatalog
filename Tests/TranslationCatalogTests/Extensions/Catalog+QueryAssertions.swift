@@ -82,7 +82,7 @@ extension Catalog {
         let expressions = try expressions(matching: GenericExpressionQuery.translationsHavingOnly(.french))
         XCTAssertEqual(expressions.count, 3)
     }
-    
+
     func assertQueryExpressionsHavingState() throws {
         let expressions = try expressions(matching: GenericExpressionQuery.translationsHavingState(.needsReview))
         XCTAssertEqual(expressions.count, 4)

@@ -169,7 +169,7 @@ public class FilesystemCatalog: Catalog {
                 let translation = try decoder.decode(TranslationDocumentV1.self, from: data)
                 translations.append(translation)
             }
-            
+
             for translation in translations {
                 let document = TranslationDocument(
                     id: translation.id,
@@ -180,10 +180,10 @@ public class FilesystemCatalog: Catalog {
                     regionCode: translation.regionCode,
                     state: .needsReview
                 )
-                
+
                 try document.write(to: translationsDirectory, using: encoder)
             }
-            
+
             setSchemaVersion(.v3)
         case .v3:
             return
@@ -408,12 +408,12 @@ public class FilesystemCatalog: Catalog {
                     let translations = translationDocuments
                         .filter {
                             $0.expressionID == document.id &&
-                            $0.state == state
+                                $0.state == state
                         }
                         .map {
                             Translation(document: $0)
                         }
-                        
+
                     return TranslationCatalog.Expression(document: document, translations: translations)
                 }
                 .filter { !$0.translations.isEmpty }

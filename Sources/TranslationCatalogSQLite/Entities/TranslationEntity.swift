@@ -84,7 +84,7 @@ extension TranslationEntity {
 
         return Locale.Region(region)
     }
-    
+
     var state: TranslationState {
         TranslationState(stringLiteral: stateRawValue)
     }

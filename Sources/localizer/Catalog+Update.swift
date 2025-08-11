@@ -207,6 +207,9 @@ extension Catalog.Update {
         @Option(help: "The translated string.")
         var value: String?
 
+        @Option(help: "State associated to the translated value.")
+        var state: TranslationState?
+
         @Flag(help: "Forcefully drop the 'ScriptCode'. Does nothing when 'script' value provided.")
         var dropScript: Bool = false
 
@@ -241,6 +244,10 @@ extension Catalog.Update {
 
             if let value, translation.value != value {
                 try catalog.updateTranslation(translation.id, action: GenericTranslationUpdate.value(value))
+            }
+
+            if let state, translation.state != state {
+                try catalog.updateTranslation(translation.id, action: GenericTranslationUpdate.state(state))
             }
 
             if dropScript, script == nil {
