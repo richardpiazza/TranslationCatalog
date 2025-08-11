@@ -4,7 +4,7 @@ final class SQLiteExportTests: LocalizerTestCase {
 
     override var resource: TestResource {
         .file(
-            Bundle.module.url(forResource: "test_multi_language_v4", withExtension: "sqlite")
+            Bundle.module.url(forResource: "test_multi_language_v5", withExtension: "sqlite")
         )
     }
 

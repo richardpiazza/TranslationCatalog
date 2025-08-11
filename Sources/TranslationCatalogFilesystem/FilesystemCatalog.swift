@@ -183,6 +183,8 @@ public class FilesystemCatalog: Catalog {
                 
                 try document.write(to: translationsDirectory, using: encoder)
             }
+            
+            setSchemaVersion(.v3)
         case .v3:
             return
         }
@@ -644,7 +646,7 @@ public class FilesystemCatalog: Catalog {
             languageCode: translation.language,
             scriptCode: translation.script,
             regionCode: translation.region,
-            state: .new
+            state: translation.state
         )
 
         try document.write(to: translationsDirectory, using: encoder)

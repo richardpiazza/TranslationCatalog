@@ -206,7 +206,7 @@ extension SQLiteStatement {
                 .value(translation.region as DataTypeConvertible),
                 .value(translation.value as DataTypeConvertible),
                 .value(translation.script as DataTypeConvertible),
-                .value((translation.stateRawValue) as DataTypeConvertible),
+                .value(translation.stateRawValue as DataTypeConvertible),
             )
         )
     }

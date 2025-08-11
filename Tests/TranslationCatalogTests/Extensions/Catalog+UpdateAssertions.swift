@@ -248,7 +248,15 @@ extension Catalog {
     func assertUpdateTranslationLanguage() throws {
         let expressionId = UUID(uuidString: "CC8AB0A7-E786-4789-A239-9EB958F8E803")!
         let translationId = UUID(uuidString: "83238FAC-5AFB-4F3A-85E8-B72153FAE5C8")!
-        let translation = TranslationCatalog.Translation(id: translationId, expressionId: expressionId, language: .english, script: nil, region: nil, value: "Test")
+        let translation = TranslationCatalog.Translation(
+            id: translationId,
+            expressionId: expressionId,
+            value: "Test",
+            language: .english,
+            script: nil,
+            region: nil,
+            state: .translated
+        )
         let expression = Expression(
             id: expressionId,
             key: "TEST_KEY",
@@ -277,9 +285,33 @@ extension Catalog {
         let id1 = UUID(uuidString: "83238FAC-5AFB-4F3A-85E8-B72153FAE5C8")!
         let id2 = UUID(uuidString: "F6A31A8E-325A-4DFC-B499-CE32725D2C37")!
         let id3 = UUID(uuidString: "C60193F0-C412-4405-A57A-8669E449307A")!
-        let t1 = TranslationCatalog.Translation(id: id1, expressionId: expressionId, language: .english, script: nil, region: nil, value: "Test")
-        let t2 = TranslationCatalog.Translation(id: id2, expressionId: expressionId, language: .english, script: .arabic, region: nil, value: "Test")
-        let t3 = TranslationCatalog.Translation(id: id3, expressionId: expressionId, language: .english, script: .hanSimplified, region: nil, value: "Test")
+        let t1 = TranslationCatalog.Translation(
+            id: id1,
+            expressionId: expressionId,
+            value: "Test",
+            language: .english,
+            script: nil,
+            region: nil,
+            state: .translated
+        )
+        let t2 = TranslationCatalog.Translation(
+            id: id2,
+            expressionId: expressionId,
+            value: "Test",
+            language: .english,
+            script: .arabic,
+            region: nil,
+            state: .translated
+        )
+        let t3 = TranslationCatalog.Translation(
+            id: id3,
+            expressionId: expressionId,
+            value: "Test",
+            language: .english,
+            script: .hanSimplified,
+            region: nil,
+            state: .translated
+        )
         let expression = Expression(
             id: expressionId,
             key: "TEST_KEY",
@@ -314,9 +346,30 @@ extension Catalog {
         let id1 = UUID(uuidString: "83238FAC-5AFB-4F3A-85E8-B72153FAE5C8")!
         let id2 = UUID(uuidString: "F6A31A8E-325A-4DFC-B499-CE32725D2C37")!
         let id3 = UUID(uuidString: "C60193F0-C412-4405-A57A-8669E449307A")!
-        let t1 = TranslationCatalog.Translation(id: id1, expressionId: expressionId, language: .english, region: nil, value: "Test")
-        let t2 = TranslationCatalog.Translation(id: id2, expressionId: expressionId, language: .english, region: .unitedKingdom, value: "Test")
-        let t3 = TranslationCatalog.Translation(id: id3, expressionId: expressionId, language: .english, region: .australia, value: "Test")
+        let t1 = TranslationCatalog.Translation(
+            id: id1,
+            expressionId: expressionId,
+            value: "Test",
+            language: .english,
+            region: nil,
+            state: .translated
+        )
+        let t2 = TranslationCatalog.Translation(
+            id: id2,
+            expressionId: expressionId,
+            value: "Test",
+            language: .english,
+            region: .unitedKingdom,
+            state: .translated
+        )
+        let t3 = TranslationCatalog.Translation(
+            id: id3,
+            expressionId: expressionId,
+            value: "Test",
+            language: .english,
+            region: .australia,
+            state: .translated
+        )
         let expression = Expression(
             id: expressionId,
             key: "TEST_KEY",
@@ -349,7 +402,13 @@ extension Catalog {
     func assertUpdateTranslationValue() throws {
         let expressionId = UUID(uuidString: "CF4964F5-B074-40FF-AB2F-F943DFB78276")!
         let translationId = UUID(uuidString: "55C175DC-3DE8-4783-9CA1-1A970B63C9C7")!
-        let translation = TranslationCatalog.Translation(id: translationId, expressionId: expressionId, language: .english, value: "Initial")
+        let translation = TranslationCatalog.Translation(
+            id: translationId,
+            expressionId: expressionId,
+            value: "Initial",
+            language: .english,
+            state: .translated
+        )
         let expression = Expression(
             id: expressionId,
             key: "KEY",

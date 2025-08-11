@@ -146,6 +146,7 @@ extension Connection {
                 do {
                     try addSchemaV5Fields()
                     try migrateTranslationState()
+                    try setSchemaVersion(.v5)
                 } catch let result as SQLite.Result {
                     print("Migration Failed: \(result.description)")
                     throw result

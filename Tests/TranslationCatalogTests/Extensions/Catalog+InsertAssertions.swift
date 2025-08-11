@@ -71,7 +71,15 @@ extension Catalog {
             feature: "Settings"
         )
         let translationId = UUID(uuidString: "80F9B7D4-BFF5-41CC-8BB6-28A990864046")!
-        let translation = TranslationCatalog.Translation(id: translationId, expressionId: expressionId, language: .english, script: nil, region: .unitedStates, value: "Party-on Wayne!")
+        let translation = TranslationCatalog.Translation(
+            id: translationId,
+            expressionId: expressionId,
+            value: "Party-on Wayne!",
+            language: .english,
+            script: nil,
+            region: .unitedStates,
+            state: .translated
+        )
 
         func preConditions(catalog: Catalog) throws {
             try catalog.createExpression(expression)
@@ -133,7 +141,15 @@ extension Catalog {
     func assertInsertExpression_CascadeTranslations() throws {
         let translationId = UUID(uuidString: "1C013C96-AEC7-4F05-AC24-F5DF547B77AA")!
         // It shouldn't matter that the correct expressionId is set here... the catalog will auto-override
-        let translation = TranslationCatalog.Translation(id: translationId, expressionId: .zero, language: .english, script: nil, region: .unitedStates, value: "Next")
+        let translation = TranslationCatalog.Translation(
+            id: translationId,
+            expressionId: .zero,
+            value: "Next",
+            language: .english,
+            script: nil,
+            region: .unitedStates,
+            state: .translated
+        )
         let expressionId = UUID(uuidString: "1721B307-9A67-4FC1-A529-3A128695E802")!
         let expression = Expression(
             id: expressionId,

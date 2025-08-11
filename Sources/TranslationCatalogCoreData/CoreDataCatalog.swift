@@ -570,6 +570,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
             entity.regionCodeRawValue = translation.region?.identifier
             entity.scriptCodeRawValue = translation.script?.identifier
             entity.value = translation.value
+            entity.stateRawValue = translation.state.rawValue
             expressionEntity.addToTranslationEntities(entity)
 
             try context.save()
@@ -785,6 +786,7 @@ private extension ExpressionEntity {
                 entity.languageCodeRawValue = translation.language.identifier
                 entity.scriptCodeRawValue = translation.script?.identifier
                 entity.regionCodeRawValue = translation.region?.identifier
+                entity.stateRawValue = translation.state.rawValue
             }
 
             addToTranslationEntities(entity)
