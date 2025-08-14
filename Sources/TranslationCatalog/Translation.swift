@@ -6,15 +6,36 @@ public struct Translation: Codable, Hashable, Identifiable, Sendable {
     public let id: UUID
     /// Identifier of the `Expression` that contains this `Translation`
     public let expressionId: Expression.ID
+    /// The translated value
+    public let value: String
     /// The primary `Locale.LanguageCode` of the translated `value`
     public let language: Locale.LanguageCode
     /// `Locale.Script` that provides precise dialect differentiation.
     public let script: Locale.Script?
     /// `Locale.Region` that classifies a regional usage of the language.
     public let region: Locale.Region?
-    /// The translated value
-    public let value: String
+    /// Indication of potential actions to be complete.
+    public let state: TranslationState
 
+    public init(
+        id: UUID,
+        expressionId: Expression.ID,
+        value: String,
+        language: Locale.LanguageCode,
+        script: Locale.Script? = nil,
+        region: Locale.Region? = nil,
+        state: TranslationState = .new
+    ) {
+        self.id = id
+        self.expressionId = expressionId
+        self.value = value
+        self.language = language
+        self.script = script
+        self.region = region
+        self.state = state
+    }
+
+    @available(*, deprecated, renamed: "init(id:expressionId:value:language:script:region:state:)")
     public init(
         id: UUID = .zero,
         expressionId: Expression.ID = .zero,
@@ -29,6 +50,7 @@ public struct Translation: Codable, Hashable, Identifiable, Sendable {
         self.script = script
         self.region = region
         self.value = value
+        state = .needsReview
     }
 
     /// Convenience initializer to assigns all values from the provided `Translation`,
@@ -43,6 +65,7 @@ public struct Translation: Codable, Hashable, Identifiable, Sendable {
         script = translation.script
         region = translation.region
         value = translation.value
+        state = translation.state
     }
 
     /// The `Locale` represented by this instance.

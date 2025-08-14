@@ -99,7 +99,7 @@ final class CatalogDeleteProjectTests: XCTestCase {
     }
 
     func testKnownProjectId() throws {
-        let resource: TestResource = .file(Bundle.module.url(forResource: "test_single_project_entity_v4", withExtension: "sqlite"))
+        let resource: TestResource = .file(Bundle.module.url(forResource: "test_single_project_entity_v5", withExtension: "sqlite"))
         let process = try LocalizerProcess(copying: resource)
         let (terminationStatus, output, _) = try process.runReporting(with: [
             "catalog", "delete", "project", "82362D51-8C80-4328-BADD-BBE2EA08889F", "--path", process.url.path(), "--verbose",

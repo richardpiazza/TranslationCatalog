@@ -1,5 +1,6 @@
 import ArgumentParser
 import Foundation
+import TranslationCatalog
 
 #if hasFeature(RetroactiveAttribute)
 extension Locale.LanguageCode: @retroactive ExpressibleByArgument {
@@ -74,3 +75,13 @@ extension UUID: ExpressibleByArgument {
     }
 }
 #endif
+
+extension TranslationState: ExpressibleByArgument {
+    public init?(argument: String) {
+        guard let knownState = TranslationState.allCases.first(where: { $0.rawValue == argument }) else {
+            return nil
+        }
+
+        self = knownState
+    }
+}

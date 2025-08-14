@@ -42,7 +42,8 @@ extension SQLiteStatement {
                 .column(TranslationEntity.language),
                 .column(TranslationEntity.script),
                 .column(TranslationEntity.region),
-                .column(TranslationEntity.value)
+                .column(TranslationEntity.value),
+                .column(TranslationEntity.stateRawValue)
             ),
             .FROM_TABLE(TranslationEntity.self)
         )
@@ -57,7 +58,8 @@ extension SQLiteStatement {
                 .column(TranslationEntity.language),
                 .column(TranslationEntity.script),
                 .column(TranslationEntity.region),
-                .column(TranslationEntity.value)
+                .column(TranslationEntity.value),
+                .column(TranslationEntity.stateRawValue)
             ),
             .FROM_TABLE(TranslationEntity.self),
             .WHERE(
@@ -75,7 +77,8 @@ extension SQLiteStatement {
                 .column(TranslationEntity.language),
                 .column(TranslationEntity.script),
                 .column(TranslationEntity.region),
-                .column(TranslationEntity.value)
+                .column(TranslationEntity.value),
+                .column(TranslationEntity.stateRawValue)
             ),
             .FROM_TABLE(TranslationEntity.self),
             .WHERE(
@@ -94,7 +97,8 @@ extension SQLiteStatement {
                 .column(TranslationEntity.language),
                 .column(TranslationEntity.script),
                 .column(TranslationEntity.region),
-                .column(TranslationEntity.value)
+                .column(TranslationEntity.value),
+                .column(TranslationEntity.stateRawValue)
             ),
             .FROM_TABLE(TranslationEntity.self),
             .WHERE(
@@ -112,7 +116,8 @@ extension SQLiteStatement {
                 .column(TranslationEntity.language),
                 .column(TranslationEntity.script),
                 .column(TranslationEntity.region),
-                .column(TranslationEntity.value)
+                .column(TranslationEntity.value),
+                .column(TranslationEntity.stateRawValue)
             ),
             .FROM_TABLE(TranslationEntity.self),
             .WHERE(
@@ -135,7 +140,8 @@ extension SQLiteStatement {
                 .column(TranslationEntity.language),
                 .column(TranslationEntity.script),
                 .column(TranslationEntity.region),
-                .column(TranslationEntity.value)
+                .column(TranslationEntity.value),
+                .column(TranslationEntity.stateRawValue)
             ),
             .FROM(
                 .TABLE(TranslationEntity.self)
@@ -160,7 +166,8 @@ extension SQLiteStatement {
                 .column(TranslationEntity.language),
                 .column(TranslationEntity.script),
                 .column(TranslationEntity.region),
-                .column(TranslationEntity.value)
+                .column(TranslationEntity.value),
+                .column(TranslationEntity.stateRawValue)
             ),
             .FROM(
                 .TABLE(TranslationEntity.self)
@@ -189,7 +196,8 @@ extension SQLiteStatement {
                 .column(TranslationEntity.language),
                 .column(TranslationEntity.region),
                 .column(TranslationEntity.value),
-                .column(TranslationEntity.script)
+                .column(TranslationEntity.script),
+                .column(TranslationEntity.stateRawValue)
             ),
             .VALUES(
                 .value(translation.uuid as DataTypeConvertible),
@@ -197,7 +205,8 @@ extension SQLiteStatement {
                 .value(translation.language as DataTypeConvertible),
                 .value(translation.region as DataTypeConvertible),
                 .value(translation.value as DataTypeConvertible),
-                .value(translation.script as DataTypeConvertible)
+                .value(translation.script as DataTypeConvertible),
+                .value(translation.stateRawValue as DataTypeConvertible)
             )
         )
     }
@@ -251,6 +260,20 @@ extension SQLiteStatement {
                     else:
                     .column(TranslationEntity.region, op: .equal, value: regionCode)
                 )
+            ),
+            .WHERE(
+                .column(TranslationEntity.id, op: .equal, value: id)
+            )
+        )
+    }
+
+    static func updateTranslation(_ id: Int, state: TranslationState) -> Self {
+        SQLiteStatement(
+            .UPDATE(
+                .TABLE(TranslationEntity.self)
+            ),
+            .SET(
+                .column(TranslationEntity.stateRawValue, op: .equal, value: state.rawValue)
             ),
             .WHERE(
                 .column(TranslationEntity.id, op: .equal, value: id)

@@ -27,6 +27,7 @@ class QueryCatalogTestCase: XCTestCase {
         try catalog.assertQueryExpressionsValued()
         try catalog.assertQueryExpressionsHaving()
         try catalog.assertQueryExpressionsHavingOnly()
+        try catalog.assertQueryExpressionsHavingState()
         try catalog.assertQueryExpressionId()
         try catalog.assertQueryExpressionKey()
     }

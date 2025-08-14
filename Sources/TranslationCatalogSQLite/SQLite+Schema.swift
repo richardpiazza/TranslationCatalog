@@ -15,8 +15,10 @@ extension Connection {
         case v3 = 3
         /// Expression Default Value
         case v4 = 4
+        /// Translation State
+        case v5 = 5
 
-        static var current: Self { .v4 }
+        static var current: Self { .v5 }
     }
 
     var schemaVersion: SchemaVersion {
@@ -127,7 +129,7 @@ extension Connection {
             print("Migrating schema from '\(from.rawValue)' to '\(to.rawValue)'.")
             try transaction {
                 do {
-                    try addSchemeV4Fields()
+                    try addSchemaV4Fields()
                     try migrateDefaultTranslationsToExpression()
                     try setSchemaVersion(.v4)
                 } catch let result as SQLite.Result {
@@ -139,6 +141,21 @@ extension Connection {
                 }
             }
         case .v4:
+            print("Migrating schema from '\(from.rawValue)' to '\(to.rawValue)'.")
+            try transaction {
+                do {
+                    try addSchemaV5Fields()
+                    try migrateTranslationState()
+                    try setSchemaVersion(.v5)
+                } catch let result as SQLite.Result {
+                    print("Migration Failed: \(result.description)")
+                    throw result
+                } catch {
+                    print("Migration Failed: \(error.localizedDescription)")
+                    throw error
+                }
+            }
+        case .v5:
             return
         }
 
@@ -190,7 +207,7 @@ extension Connection {
         }
     }
 
-    private func addSchemeV4Fields() throws {
+    private func addSchemaV4Fields() throws {
         try run("ALTER TABLE expression ADD COLUMN default_value TEXT NOT NULL DEFAULT '';")
     }
 
@@ -214,5 +231,18 @@ extension Connection {
                 try run(delete)
             }
         }
+    }
+
+    private func addSchemaV5Fields() throws {
+        try run("ALTER TABLE translation ADD COLUMN state_raw_value TEXT NOT NULL DEFAULT '';")
+    }
+
+    private func migrateTranslationState() throws {
+        let update = """
+        UPDATE translation
+        SET state_raw_value = 'needs_review'
+        WHERE state_raw_value = '';
+        """
+        try run(update)
     }
 }

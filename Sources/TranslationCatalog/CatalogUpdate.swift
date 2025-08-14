@@ -23,4 +23,5 @@ public enum GenericTranslationUpdate: CatalogUpdate {
     case script(Locale.Script?)
     case region(Locale.Region?)
     case value(String)
+    case state(TranslationState)
 }

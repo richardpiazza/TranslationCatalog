@@ -62,9 +62,10 @@ extension Catalog {
         let translation = TranslationCatalog.Translation(
             id: translationId,
             expressionId: expressionId,
+            value: "Overture to Egmont, Op. 84",
             language: .english,
             region: .unitedStates,
-            value: "Overture to Egmont, Op. 84"
+            state: .translated
         )
 
         func preConditions(catalog: Catalog) throws {
@@ -97,9 +98,10 @@ extension Catalog {
         let translation = TranslationCatalog.Translation(
             id: translationId,
             expressionId: expressionId,
+            value: "Overture to Egmont, Op. 84",
             language: .english,
             region: .unitedStates,
-            value: "Overture to Egmont, Op. 84"
+            state: .translated
         )
 
         func preConditions(catalog: Catalog) throws {

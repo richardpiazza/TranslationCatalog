@@ -20,6 +20,8 @@ struct TranslationEntity: Entity {
     var region: String? = nil
     @Field("value")
     var value: String = ""
+    @Field("state_raw_value")
+    var stateRawValue: String = ""
 }
 
 extension TranslationEntity {
@@ -31,6 +33,7 @@ extension TranslationEntity {
     static var script: Attribute { entity["script_code"]! }
     static var region: Attribute { entity["region_code"]! }
     static var value: Attribute { entity["value"]! }
+    static var stateRawValue: Attribute { entity["state_raw_value"]! }
 
     init(_ translation: TranslationCatalog.Translation) {
         uuid = translation.id.uuidString
@@ -38,6 +41,7 @@ extension TranslationEntity {
         script = translation.script?.identifier
         region = translation.region?.identifier
         value = translation.value
+        stateRawValue = translation.state.rawValue
     }
 
     func translation(with expressionID: String) throws -> TranslationCatalog.Translation {
@@ -51,10 +55,11 @@ extension TranslationEntity {
         return TranslationCatalog.Translation(
             id: id,
             expressionId: foreignID,
+            value: value,
             language: languageCode,
             script: scriptCode,
             region: regionCode,
-            value: value
+            state: state
         )
     }
 }
@@ -78,5 +83,9 @@ extension TranslationEntity {
         }
 
         return Locale.Region(region)
+    }
+
+    var state: TranslationState {
+        TranslationState(stringLiteral: stateRawValue)
     }
 }

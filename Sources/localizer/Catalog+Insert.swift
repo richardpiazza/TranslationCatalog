@@ -152,10 +152,8 @@ extension Catalog.Insert {
             let translation = Translation(
                 id: .zero,
                 expressionId: expression,
-                language: language,
-                script: nil,
-                region: nil,
-                value: value
+                value: value,
+                language: language
             )
 
             let id = try catalog.createTranslation(translation)

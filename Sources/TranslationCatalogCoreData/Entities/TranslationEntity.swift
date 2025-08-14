@@ -20,6 +20,7 @@ extension TranslationEntity {
     @NSManaged var regionCodeRawValue: String?
     @NSManaged var scriptCodeRawValue: String?
     @NSManaged var value: String?
+    @NSManaged var stateRawValue: String?
     @NSManaged var expressionEntity: ExpressionEntity?
 }
 
@@ -28,7 +29,7 @@ extension TranslationEntity {
         guard let languageCodeRawValue else {
             return .default
         }
-        
+
         return Locale.LanguageCode(languageCodeRawValue)
     }
 
@@ -47,6 +48,14 @@ extension TranslationEntity {
 
         return Locale.Region(regionCodeRawValue)
     }
+
+    var state: TranslationState {
+        guard let stateRawValue else {
+            return .new
+        }
+
+        return TranslationState(stringLiteral: stateRawValue)
+    }
 }
 
 extension TranslationCatalog.Translation {
@@ -62,10 +71,11 @@ extension TranslationCatalog.Translation {
         self.init(
             id: id,
             expressionId: expressionId,
+            value: entity.value ?? "",
             language: entity.language,
             script: entity.script,
             region: entity.region,
-            value: entity.value ?? ""
+            state: entity.state
         )
     }
 }

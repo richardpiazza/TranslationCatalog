@@ -15,7 +15,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
     /// of the instance is required, provide a URL where a store can be created.
     public init() throws {
         container = try CatalogContainer(
-            version: .v2,
+            version: .v3,
             persistence: .memory,
             name: "CatalogModel"
         )
@@ -28,13 +28,20 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
         }
 
         container = try CatalogContainer(
-            version: .v2,
+            version: .v3,
             persistence: .store(storeURL),
             name: "CatalogModel",
             silentMigration: false
-        )
-
-        try migrateDefaultExpressionValues()
+        ) { source, destination, context in
+            switch (source, destination) {
+            case (.v1, .v2):
+                try Self.migrateDefaultExpressionValues(context: context)
+            case (.v2, .v3):
+                try Self.migrateTranslationState(context: context)
+            default:
+                break
+            }
+        }
     }
 
     public func projects() throws -> [TranslationCatalog.Project] {
@@ -232,6 +239,8 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
                 format: "SUBQUERY(translationEntities, $translation, $translation.languageCodeRawValue == %@ AND $translation.scriptCodeRawValue == NIL AND $translation.regionCodeRawValue == NIL).@count > 0",
                 languageCode.identifier
             )
+        case GenericExpressionQuery.translationsHavingState(let state):
+            fetchRequest.predicate = NSPredicate(format: "ANY %K == %@", "translationEntities.stateRawValue", state.rawValue)
         default:
             throw CatalogError.unhandledQuery(query)
         }
@@ -561,6 +570,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
             entity.regionCodeRawValue = translation.region?.identifier
             entity.scriptCodeRawValue = translation.script?.identifier
             entity.value = translation.value
+            entity.stateRawValue = translation.state.rawValue
             expressionEntity.addToTranslationEntities(entity)
 
             try context.save()
@@ -616,6 +626,15 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
                 translationEntity.value = value
                 try context.save()
             }
+        case GenericTranslationUpdate.state(let state):
+            guard translationEntity.state != state else {
+                return
+            }
+
+            try context.performAndWait {
+                translationEntity.stateRawValue = state.rawValue
+                try context.save()
+            }
         default:
             throw CatalogError.unhandledUpdate(action)
         }
@@ -655,8 +674,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
 }
 
 private extension CoreDataCatalog {
-    func migrateDefaultExpressionValues() throws {
-        let context = container.persistentContainer.newBackgroundContext()
+    static func migrateDefaultExpressionValues(context: NSManagedObjectContext) throws {
         try context.performAndWait {
             let expressionRequest = ExpressionEntity.fetchRequest()
             expressionRequest.predicate = NSPredicate(format: "%K == %@", argumentArray: ["defaultValue", ""])
@@ -682,6 +700,26 @@ private extension CoreDataCatalog {
                     expression.defaultValue = translationEntity.value ?? ""
                     context.delete(translationEntity)
                 }
+            }
+
+            try context.save()
+        }
+    }
+
+    static func migrateTranslationState(context: NSManagedObjectContext) throws {
+        try context.performAndWait {
+            let translationRequest = TranslationEntity.fetchRequest()
+            translationRequest.predicate = NSCompoundPredicate(
+                type: .or,
+                subpredicates: [
+                    NSPredicate(format: "%K == NIL", "stateRawValue"),
+                    NSPredicate(format: "%K == %@", argumentArray: ["stateRawValue", ""]),
+                ]
+            )
+
+            let translationEntities = try context.fetch(translationRequest)
+            for translation in translationEntities {
+                translation.stateRawValue = TranslationState.needsReview.rawValue
             }
 
             try context.save()
@@ -748,6 +786,7 @@ private extension ExpressionEntity {
                 entity.languageCodeRawValue = translation.language.identifier
                 entity.scriptCodeRawValue = translation.script?.identifier
                 entity.regionCodeRawValue = translation.region?.identifier
+                entity.stateRawValue = translation.state.rawValue
             }
 
             addToTranslationEntities(entity)

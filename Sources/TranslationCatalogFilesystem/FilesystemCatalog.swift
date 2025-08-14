@@ -8,8 +8,10 @@ public class FilesystemCatalog: Catalog {
         case v1 = 1
         /// Expression Default Value
         case v2 = 2
+        /// Translation State
+        case v3 = 3
 
-        static var current: Self { .v2 }
+        static var current: Self { .v3 }
     }
 
     private let fileManager = FileManager.default
@@ -114,11 +116,11 @@ public class FilesystemCatalog: Catalog {
 
         switch from {
         case .v1:
-            var translations: [TranslationDocument] = []
+            var translations: [TranslationDocumentV1] = []
             let translationUrls = try fileManager.contentsOfDirectory(at: translationsDirectory, includingPropertiesForKeys: nil)
             try translationUrls.forEach {
                 let data = try Data(contentsOf: $0)
-                let translation = try decoder.decode(TranslationDocument.self, from: data)
+                let translation = try decoder.decode(TranslationDocumentV1.self, from: data)
                 translations.append(translation)
             }
 
@@ -160,6 +162,30 @@ public class FilesystemCatalog: Catalog {
 
             setSchemaVersion(.v2)
         case .v2:
+            var translations: [TranslationDocumentV1] = []
+            let translationUrls = try fileManager.contentsOfDirectory(at: translationsDirectory, includingPropertiesForKeys: nil)
+            try translationUrls.forEach {
+                let data = try Data(contentsOf: $0)
+                let translation = try decoder.decode(TranslationDocumentV1.self, from: data)
+                translations.append(translation)
+            }
+
+            for translation in translations {
+                let document = TranslationDocument(
+                    id: translation.id,
+                    expressionID: translation.expressionID,
+                    value: translation.value,
+                    languageCode: translation.languageCode,
+                    scriptCode: translation.scriptCode,
+                    regionCode: translation.regionCode,
+                    state: .needsReview
+                )
+
+                try document.write(to: translationsDirectory, using: encoder)
+            }
+
+            setSchemaVersion(.v3)
+        case .v3:
             return
         }
 
@@ -368,6 +394,21 @@ public class FilesystemCatalog: Catalog {
                                 $0.languageCode == languageCode &&
                                 $0.scriptCode == scriptCode &&
                                 $0.regionCode == regionCode
+                        }
+                        .map {
+                            Translation(document: $0)
+                        }
+
+                    return TranslationCatalog.Expression(document: document, translations: translations)
+                }
+                .filter { !$0.translations.isEmpty }
+        case GenericExpressionQuery.translationsHavingState(let state):
+            return expressionDocuments
+                .map { document in
+                    let translations = translationDocuments
+                        .filter {
+                            $0.expressionID == document.id &&
+                                $0.state == state
                         }
                         .map {
                             Translation(document: $0)
@@ -601,10 +642,11 @@ public class FilesystemCatalog: Catalog {
         let document = TranslationDocument(
             id: id,
             expressionID: translation.expressionId,
+            value: translation.value,
             languageCode: translation.language,
             scriptCode: translation.script,
             regionCode: translation.region,
-            value: translation.value
+            state: translation.state
         )
 
         try document.write(to: translationsDirectory, using: encoder)
@@ -626,6 +668,8 @@ public class FilesystemCatalog: Catalog {
             translationDocuments[index].regionCode = regionCode
         case GenericTranslationUpdate.value(let value):
             translationDocuments[index].value = value
+        case GenericTranslationUpdate.state(let state):
+            translationDocuments[index].state = state
         default:
             throw CatalogError.unhandledUpdate(action)
         }

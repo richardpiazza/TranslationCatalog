@@ -6,6 +6,8 @@ enum ManagedModel: String, CaseIterable, ModelVersion, ModelCatalog {
     case v1 = "1"
     /// Expression Default Value
     case v2 = "2"
+    /// Translation State
+    case v3 = "3"
 
     static var allVersions: [ManagedModel] { allCases }
     private static var models: [ManagedModel: NSManagedObjectModel] = [:]
@@ -36,6 +38,8 @@ enum ManagedModel: String, CaseIterable, ModelVersion, ModelCatalog {
             return nil
         case .v2:
             resource = "Model_1_to_2"
+        case .v3:
+            resource = "Model_2_to_3"
         }
 
         guard let mapping = try? Bundle.module.mappingModel(forResource: resource, subdirectory: "PrecompiledResources") else {
@@ -50,6 +54,7 @@ enum ManagedModel: String, CaseIterable, ModelVersion, ModelCatalog {
         switch self {
         case .v1: nil
         case .v2: ManagedModel.v1
+        case .v3: ManagedModel.v2
         }
     }
 }

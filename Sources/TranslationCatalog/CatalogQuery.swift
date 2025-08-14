@@ -17,8 +17,10 @@ public enum GenericExpressionQuery: CatalogQuery {
     case named(String)
     /// Expressions with Translations that only match the provided LanguageCode. (Script == Null & Region == Null)
     case translationsHavingOnly(Locale.LanguageCode)
-    /// Expressions with Translations the match the LanguageCode as well as the provided script/region.
+    /// Expressions with Translations that match the LanguageCode as well as the provided script/region.
     case translationsHaving(Locale.LanguageCode, Locale.Script?, Locale.Region?)
+    /// Expressions with Translations having a specified state
+    case translationsHavingState(TranslationState)
 }
 
 public enum GenericTranslationQuery: CatalogQuery {

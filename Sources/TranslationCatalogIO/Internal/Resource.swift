@@ -56,10 +56,11 @@ extension Resource {
                     Translation(
                         id: .zero,
                         expressionId: uuid,
+                        value: value,
                         language: language,
                         script: script,
                         region: region,
-                        value: value
+                        state: .new
                     ),
                 ]
             )
