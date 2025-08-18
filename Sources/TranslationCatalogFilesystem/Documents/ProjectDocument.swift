@@ -4,7 +4,7 @@ import TranslationCatalog
 struct ProjectDocument: Document {
     let id: UUID
     var name: String
-    var expressionIds: [ExpressionDocument.ID]
+    var expressionIds: Set<ExpressionDocument.ID>
 }
 
 extension Project {
