@@ -3,6 +3,17 @@ import Foundation
 import TranslationCatalog
 
 #if hasFeature(RetroactiveAttribute)
+extension Locale: @retroactive ExpressibleByArgument {
+    public init?(argument: String) {
+        let locale = Locale(identifier: argument)
+        guard locale.language.languageCode?.isISOLanguage == true else {
+            return nil
+        }
+
+        self = locale
+    }
+}
+
 extension Locale.LanguageCode: @retroactive ExpressibleByArgument {
     public init?(argument: String) {
         guard Locale.LanguageCode.allCases.contains(where: { $0.identifier == argument }) else {
@@ -39,6 +50,17 @@ extension UUID: @retroactive ExpressibleByArgument {
     }
 }
 #else
+extension Locale: ExpressibleByArgument {
+    public init?(argument: String) {
+        let locale = Locale(identifier: argument)
+        guard locale.language.languageCode?.isISOLanguage == true else {
+            return nil
+        }
+
+        self = locale
+    }
+}
+
 extension Locale.LanguageCode: ExpressibleByArgument {
     public init?(argument: String) {
         guard let languageCode = try? Locale.LanguageCode(matching: argument) else {
