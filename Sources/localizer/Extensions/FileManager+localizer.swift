@@ -1,6 +1,7 @@
 import Foundation
 
 extension FileManager {
+    @available(*, deprecated)
     func url(for filename: String) throws -> URL {
         // Absolute Path?
         let absoluteURL = URL(fileURLWithPath: filename)
@@ -14,6 +15,7 @@ extension FileManager {
         return relativeURL
     }
 
+    @available(*, deprecated)
     func directoryURL(for path: String) throws -> URL {
         // Absolute Path?
         let absoluteURL = URL(fileURLWithPath: path, isDirectory: true)

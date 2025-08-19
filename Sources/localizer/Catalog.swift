@@ -45,20 +45,20 @@ extension CatalogCommand {
         #if os(macOS)
         case .coreData:
             if let path, !path.isEmpty {
-                return try FileManager.default.url(for: path)
+                return URL(filePath: path, directoryHint: .notDirectory)
             } else {
                 return try FileManager.default.catalogURL()
             }
         #endif
         case .filesystem:
             if let path, !path.isEmpty {
-                return try FileManager.default.directoryURL(for: path)
+                return URL(filePath: path, directoryHint: .isDirectory)
             } else {
                 return try FileManager.default.catalogDirectoryURL()
             }
         case .sqlite:
             if let path, !path.isEmpty {
-                return try FileManager.default.url(for: path)
+                return URL(filePath: path, directoryHint: .notDirectory)
             } else {
                 return try FileManager.default.catalogURL()
             }

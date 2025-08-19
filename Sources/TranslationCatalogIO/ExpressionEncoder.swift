@@ -41,7 +41,11 @@ public struct ExpressionEncoder {
                     continue
                 }
 
-                output.append("\"\(expression.key)\" = \"\(translation.simpleAppleDictionaryEscaped())\";")
+                let value = try translation
+                    .encodingDarwinStrings()
+                    .simpleAppleDictionaryEscaped()
+
+                output.append("\"\(expression.key)\" = \"\(value)\";")
             }
 
             return output
