@@ -284,7 +284,7 @@ public class FilesystemCatalog: Catalog {
         let document = ProjectDocument(
             id: id,
             name: project.name,
-            expressionIds: expressionIds
+            expressionIds: Set(expressionIds)
         )
 
         try document.write(to: projectsDirectory, using: encoder)
@@ -301,9 +301,9 @@ public class FilesystemCatalog: Catalog {
         case GenericProjectUpdate.name(let name):
             projectDocuments[index].name = name
         case GenericProjectUpdate.linkExpression(let expressionId):
-            projectDocuments[index].expressionIds.append(expressionId)
+            projectDocuments[index].expressionIds.insert(expressionId)
         case GenericProjectUpdate.unlinkExpression(let expressionId):
-            projectDocuments[index].expressionIds.removeAll(where: { $0 == expressionId })
+            projectDocuments[index].expressionIds.remove(expressionId)
         default:
             throw CatalogError.unhandledUpdate(action)
         }
@@ -542,7 +542,7 @@ public class FilesystemCatalog: Catalog {
                 return
             }
 
-            projectDocuments[idx].expressionIds.removeAll(where: { $0 == id })
+            projectDocuments[idx].expressionIds.remove(id)
             try projectDocuments[idx].write(to: projectsDirectory, using: encoder)
         }
 
