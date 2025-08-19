@@ -1,7 +1,7 @@
 @testable import TranslationCatalogIO
 import XCTest
 
-final class XMLEscapingTests: XCTestCase {
+final class StringReplacementTests: XCTestCase {
 
     func testSimpleEscaping() {
         XCTAssertEqual("I am not Spartacus & lying".simpleAndroidXMLEscaped(), "I am not Spartacus &amp; lying")
@@ -16,5 +16,16 @@ final class XMLEscapingTests: XCTestCase {
         XCTAssertFalse("I'm heading to the store.".hasMultipleReplacements)
         XCTAssertFalse("I'm heading to %@.".hasMultipleReplacements)
         XCTAssertTrue("I'm heading to %@ to buy %@.".hasMultipleReplacements)
+        XCTAssertTrue("I'm heading to %s to buy %s.".hasMultipleReplacements)
+    }
+
+    func testDecodeDarwinStrings() throws {
+        XCTAssertEqual(try "Hello %@".decodingDarwinStrings(), "Hello %s")
+        XCTAssertEqual(try "Hello $1%@".decodingDarwinStrings(), "Hello $1%s")
+    }
+
+    func testEncodeDarwinStrings() throws {
+        XCTAssertEqual(try "Hello %s".encodingDarwinStrings(), "Hello %@")
+        XCTAssertEqual(try "Hello $1%s".encodingDarwinStrings(), "Hello $1%@")
     }
 }

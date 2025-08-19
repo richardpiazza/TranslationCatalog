@@ -21,7 +21,7 @@ extension [String: String] {
             }
 
             if components.count > 1 {
-                self[components[0]] = components[1]
+                self[components[0]] = try components[1].decodingDarwinStrings()
             }
         }
     }
@@ -46,7 +46,7 @@ extension [String: String] {
             }
 
             if components.count > 1 {
-                self[components[0]] = components[1]
+                self[components[0]] = try components[1].decodingDarwinStrings()
             }
         }
     }
