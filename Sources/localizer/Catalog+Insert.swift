@@ -37,6 +37,9 @@ extension Catalog.Insert {
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
 
+        @Flag(help: "Additional execution details in the standard output.")
+        var verbose: Bool = false
+
         func validate() throws {
             guard !name.isEmpty else {
                 throw ValidationError("Must provide a non-empty 'name'.")
@@ -46,7 +49,7 @@ extension Catalog.Insert {
         func run() async throws {
             print("Inserting Project '\(name)'…")
 
-            let catalog = try catalog(forStorage: storage)
+            let catalog = try catalog()
 
             let entity = Project(id: .zero, name: name)
             let id = try catalog.createProject(entity)
@@ -87,6 +90,9 @@ extension Catalog.Insert {
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
 
+        @Flag(help: "Additional execution details in the standard output.")
+        var verbose: Bool = false
+
         func validate() throws {
             guard !key.isEmpty else {
                 throw ValidationError("Must provide a non-empty 'key'.")
@@ -98,7 +104,7 @@ extension Catalog.Insert {
         }
 
         func run() async throws {
-            let catalog = try catalog(forStorage: storage)
+            let catalog = try catalog()
 
             let expression = Expression(
                 id: .zero,
@@ -146,8 +152,11 @@ extension Catalog.Insert {
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
 
+        @Flag(help: "Additional execution details in the standard output.")
+        var verbose: Bool = false
+
         func run() async throws {
-            let catalog = try catalog(forStorage: storage)
+            let catalog = try catalog()
 
             let translation = Translation(
                 id: .zero,

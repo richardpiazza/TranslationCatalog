@@ -37,36 +37,33 @@ struct Catalog: AsyncParsableCommand {
 protocol CatalogCommand: AsyncParsableCommand {
     var storage: Catalog.Storage { get }
     var path: String? { get }
+    var verbose: Bool { get }
 }
 
 extension CatalogCommand {
-    func catalogURL(forStorage storage: Catalog.Storage) throws -> URL {
-        switch storage {
+    func catalog() throws -> TranslationCatalog.Catalog {
+        let url = switch storage {
         #if os(macOS)
         case .coreData:
             if let path, !path.isEmpty {
-                return URL(filePath: path, directoryHint: .notDirectory)
+                URL(filePath: path, directoryHint: .notDirectory)
             } else {
-                return try FileManager.default.catalogURL()
+                try FileManager.default.catalogURL()
             }
         #endif
         case .filesystem:
             if let path, !path.isEmpty {
-                return URL(filePath: path, directoryHint: .isDirectory)
+                URL(filePath: path, directoryHint: .isDirectory)
             } else {
-                return try FileManager.default.catalogDirectoryURL()
+                try FileManager.default.catalogDirectoryURL()
             }
         case .sqlite:
             if let path, !path.isEmpty {
-                return URL(filePath: path, directoryHint: .notDirectory)
+                URL(filePath: path, directoryHint: .notDirectory)
             } else {
-                return try FileManager.default.catalogURL()
+                try FileManager.default.catalogURL()
             }
         }
-    }
-
-    func catalog(forStorage storage: Catalog.Storage, verbose: Bool = false) throws -> TranslationCatalog.Catalog {
-        let url = try catalogURL(forStorage: storage)
 
         let catalog: TranslationCatalog.Catalog
 

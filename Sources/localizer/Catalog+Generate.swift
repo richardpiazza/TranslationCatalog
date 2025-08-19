@@ -28,8 +28,11 @@ extension Catalog {
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
 
+        @Flag(help: "Additional execution details in the standard output.")
+        var verbose: Bool = false
+
         func run() async throws {
-            let catalog = try catalog(forStorage: storage)
+            let catalog = try catalog()
             let expressions = try catalog.expressions()
             let sortedExpressions = expressions.sorted(by: { $0.key < $1.key })
             let expressionsWithTranslations = try sortedExpressions.map { expression in

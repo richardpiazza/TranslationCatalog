@@ -42,8 +42,11 @@ extension Catalog {
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
 
+        @Flag(help: "Additional execution details in the standard output.")
+        var verbose: Bool = false
+
         func run() async throws {
-            let catalog = try catalog(forStorage: storage)
+            let catalog = try catalog()
             let expressions = try queryExpressions(from: catalog, using: storage, projectId: projectId)
             let shouldFallback = (format == .appleStrings || fallback) ? true : false
             let locale = Locale(languageCode: language, script: script, languageRegion: region)
