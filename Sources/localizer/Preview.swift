@@ -25,16 +25,20 @@ struct Preview: AsyncParsableCommand {
     var region: Locale.Region?
 
     @Argument(help: "The path to the file being imported")
-    var input: String
+    var path: String
+
+    @available(*, deprecated, renamed: "path")
+    @Argument(help: "The path to the file being imported")
+    var input: String?
 
     func validate() throws {
-        guard !input.isEmpty else {
+        guard !path.isEmpty else {
             throw ValidationError("'input' source file not provided.")
         }
     }
 
     func run() async throws {
-        let url = try FileManager.default.url(for: input)
+        let url = URL(filePath: path, directoryHint: .notDirectory)
         let data = try Data(contentsOf: url)
         let expressions = try ExpressionDecoder.decodeExpressions(
             from: data,

@@ -45,7 +45,7 @@ extension Catalog {
         }
 
         func run() async throws {
-            let fileURL = try FileManager.default.url(for: filename)
+            let fileURL = URL(filePath: filename, directoryHint: storage == .filesystem ? .isDirectory : .notDirectory)
             let _format = format ?? FileFormat(fileExtension: fileURL.pathExtension)
             guard let fileFormat = _format else {
                 throw ValidationError("Import format could not be determined. Use '--format' to specify.")
