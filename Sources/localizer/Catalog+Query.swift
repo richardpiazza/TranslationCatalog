@@ -87,6 +87,18 @@ extension Catalog.Query {
         @Option(help: "A descriptive human-readable identification.")
         var named: String?
 
+        @Option(help: "Identifier of the project to which the output belongs.")
+        var projectId: TranslationCatalog.Project.ID?
+
+        @Option(help: "Matches expressions having only the specific Language Code.")
+        var languageCode: Locale.LanguageCode?
+
+        @Option(help: "Matches expressions having the specified Locale.")
+        var locale: Locale?
+
+        @Option(help: "Matches expressions with translations matching a specific state.")
+        var translationState: TranslationState?
+
         @Option(help: "Storage mechanism used to persist the catalog. [sqlite, filesystem]")
         var storage: Catalog.Storage = .default
 
@@ -115,6 +127,24 @@ extension Catalog.Query {
                 expressions = try catalog.expressions(matching: GenericExpressionQuery.value(value))
             } else if let named {
                 expressions = try catalog.expressions(matching: GenericExpressionQuery.named(named))
+            } else if let projectId {
+                expressions = try catalog.expressions(matching: GenericExpressionQuery.projectId(projectId))
+            } else if let languageCode {
+                expressions = try catalog.expressions(matching: GenericExpressionQuery.translationsHavingOnly(languageCode))
+            } else if let locale {
+                guard let languageCode = locale.language.languageCode else {
+                    throw ValidationError("Invalid Locale Language Code")
+                }
+
+                expressions = try catalog.expressions(
+                    matching: GenericExpressionQuery.translationsHaving(
+                        languageCode,
+                        locale.language.script,
+                        locale.language.region
+                    )
+                )
+            } else if let translationState {
+                expressions = try catalog.expressions(matching: GenericExpressionQuery.translationsHavingState(translationState))
             } else {
                 expressions = try catalog.expressions()
             }
