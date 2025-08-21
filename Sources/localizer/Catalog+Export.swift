@@ -11,7 +11,7 @@ extension Catalog {
             abstract: "Export a translation file using the catalog.",
             discussion: """
             iOS Localization should contain all keys (expressions) for a given language. There is no native fallback
-            mechanism to a 'base' language. (i.e. en-GB > en). Given this functionality, when exporting the 'apple'
+            mechanism to a 'base' language. (i.e. en-GB > en). Given this functionality, when exporting an Apple
             format, all expressions will be included (preferring the script/region).
             """,
             version: "1.0.0",

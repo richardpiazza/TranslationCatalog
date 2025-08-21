@@ -1,10 +1,7 @@
 import ArgumentParser
 import Foundation
 import TranslationCatalog
-import TranslationCatalogCoreData
-import TranslationCatalogFilesystem
 import TranslationCatalogIO
-import TranslationCatalogSQLite
 
 extension Catalog {
     struct Generate: CatalogCommand {
