@@ -74,7 +74,7 @@ extension Catalog {
         var expressions = try expressions(matching: GenericExpressionQuery.translationsHaving(.french, nil, nil))
         XCTAssertEqual(expressions.count, 3)
         expressions = try self.expressions(matching: GenericExpressionQuery.translationsHaving(.french, nil, .canada))
-        XCTAssertEqual(expressions.count, 1)
+        XCTAssertEqual(expressions.count, 2)
     }
 
     /// Verify `Expression` entities can be retrieved matching _having only_ statements.
@@ -85,6 +85,20 @@ extension Catalog {
 
     func assertQueryExpressionsHavingState() throws {
         let expressions = try expressions(matching: GenericExpressionQuery.translationsHavingState(.needsReview))
+        XCTAssertEqual(expressions.count, 4)
+    }
+
+    func assertQueryExpressionsWithoutAllLocales() throws {
+        let locales = [
+            "en",
+            "en_GB",
+            "es",
+            "fr",
+            "fr_CA",
+            "pt_BR",
+            "zh-Hans",
+        ].map { Locale(identifier: $0) }
+        let expressions = try expressions(matching: GenericExpressionQuery.withoutAllLocales(Set(locales)))
         XCTAssertEqual(expressions.count, 4)
     }
 
@@ -103,7 +117,7 @@ extension Catalog {
     /// Verify an expected number of existing `Translation`.
     func assertQueryTranslations() throws {
         let translations = try translations()
-        XCTAssertEqual(translations.count, 13)
+        XCTAssertEqual(translations.count, 16)
     }
 
     /// Verify that existing `Translation`s can be found using a `Expression.ID`.
@@ -132,7 +146,7 @@ extension Catalog {
         XCTAssertEqual(translation.locale.identifier, "zh-Hans")
     }
 
-    func assertLocaleIdentifiers() throws {
+    func assertLocales() throws {
         let localeIdentifiers = try locales().map(\.identifier)
         XCTAssertEqual(localeIdentifiers.count, 7)
         XCTAssertEqual(localeIdentifiers.sorted(), [
@@ -170,7 +184,7 @@ enum CatalogData {
         languageCode: .english,
         context: "Button/Action Title",
         feature: "Buttons",
-        translations: [translation1, translation2, translation3]
+        translations: [translation1, translation2, translation3, translation14, translation15, translation16]
     )
     static let expression2 = Expression(
         id: .expression2,
@@ -328,6 +342,33 @@ enum CatalogData {
         region: .canada,
         state: .needsReview
     )
+    static let translation14 = TranslationCatalog.Translation(
+        id: .translation14,
+        expressionId: .expression1,
+        value: "sauver",
+        language: .french,
+        script: nil,
+        region: .canada,
+        state: .needsReview
+    )
+    static let translation15 = TranslationCatalog.Translation(
+        id: .translation15,
+        expressionId: .expression1,
+        value: "Guardar",
+        language: .portuguese,
+        script: nil,
+        region: .brazil,
+        state: .needsReview
+    )
+    static let translation16 = TranslationCatalog.Translation(
+        id: .translation16,
+        expressionId: .expression1,
+        value: "保存",
+        language: .chinese,
+        script: .hanSimplified,
+        region: nil,
+        state: .needsReview
+    )
 }
 
 extension UUID {
@@ -352,4 +393,7 @@ extension UUID {
     static let translation11 = UUID(uuidString: "3C48632D-C5FD-4307-A5DB-96FD1C0C5828")!
     static let translation12 = UUID(uuidString: "42DFEB9F-C9E6-457A-9F4E-EEAF645C9E0B")!
     static let translation13 = UUID(uuidString: "D57844A7-68D6-45E6-A260-CD7C5BC708D3")!
+    static let translation14 = UUID(uuidString: "4C493E43-59FB-484F-B1C7-F52DFA03B889")!
+    static let translation15 = UUID(uuidString: "9E5895C8-A9DD-4B52-BE22-0C005C84FA3A")!
+    static let translation16 = UUID(uuidString: "A825C6CD-4676-4A01-AA02-3CB3C78DDBE6")!
 }

@@ -241,6 +241,17 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
             )
         case GenericExpressionQuery.translationsHavingState(let state):
             fetchRequest.predicate = NSPredicate(format: "ANY %K == %@", "translationEntities.stateRawValue", state.rawValue)
+        case GenericExpressionQuery.withoutAllLocales(let locales):
+            // TODO: Render with a statement?
+            let expressions = try expressions()
+            let translations = try translations()
+            let mappedExpressions = expressions.map { expression in
+                TranslationCatalog.Expression(
+                    expression: expression,
+                    translations: translations.filter { $0.expressionId == expression.id }
+                )
+            }
+            return mappedExpressions.filter { !$0.hasValuesForLocales(locales) }
         default:
             throw CatalogError.unhandledQuery(query)
         }

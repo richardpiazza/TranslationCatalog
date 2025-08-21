@@ -28,6 +28,7 @@ class QueryCatalogTestCase: XCTestCase {
         try catalog.assertQueryExpressionsHaving()
         try catalog.assertQueryExpressionsHavingOnly()
         try catalog.assertQueryExpressionsHavingState()
+        try catalog.assertQueryExpressionsWithoutAllLocales()
         try catalog.assertQueryExpressionId()
         try catalog.assertQueryExpressionKey()
     }
@@ -41,6 +42,6 @@ class QueryCatalogTestCase: XCTestCase {
     }
 
     func testMetadataQueries() throws {
-        try catalog.assertLocaleIdentifiers()
+        try catalog.assertLocales()
     }
 }

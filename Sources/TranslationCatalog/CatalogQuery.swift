@@ -21,6 +21,8 @@ public enum GenericExpressionQuery: CatalogQuery {
     case translationsHaving(Locale.LanguageCode, Locale.Script?, Locale.Region?)
     /// Expressions with Translations having a specified state
     case translationsHavingState(TranslationState)
+    /// Expressions that don't have a default value or Translation for _all_ of the specified locales.
+    case withoutAllLocales(Set<Locale>)
 }
 
 public enum GenericTranslationQuery: CatalogQuery {
