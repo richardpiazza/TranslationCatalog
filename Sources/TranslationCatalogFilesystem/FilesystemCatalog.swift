@@ -417,6 +417,18 @@ public class FilesystemCatalog: Catalog {
                     return TranslationCatalog.Expression(document: document, translations: translations)
                 }
                 .filter { !$0.translations.isEmpty }
+        case GenericExpressionQuery.withoutAllLocales(let locales):
+            let expressions = expressionDocuments
+                .map { document in
+                    let translations = translationDocuments
+                        .filter { $0.expressionID == document.id }
+                        .map {
+                            Translation(document: $0)
+                        }
+
+                    return Expression(document: document, translations: translations)
+                }
+            return expressions.filter { !$0.hasValuesForLocales(locales) }
         default:
             throw CatalogError.unhandledQuery(query)
         }

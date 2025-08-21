@@ -62,7 +62,7 @@ final class SQLiteQueryCatalogTests: QueryCatalogTestCase {
         let e3 = try XCTUnwrap(expressions.first(where: { $0.id == .expression3 }))
         let e4 = try XCTUnwrap(expressions.first(where: { $0.id == .expression4 }))
         let e5 = try XCTUnwrap(expressions.first(where: { $0.id == .expression5 }))
-        XCTAssertEqual(e1.translations.count, 3)
+        XCTAssertEqual(e1.translations.count, 6)
         XCTAssertEqual(e2.translations.count, 3)
         XCTAssertEqual(e3.translations.count, 3)
         XCTAssertEqual(e4.translations.count, 1)
@@ -75,7 +75,7 @@ final class SQLiteQueryCatalogTests: QueryCatalogTestCase {
     }
 
     func testQueryTranslationPrimaryKey() throws {
-        let translation = try catalog.translation(matching: SQLiteCatalog.TranslationQuery.primaryKey(9))
+        let translation = try catalog.translation(matching: SQLiteCatalog.TranslationQuery.primaryKey(12))
         XCTAssertEqual(translation.region, .brazil)
     }
 }
