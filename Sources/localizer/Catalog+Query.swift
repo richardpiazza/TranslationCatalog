@@ -49,7 +49,7 @@ extension Catalog.Query {
         }
 
         func run() async throws {
-            let catalog = try catalog(forStorage: storage, verbose: verbose)
+            let catalog = try catalog()
 
             var projects: [Project] = []
 
@@ -117,7 +117,7 @@ extension Catalog.Query {
         }
 
         func run() async throws {
-            let catalog = try catalog(forStorage: storage, verbose: verbose)
+            let catalog = try catalog()
 
             var expressions: [TranslationCatalog.Expression] = []
 

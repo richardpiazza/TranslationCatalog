@@ -41,7 +41,7 @@ extension Catalog.Delete {
         var verbose: Bool = false
 
         func run() async throws {
-            let catalog = try catalog(forStorage: storage, verbose: verbose)
+            let catalog = try catalog()
 
             guard let project = try? catalog.project(id) else {
                 Self.exit(withError: ValidationError("Unknown Project '\(id)'."))
@@ -71,8 +71,11 @@ extension Catalog.Delete {
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
 
+        @Flag(help: "Additional execution details in the standard output.")
+        var verbose: Bool = false
+
         func run() async throws {
-            let catalog = try catalog(forStorage: storage)
+            let catalog = try catalog()
             try catalog.deleteExpression(id)
         }
     }
@@ -95,8 +98,11 @@ extension Catalog.Delete {
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
 
+        @Flag(help: "Additional execution details in the standard output.")
+        var verbose: Bool = false
+
         func run() async throws {
-            let catalog = try catalog(forStorage: storage)
+            let catalog = try catalog()
             try catalog.deleteTranslation(id)
         }
     }

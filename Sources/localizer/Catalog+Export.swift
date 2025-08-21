@@ -11,7 +11,7 @@ extension Catalog {
             abstract: "Export a translation file using the catalog.",
             discussion: """
             iOS Localization should contain all keys (expressions) for a given language. There is no native fallback
-            mechanism to a 'base' language. (i.e. en-GB > en). Given this functionality, when exporting the 'apple'
+            mechanism to a 'base' language. (i.e. en-GB > en). Given this functionality, when exporting an Apple
             format, all expressions will be included (preferring the script/region).
             """,
             version: "1.0.0",
@@ -42,8 +42,11 @@ extension Catalog {
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
 
+        @Flag(help: "Additional execution details in the standard output.")
+        var verbose: Bool = false
+
         func run() async throws {
-            let catalog = try catalog(forStorage: storage)
+            let catalog = try catalog()
             let expressions = try queryExpressions(from: catalog, using: storage, projectId: projectId)
             let shouldFallback = (format == .appleStrings || fallback) ? true : false
             let locale = Locale(languageCode: language, script: script, languageRegion: region)

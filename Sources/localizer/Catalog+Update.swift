@@ -58,7 +58,7 @@ extension Catalog.Update {
         }
 
         func run() async throws {
-            let catalog = try catalog(forStorage: storage, verbose: verbose)
+            let catalog = try catalog()
 
             let project = try catalog.project(id)
 
@@ -141,7 +141,7 @@ extension Catalog.Update {
         }
 
         func run() async throws {
-            let catalog = try catalog(forStorage: storage, verbose: verbose)
+            let catalog = try catalog()
 
             let expression = try catalog.expression(id)
 
@@ -226,7 +226,7 @@ extension Catalog.Update {
         var verbose: Bool = false
 
         func run() async throws {
-            let catalog = try catalog(forStorage: storage, verbose: verbose)
+            let catalog = try catalog()
 
             let translation = try catalog.translation(id)
 

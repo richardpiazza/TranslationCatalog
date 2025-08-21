@@ -2,7 +2,6 @@ import ArgumentParser
 import Foundation
 import TranslationCatalog
 import TranslationCatalogIO
-import TranslationCatalogSQLite
 
 extension Catalog {
     struct Import: CatalogCommand {
@@ -38,6 +37,9 @@ extension Catalog {
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
 
+        @Flag(help: "Additional execution details in the standard output.")
+        var verbose: Bool = false
+
         func validate() throws {
             guard !filename.isEmpty else {
                 throw ValidationError("'input' source file not provided.")
@@ -51,7 +53,7 @@ extension Catalog {
                 throw ValidationError("Import format could not be determined. Use '--format' to specify.")
             }
 
-            let catalog = try catalog(forStorage: storage)
+            let catalog = try catalog()
             let data = try Data(contentsOf: fileURL)
             let expressions = try ExpressionDecoder.decodeExpressions(
                 from: data,
