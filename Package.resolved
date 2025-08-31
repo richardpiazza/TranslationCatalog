@@ -19,6 +19,15 @@
       }
     },
     {
+      "identity" : "localesupport",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/richardpiazza/LocaleSupport.git",
+      "state" : {
+        "revision" : "2e258b38557504211bd5e89c555d591beda97d65",
+        "version" : "0.8.0"
+      }
+    },
+    {
       "identity" : "plot",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/JohnSundell/Plot.git",

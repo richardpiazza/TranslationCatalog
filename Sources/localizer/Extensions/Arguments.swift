@@ -1,5 +1,6 @@
 import ArgumentParser
 import Foundation
+import LocaleSupport
 import TranslationCatalog
 
 #if hasFeature(RetroactiveAttribute)
