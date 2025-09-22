@@ -70,6 +70,7 @@ let package = Package(
                 .product(name: "HTMLString", package: "HTMLString"),
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
+                .product(name: "LocaleSupport", package: "LocaleSupport"),
             ]
         ),
         .target(

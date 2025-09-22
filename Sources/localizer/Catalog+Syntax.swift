@@ -31,6 +31,9 @@ extension Catalog {
             helpNames: .shortAndLong
         )
 
+        @Option(help: "Name used for the root declaration.")
+        var name: String?
+
         @Option(help: "Identifier of the project for which to limit results.")
         var projectId: Project.ID?
 
@@ -50,8 +53,12 @@ extension Catalog {
             } else {
                 try catalog.expressions()
             }
-            let keyHierarchy = KeyHierarchy.make(with: expressions)
-            let data = keyHierarchy.localizedStringConvertible()
+            let keyHierarchy = try KeyHierarchy.make(with: expressions)
+            let data = if let name, !name.isEmpty {
+                keyHierarchy.localizedStringConvertible(rootDeclaration: name)
+            } else {
+                keyHierarchy.localizedStringConvertible()
+            }
             let output = String(decoding: data, as: UTF8.self)
             print(output)
         }

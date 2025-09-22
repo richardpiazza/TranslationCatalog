@@ -4,13 +4,13 @@ import TranslationCatalog
 public struct KeyHierarchy {
     public private(set) var id: [String]
     public private(set) var prefix: [String]
-    public private(set) var contents: [String: LocalizationKey]
+    public private(set) var contents: [[String]: LocalizationKey]
     public private(set) var nodes: [KeyHierarchy]
 
     public init(
         id: [String] = [],
         prefix: [String] = [],
-        contents: [String: LocalizationKey] = [:],
+        contents: [[String]: LocalizationKey] = [:],
         nodes: [KeyHierarchy] = []
     ) {
         self.id = id
@@ -19,14 +19,14 @@ public struct KeyHierarchy {
         self.nodes = nodes
     }
 
-    public static func make(with expressions: [Expression]) -> KeyHierarchy {
+    public static func make(with expressions: [Expression]) throws -> KeyHierarchy {
         var hierarchy = KeyHierarchy()
 
-        expressions
+        try expressions
             .map {
                 LocalizationKey(
                     key: $0.key,
-                    defaultValue: $0.defaultValue,
+                    defaultValue: try $0.defaultValue.encodingDarwinStrings(),
                     comment: $0.context
                 )
             }
@@ -43,10 +43,23 @@ public struct KeyHierarchy {
         case 0:
             break
         case 1:
-            contents[identity.first!] = key
+            contents[identity] = key
         default:
             var components = identity
-            let nodeId = [components.removeFirst()]
+            let component = components.removeFirst()
+            let nodeId = [component]
+
+            for token in Self.reservedTypeTokens {
+                if component.caseInsensitiveCompare(token) == .orderedSame {
+                    contents[identity] = key
+                    return
+                }
+            }
+
+            if let nextComponent = components.first, Int(nextComponent) != nil {
+                contents[identity] = key
+                return
+            }
 
             if let index = nodes.firstIndex(where: { $0.id == nodeId }) {
                 nodes[index].process(components, key: key)
@@ -60,4 +73,17 @@ public struct KeyHierarchy {
             }
         }
     }
+
+    static let reservedTypeTokens: [String] = [
+        "Any",
+        "Type",
+    ]
+
+    static let reservedVariableTokens: [String] = [
+        "any",
+        "continue",
+        "for",
+        "in",
+        "self",
+    ]
 }

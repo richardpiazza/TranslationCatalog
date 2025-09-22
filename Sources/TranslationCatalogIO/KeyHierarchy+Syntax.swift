@@ -68,9 +68,9 @@ extension EnumDeclSyntax {
             name: TokenSyntax(stringLiteral: name ?? hierarchy.declName),
             inheritanceClause: inheritanceClause
         ) {
-            for (path, key) in hierarchy.contents {
+            for (path, key) in hierarchy.contents.sorted(by: { $0.key < $1.key }) {
                 EnumCaseDeclSyntax.stringEnumerationCase(
-                    key: path.lowercased(),
+                    key: path.lowerCamelCased,
                     value: key.defaultValue,
                     comment: key.comment
                 )
@@ -101,12 +101,18 @@ extension EnumCaseDeclSyntax {
             ]
         }
 
+        let token: TokenSyntax = if KeyHierarchy.reservedVariableTokens.contains(key) {
+            TokenSyntax(stringLiteral: "`\(key)`")
+        } else {
+            TokenSyntax(stringLiteral: key)
+        }
+
         return EnumCaseDeclSyntax(
             leadingTrivia: trivia
         ) {
             EnumCaseElementListSyntax {
                 EnumCaseElementSyntax(
-                    name: TokenSyntax(stringLiteral: key),
+                    name: token,
                     rawValue: InitializerClauseSyntax(value: StringLiteralExprSyntax(content: value))
                 )
             }
