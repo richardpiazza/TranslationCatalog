@@ -33,7 +33,7 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/richardpiazza/LocaleSupport.git", branch: "feature/localization-key"), // .upToNextMajor(from: "0.8.0")
+        .package(url: "https://github.com/richardpiazza/LocaleSupport.git", from: "0.8.1"),
         .package(url: "https://github.com/richardpiazza/Statement.git", .upToNextMajor(from: "0.8.1")),
         .package(url: "https://github.com/richardpiazza/CoreDataPlus.git", .upToNextMajor(from: "0.5.0")),
         .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMajor(from: "1.5.1")),

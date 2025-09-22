@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/richardpiazza/LocaleSupport.git",
       "state" : {
-        "branch" : "feature/localization-key",
-        "revision" : "3a19204fc4fa7a6aa8bf9529e4a64a6d49e09959"
+        "revision" : "29c92894489ac1f0c354e4e8c2fb7cbe7fb2170e",
+        "version" : "0.8.1"
       }
     },
     {
