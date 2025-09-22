@@ -31,7 +31,7 @@ public struct KeyHierarchy {
                 )
             }
             .forEach { key in
-                let id = key.key.components(separatedBy: "_")
+                let id = key.key.components(separatedBy: String(key.strategy.separator))
                 hierarchy.process(id, key: key)
             }
 

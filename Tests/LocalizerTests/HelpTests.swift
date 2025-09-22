@@ -26,6 +26,7 @@ final class HelpTests: XCTestCase {
           catalog                 Interact with the translation catalog.
           import                  Imports a translation file into the catalog.
           export                  Export a translation file using the catalog.
+          syntax                  Create a enumerated syntax tree.
           configure               Displays or alters the command configuration details.
 
           See 'localizer help <subcommand>' for detailed help.
