@@ -28,6 +28,7 @@ struct Catalog: AsyncParsableCommand {
             Import.self,
             Insert.self,
             Query.self,
+            Syntax.self,
             Update.self,
         ],
         helpNames: .shortAndLong
