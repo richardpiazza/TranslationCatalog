@@ -68,6 +68,8 @@ let package = Package(
                 .product(name: "XMLCoder", package: "XMLCoder"),
                 .product(name: "Plot", package: "Plot"),
                 .product(name: "HTMLString", package: "HTMLString"),
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
             ]
         ),
         .target(
@@ -95,8 +97,6 @@ let package = Package(
                 "TranslationCatalogFilesystem",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "LocaleSupport", package: "LocaleSupport"),
-                .product(name: "SwiftSyntax", package: "swift-syntax"),
-                .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
             ]
         ),
         .testTarget(

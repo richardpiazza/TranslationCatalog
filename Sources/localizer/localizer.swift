@@ -19,8 +19,8 @@ import Foundation
                 Catalog.self,
                 Catalog.Import.self,
                 Catalog.Export.self,
+                Catalog.Syntax.self,
                 Configure.self,
-                Syntax.self
             ],
             helpNames: .shortAndLong)
     }()
