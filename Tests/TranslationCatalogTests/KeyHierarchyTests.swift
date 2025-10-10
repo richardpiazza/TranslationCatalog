@@ -1,0 +1,143 @@
+@testable import TranslationCatalog
+@testable import TranslationCatalogIO
+import XCTest
+
+final class KeyHierarchyTests: XCTestCase {
+
+    let expressions: [TranslationCatalog.Expression] = [
+        Expression(
+            id: UUID(uuidString: "0681BB4E-A63F-4E3C-AA15-5E152844B7EC")!,
+            key: "GREETING",
+            value: "Hello World!",
+            languageCode: .english
+        ),
+        Expression(
+            id: UUID(uuidString: "B7FA5A95-2FE5-4887-8619-566CDA83F23E")!,
+            key: "APPLICATION_NAME",
+            value: "Lingua",
+            languageCode: .english
+        ),
+        Expression(
+            id: UUID(uuidString: "76C37D84-8AF3-4011-88B1-BCC80B2D6C6A")!,
+            key: "HIDDEN_MESSAGE",
+            value: "",
+            languageCode: .english
+        ),
+        Expression(
+            id: UUID(uuidString: "52B6650F-F041-4CA3-ACE6-38E7930D026D")!,
+            key: "PLATFORM_ANDROID",
+            value: "Android",
+            languageCode: .english
+        ),
+        Expression(
+            id: UUID(uuidString: "943D6EF9-A37A-4BB6-8C93-05FECAD1DA8C")!,
+            key: "PLATFORM_APPLE",
+            value: "Apple",
+            languageCode: .english
+        ),
+        Expression(
+            id: UUID(uuidString: "95C73B79-8111-43E7-85AC-EF4C74586594")!,
+            key: "PLATFORM_APPLE_MAC",
+            value: "macOS",
+            languageCode: .english
+        ),
+        Expression(
+            id: UUID(uuidString: "E5792937-3C63-4C10-8B58-0E405E76AB56")!,
+            key: "PLATFORM_WEB",
+            value: "Web",
+            languageCode: .english
+        ),
+    ]
+
+    var hierarchy: KeyHierarchy!
+
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+        hierarchy = try KeyHierarchy.make(with: expressions)
+    }
+
+    func testHierarchyGeneration() throws {
+        XCTAssertEqual(hierarchy.contents.count, 1)
+        XCTAssertEqual(hierarchy.contents.keys.sorted(), [["GREETING"]])
+        XCTAssertEqual(hierarchy.nodes.count, 3)
+        XCTAssertEqual(hierarchy.nodes.map(\.id), [["APPLICATION"], ["HIDDEN"], ["PLATFORM"]])
+    }
+
+    func testSyntax() throws {
+        let data = hierarchy.localizedStringConvertible()
+        let syntax = String(decoding: data, as: UTF8.self)
+        XCTAssertEqual(syntax, """
+        import LocaleSupport
+
+        enum LocalizedStrings: String, LocalizedStringConvertible {
+            case greeting = "Hello World!"
+
+            enum Application: String, LocalizedStringConvertible {
+                case name = "Lingua"
+
+                var prefix: String? {
+                    "application"
+                }
+            }
+
+            enum Hidden: String, LocalizedStringConvertible {
+                case message = ""
+
+                var prefix: String? {
+                    "hidden"
+                }
+            }
+
+            enum Platform: String, LocalizedStringConvertible {
+                case android = "Android"
+                case apple = "Apple"
+                case web = "Web"
+
+                var prefix: String? {
+                    "platform"
+                }
+
+                enum Apple: String, LocalizedStringConvertible {
+                    case mac = "macOS"
+
+                    var prefix: String? {
+                        "platformApple"
+                    }
+                }
+            }
+        }
+        """)
+    }
+
+    func testSingleContentNodes() throws {
+        let nodes = hierarchy.singleContentNodes()
+        XCTAssertEqual(nodes.count, 3)
+        XCTAssertEqual(nodes, [["APPLICATION"], ["HIDDEN"], ["PLATFORM", "APPLE"]])
+    }
+
+    func testCompression() throws {
+        let test = try hierarchy!.compressed()
+        let data = test.localizedStringConvertible()
+        let syntax = String(decoding: data, as: UTF8.self)
+        XCTAssertEqual(syntax, """
+        import LocaleSupport
+
+        enum LocalizedStrings: String, LocalizedStringConvertible {
+            case applicationName = "Lingua"
+            case greeting = "Hello World!"
+            case hiddenMessage = ""
+
+            enum Platform: String, LocalizedStringConvertible {
+                case android = "Android"
+                case apple = "Apple"
+                case appleMac = "macOS"
+                case web = "Web"
+
+                var prefix: String? {
+                    "platform"
+                }
+            }
+        }
+        """)
+    }
+}

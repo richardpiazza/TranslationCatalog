@@ -43,6 +43,9 @@ extension Catalog {
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
 
+        @Flag(help: "Reduce the instance of single-content nodes.")
+        var compressed: Bool = false
+
         @Flag(help: "Additional execution details in the standard output.")
         var verbose: Bool = false
 
@@ -53,7 +56,12 @@ extension Catalog {
             } else {
                 try catalog.expressions()
             }
-            let keyHierarchy = try KeyHierarchy.make(with: expressions)
+
+            var keyHierarchy = try KeyHierarchy.make(with: expressions)
+            if compressed {
+                try keyHierarchy.compress()
+            }
+
             let data = if let name, !name.isEmpty {
                 keyHierarchy.localizedStringConvertible(rootDeclaration: name)
             } else {
