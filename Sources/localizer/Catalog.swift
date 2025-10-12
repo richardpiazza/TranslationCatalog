@@ -74,7 +74,7 @@ extension CatalogCommand {
             catalog = try CoreDataCatalog(url: url)
         #endif
         case .filesystem:
-            catalog = try FilesystemCatalog(url: url)
+            catalog = try DirectoryCatalog(url: url)
         case .sqlite:
             let sqliteCatalog = try SQLiteCatalog(url: url)
             if verbose {

@@ -1,210 +1,32 @@
 import Foundation
 import TranslationCatalog
 
-/// Implementation of `Catalog` the reads/writes data from/to a filesystem directory.
-public class FilesystemCatalog: Catalog {
+protocol FilesystemContainerMedium {}
+extension URL: FilesystemContainerMedium {}
+extension FileWrapper: FilesystemContainerMedium {}
 
-    enum SchemaVersion: Int {
-        case v1 = 1
-        /// Expression Default Value
-        case v2 = 2
-        /// Translation State
-        case v3 = 3
+protocol FilesystemContainer: AnyObject, Catalog {
+    associatedtype Medium: FilesystemContainerMedium
+    
+    var medium: Medium { get }
+    var translationDocuments: [TranslationDocument] { get set }
+    var expressionDocuments: [ExpressionDocument] { get set }
+    var projectDocuments: [ProjectDocument] { get set }
+    
+    func writeDocument(_ document: any Document, using encoder: JSONEncoder) throws
+    func removeDocument(_ document: any Document) throws
+}
 
-        static var current: Self { .v3 }
+extension FilesystemContainer {
+    static var versionPath: String { ".catalog-version" }
+    static var translationsPath: String { "Translations" }
+    static var expressionsPath: String { "Expressions" }
+    static var projectsPath: String { "Projects" }
+    
+    func writeDocument(_ document: any Document, using encoder: JSONEncoder = .filesystem) throws {
+        try writeDocument(document, using: encoder)
     }
-
-    private let fileManager = FileManager.default
-    private let decoder: JSONDecoder = JSONDecoder()
-    private let encoder: JSONEncoder = {
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.sortedKeys, .prettyPrinted]
-        return encoder
-    }()
-
-    private let directory: URL
-    private var translationsDirectory: URL {
-        directory.appending(path: "Translations", directoryHint: .isDirectory)
-    }
-
-    private var expressionsDirectory: URL {
-        directory.appending(path: "Expressions", directoryHint: .isDirectory)
-    }
-
-    private var projectsDirectory: URL {
-        directory.appending(path: "Projects", directoryHint: .isDirectory)
-    }
-
-    private var catalogVersion: URL {
-        directory.appending(path: ".catalog-version", directoryHint: .notDirectory)
-    }
-
-    private var schemaVersion: SchemaVersion {
-        guard fileManager.fileExists(atPath: catalogVersion.path()) else {
-            setSchemaVersion(.v1)
-            return .v1
-        }
-
-        do {
-            let data = try Data(contentsOf: catalogVersion)
-            let rawValue = try decoder.decode(Int.self, from: data)
-            return SchemaVersion(rawValue: rawValue) ?? .v1
-        } catch {
-            return .v1
-        }
-    }
-
-    private var translationDocuments: [TranslationDocument] = []
-    private var expressionDocuments: [ExpressionDocument] = []
-    private var projectDocuments: [ProjectDocument] = []
-
-    public init(url: URL) throws {
-        guard url.hasDirectoryPath else {
-            throw URLError(.unsupportedURL)
-        }
-
-        directory = url
-        try createDirectories()
-        try migrateSchema(from: schemaVersion, to: .current)
-        try loadDocuments()
-    }
-
-    private func createDirectories() throws {
-        if !fileManager.fileExists(atPath: translationsDirectory.path()) {
-            try fileManager.createDirectory(at: translationsDirectory, withIntermediateDirectories: true)
-        }
-        if !fileManager.fileExists(atPath: expressionsDirectory.path()) {
-            try fileManager.createDirectory(at: expressionsDirectory, withIntermediateDirectories: true)
-        }
-        if !fileManager.fileExists(atPath: projectsDirectory.path()) {
-            try fileManager.createDirectory(at: projectsDirectory, withIntermediateDirectories: true)
-        }
-    }
-
-    private func loadDocuments() throws {
-        let translationUrls = try fileManager.contentsOfDirectory(at: translationsDirectory, includingPropertiesForKeys: nil)
-        try translationUrls.forEach {
-            let data = try Data(contentsOf: $0)
-            let translation = try decoder.decode(TranslationDocument.self, from: data)
-            translationDocuments.append(translation)
-        }
-
-        let expressionUrls = try fileManager.contentsOfDirectory(at: expressionsDirectory, includingPropertiesForKeys: nil)
-        try expressionUrls.forEach {
-            let data = try Data(contentsOf: $0)
-            let expression = try decoder.decode(ExpressionDocument.self, from: data)
-            expressionDocuments.append(expression)
-        }
-
-        let projectUrls = try fileManager.contentsOfDirectory(at: projectsDirectory, includingPropertiesForKeys: nil)
-        try projectUrls.forEach {
-            let data = try Data(contentsOf: $0)
-            let project = try decoder.decode(ProjectDocument.self, from: data)
-            projectDocuments.append(project)
-        }
-    }
-
-    private func migrateSchema(from: SchemaVersion, to: SchemaVersion) throws {
-        guard to.rawValue != from.rawValue else {
-            // Migration complete
-            return
-        }
-
-        guard to.rawValue > from.rawValue else {
-            throw CocoaError(.featureUnsupported)
-        }
-
-        switch from {
-        case .v1:
-            var translations: [TranslationDocumentV1] = []
-            let translationUrls = try fileManager.contentsOfDirectory(at: translationsDirectory, includingPropertiesForKeys: nil)
-            try translationUrls.forEach {
-                let data = try Data(contentsOf: $0)
-                let translation = try decoder.decode(TranslationDocumentV1.self, from: data)
-                translations.append(translation)
-            }
-
-            var expressions: [ExpressionDocumentV1] = []
-            let expressionUrls = try fileManager.contentsOfDirectory(at: expressionsDirectory, includingPropertiesForKeys: nil)
-            try expressionUrls.forEach {
-                let data = try Data(contentsOf: $0)
-                let expression = try decoder.decode(ExpressionDocumentV1.self, from: data)
-                expressions.append(expression)
-            }
-
-            for expression in expressions {
-                var translationDocuments = translations.filter { $0.expressionID == expression.id }
-                let index = translationDocuments.firstIndex(where: {
-                    $0.languageCode == expression.defaultLanguage &&
-                        $0.scriptCode == nil &&
-                        $0.regionCode == nil
-                })
-
-                var value: String = ""
-                if let index {
-                    let translation = translationDocuments.remove(at: index)
-                    value = translation.value
-                    try translation.remove(from: translationsDirectory)
-                }
-
-                let document = ExpressionDocument(
-                    id: expression.id,
-                    key: expression.key,
-                    name: expression.name,
-                    defaultLanguage: expression.defaultLanguage,
-                    defaultValue: value,
-                    context: expression.context,
-                    feature: expression.feature
-                )
-
-                try document.write(to: expressionsDirectory, using: encoder)
-            }
-
-            setSchemaVersion(.v2)
-        case .v2:
-            var translations: [TranslationDocumentV1] = []
-            let translationUrls = try fileManager.contentsOfDirectory(at: translationsDirectory, includingPropertiesForKeys: nil)
-            try translationUrls.forEach {
-                let data = try Data(contentsOf: $0)
-                let translation = try decoder.decode(TranslationDocumentV1.self, from: data)
-                translations.append(translation)
-            }
-
-            for translation in translations {
-                let document = TranslationDocument(
-                    id: translation.id,
-                    expressionID: translation.expressionID,
-                    value: translation.value,
-                    languageCode: translation.languageCode,
-                    scriptCode: translation.scriptCode,
-                    regionCode: translation.regionCode,
-                    state: .needsReview
-                )
-
-                try document.write(to: translationsDirectory, using: encoder)
-            }
-
-            setSchemaVersion(.v3)
-        case .v3:
-            return
-        }
-
-        guard let next = SchemaVersion(rawValue: from.rawValue + 1) else {
-            throw CocoaError(.featureUnsupported)
-        }
-
-        try migrateSchema(from: next, to: to)
-    }
-
-    private func setSchemaVersion(_ version: SchemaVersion) {
-        do {
-            let data = try encoder.encode(version.rawValue)
-            try data.write(to: catalogVersion)
-        } catch {
-            print(error)
-        }
-    }
-
+    
     // MARK: - Project
 
     public func projects() throws -> [Project] {
@@ -287,7 +109,7 @@ public class FilesystemCatalog: Catalog {
             expressionIds: Set(expressionIds)
         )
 
-        try document.write(to: projectsDirectory, using: encoder)
+        try writeDocument(document)
         projectDocuments.append(document)
         return id
     }
@@ -308,7 +130,8 @@ public class FilesystemCatalog: Catalog {
             throw CatalogError.unhandledUpdate(action)
         }
 
-        try projectDocuments[index].write(to: projectsDirectory, using: encoder)
+        let document = projectDocuments[index]
+        try writeDocument(document)
     }
 
     public func deleteProject(_ id: Project.ID) throws {
@@ -316,8 +139,8 @@ public class FilesystemCatalog: Catalog {
             throw CatalogError.projectId(id)
         }
 
-        try projectDocuments[index].remove(from: projectsDirectory)
-        projectDocuments.remove(at: index)
+        let document = projectDocuments.remove(at: index)
+        try removeDocument(document)
     }
 
     // MARK: - Expression
@@ -497,7 +320,7 @@ public class FilesystemCatalog: Catalog {
             feature: expression.feature
         )
 
-        try document.write(to: expressionsDirectory, using: encoder)
+        try writeDocument(document)
         expressionDocuments.append(document)
         return id
     }
@@ -524,7 +347,8 @@ public class FilesystemCatalog: Catalog {
             throw CatalogError.unhandledUpdate(action)
         }
 
-        try expressionDocuments[index].write(to: expressionsDirectory, using: encoder)
+        let document = expressionDocuments[index]
+        try writeDocument(document)
     }
 
     public func deleteExpression(_ id: TranslationCatalog.Expression.ID) throws {
@@ -541,8 +365,8 @@ public class FilesystemCatalog: Catalog {
                 return
             }
 
-            try translationDocuments[idx].remove(from: translationsDirectory)
-            translationDocuments.remove(at: idx)
+            let document = translationDocuments.remove(at: idx)
+            try removeDocument(document)
         }
 
         let projectIds = projectDocuments
@@ -555,11 +379,12 @@ public class FilesystemCatalog: Catalog {
             }
 
             projectDocuments[idx].expressionIds.remove(id)
-            try projectDocuments[idx].write(to: projectsDirectory, using: encoder)
+            let document = projectDocuments[idx]
+            try writeDocument(document)
         }
 
-        try expressionDocuments[index].remove(from: expressionsDirectory)
-        expressionDocuments.remove(at: index)
+        let document = expressionDocuments.remove(at: index)
+        try removeDocument(document)
     }
 
     // MARK: - Translation
@@ -661,7 +486,7 @@ public class FilesystemCatalog: Catalog {
             state: translation.state
         )
 
-        try document.write(to: translationsDirectory, using: encoder)
+        try writeDocument(document)
         translationDocuments.append(document)
         return id
     }
@@ -686,7 +511,8 @@ public class FilesystemCatalog: Catalog {
             throw CatalogError.unhandledUpdate(action)
         }
 
-        try translationDocuments[index].write(to: translationsDirectory, using: encoder)
+        let document = translationDocuments[index]
+        try writeDocument(document)
     }
 
     public func deleteTranslation(_ id: Translation.ID) throws {
@@ -694,8 +520,8 @@ public class FilesystemCatalog: Catalog {
             throw CatalogError.translationId(id)
         }
 
-        try translationDocuments[index].remove(from: translationsDirectory)
-        translationDocuments.remove(at: index)
+        let document = translationDocuments.remove(at: index)
+        try removeDocument(document)
     }
 
     // MARK: - Metadata
@@ -713,5 +539,118 @@ public class FilesystemCatalog: Catalog {
         )
 
         return expressionLocales.union(translationLocales)
+    }
+}
+
+extension FilesystemContainer where Medium == URL {
+    func directory(forPath path: String) throws -> URL {
+        let url = medium.appending(path: path, directoryHint: .isDirectory)
+        if !FileManager.default.fileExists(atPath: url.path()) {
+            try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+        }
+        return url
+    }
+    
+    var translationContainer: Medium {
+        get throws {
+            try directory(forPath: Self.translationsPath)
+        }
+    }
+    
+    var expressionContainer: Medium {
+        get throws {
+            try directory(forPath: Self.expressionsPath)
+        }
+    }
+    
+    var projectContainer: Medium {
+        get throws {
+            try directory(forPath: Self.projectsPath)
+        }
+    }
+    
+    func writeDocument(_ document: any Document, using encoder: JSONEncoder) throws {
+        let container = switch document {
+        case is TranslationDocument:
+            try translationContainer
+        case is ExpressionDocument:
+            try expressionContainer
+        case is ProjectDocument:
+            try projectContainer
+        default:
+            throw CocoaError(.fileWriteUnsupportedScheme)
+        }
+        
+        try document.write(to: container, using: encoder)
+    }
+    
+    func removeDocument(_ document: any Document) throws {
+        let container = switch document {
+        case is TranslationDocument, is TranslationDocumentV1:
+            try translationContainer
+        case is ExpressionDocument, is ExpressionDocumentV1:
+            try expressionContainer
+        case is ProjectDocument:
+            try projectContainer
+        default:
+            throw CocoaError(.fileWriteUnsupportedScheme)
+        }
+        
+        try document.remove(from: container)
+    }
+}
+
+extension FilesystemContainer where Medium == FileWrapper {
+    func directory(forPath path: String) -> FileWrapper {
+        guard let wrapper = medium.fileWrappers?[path] else {
+            let directoryWrapper = FileWrapper(directoryWithFileWrappers: [:])
+            directoryWrapper.preferredFilename = path
+            medium.addFileWrapper(directoryWrapper)
+            return directoryWrapper
+        }
+        
+        return wrapper
+    }
+    
+    var translationContainer: Medium {
+        directory(forPath: Self.translationsPath)
+    }
+    
+    var expressionContainer: Medium {
+        directory(forPath: Self.expressionsPath)
+    }
+    
+    var projectContainer: Medium {
+        directory(forPath: Self.projectsPath)
+    }
+    
+    func writeDocument(_ document: any Document, using encoder: JSONEncoder) throws {
+        let container = switch document {
+        case is TranslationDocument:
+            translationContainer
+        case is ExpressionDocument:
+            expressionContainer
+        case is ProjectDocument:
+            projectContainer
+        default:
+            throw CocoaError(.fileWriteUnsupportedScheme)
+        }
+        
+        try document.write(to: container, using: encoder)
+    }
+    
+    func removeDocument(_ document: any Document) throws {
+        let container = switch document {
+        case is TranslationDocument, is TranslationDocumentV1:
+            translationContainer
+        case is ExpressionDocument, is ExpressionDocumentV1:
+            expressionContainer
+        case is ProjectDocument:
+            projectContainer
+        default:
+            throw CocoaError(.fileWriteUnsupportedScheme)
+        }
+
+        try document.remove(from: container)
     }
 }
