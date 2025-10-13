@@ -1,3 +1,4 @@
+import LocaleSupport
 @testable import TranslationCatalog
 @testable import TranslationCatalogIO
 import XCTest
@@ -66,10 +67,34 @@ final class KeyHierarchyTests: XCTestCase {
         XCTAssertEqual(hierarchy.contents.count, 1)
         XCTAssertEqual(hierarchy.contents.keys.sorted(), [["GREETING"]])
         XCTAssertEqual(hierarchy.nodes.count, 4)
-        XCTAssertEqual(hierarchy.nodes.map(\.id), [["APPLICATION"], ["HIDDEN"], ["PLATFORM"], ["ZULU"]])
+        XCTAssertEqual(hierarchy.nodes.map(\.id), [
+            ["APPLICATION"],
+            ["HIDDEN"],
+            ["PLATFORM"],
+            ["ZULU"],
+        ])
     }
 
-    func testSyntax() throws {
+    func testOrphanNodes() throws {
+        let nodes = hierarchy.orphanNodes()
+        XCTAssertEqual(nodes.count, 4)
+        XCTAssertEqual(nodes, [
+            ["APPLICATION"],
+            ["HIDDEN"],
+            ["PLATFORM", "APPLE"],
+            ["ZULU", "TIME"],
+        ])
+    }
+
+    func testPhantomNodes() throws {
+        let nodes = hierarchy.phantomNodes()
+        XCTAssertEqual(nodes.count, 1)
+        XCTAssertEqual(nodes, [
+            ["ZULU"],
+        ])
+    }
+
+    func testLocalizedStringConvertible() throws {
         let data = hierarchy.localizedStringConvertible()
         let syntax = String(decoding: data, as: UTF8.self)
         XCTAssertEqual(syntax, """
@@ -126,23 +151,101 @@ final class KeyHierarchyTests: XCTestCase {
         """)
     }
 
-    func testSingleContentNodes() throws {
-        let nodes = hierarchy.singleContentNodes()
-        XCTAssertEqual(nodes.count, 4)
-        XCTAssertEqual(nodes, [
-            ["APPLICATION"],
-            ["HIDDEN"],
-            ["PLATFORM", "APPLE"],
-            ["ZULU", "TIME"],
-        ])
+    func testPhantomOnlyCompression() throws {
+        let test = try hierarchy!.compressed(mergeOrphans: false)
+        let data = test.localizedStringConvertible()
+        let syntax = String(decoding: data, as: UTF8.self)
+        XCTAssertEqual(syntax, """
+        import LocaleSupport
+
+        enum LocalizedStrings: String, LocalizedStringConvertible {
+            case greeting = "Hello World!"
+
+            enum Application: String, LocalizedStringConvertible {
+                case name = "Lingua"
+
+                var prefix: String? {
+                    "application"
+                }
+            }
+
+            enum Hidden: String, LocalizedStringConvertible {
+                case message = ""
+
+                var prefix: String? {
+                    "hidden"
+                }
+            }
+
+            enum Platform: String, LocalizedStringConvertible {
+                case android = "Android"
+                case apple = "Apple"
+                case web = "Web"
+
+                var prefix: String? {
+                    "platform"
+                }
+
+                enum Apple: String, LocalizedStringConvertible {
+                    case mac = "macOS"
+
+                    var prefix: String? {
+                        "platformApple"
+                    }
+                }
+            }
+
+            enum ZuluTime: String, LocalizedStringConvertible {
+                case definition
+
+                var prefix: String? {
+                    "zuluTime"
+                }
+            }
+        }
+        """)
     }
 
-    func testSingleNodeNodes() throws {
-        let nodes = hierarchy.singleNodeNodes()
-        XCTAssertEqual(nodes.count, 1)
-        XCTAssertEqual(nodes, [
-            ["ZULU"],
-        ])
+    func testOrphanOnlyCompression() throws {
+        let key = LocalizationKey(
+            key: "ZULU_ZONE",
+            defaultValue: "zone"
+        )
+        var test = hierarchy!
+        test.process(["ZULU", "ZONE"], key: key)
+        let data = try test
+            .compressed(mergePhantoms: false)
+            .localizedStringConvertible()
+        let syntax = String(decoding: data, as: UTF8.self)
+        XCTAssertEqual(syntax, """
+        import LocaleSupport
+
+        enum LocalizedStrings: String, LocalizedStringConvertible {
+            case applicationName = "Lingua"
+            case greeting = "Hello World!"
+            case hiddenMessage = ""
+
+            enum Platform: String, LocalizedStringConvertible {
+                case android = "Android"
+                case apple = "Apple"
+                case appleMac = "macOS"
+                case web = "Web"
+
+                var prefix: String? {
+                    "platform"
+                }
+            }
+
+            enum Zulu: String, LocalizedStringConvertible {
+                case timeDefinition = "definition"
+                case zone
+
+                var prefix: String? {
+                    "zulu"
+                }
+            }
+        }
+        """)
     }
 
     func testCompression() throws {

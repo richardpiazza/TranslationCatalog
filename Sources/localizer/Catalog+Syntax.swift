@@ -46,6 +46,12 @@ extension Catalog {
         @Flag(help: "Reduce the instance of single-content nodes.")
         var compressed: Bool = false
 
+        @Flag(help: "Phantom nodes will not be merged when compression enabled.")
+        var excludePhantoms: Bool = false
+
+        @Flag(help: "Orphaned nodes will not be merged when compression enabled.")
+        var excludeOrphans: Bool = false
+
         @Flag(help: "Additional execution details in the standard output.")
         var verbose: Bool = false
 
@@ -59,7 +65,10 @@ extension Catalog {
 
             var keyHierarchy = try KeyHierarchy.make(with: expressions)
             if compressed {
-                try keyHierarchy.compress()
+                try keyHierarchy.compress(
+                    mergePhantoms: !excludePhantoms,
+                    mergeOrphans: !excludeOrphans
+                )
             }
 
             let data = if let name, !name.isEmpty {

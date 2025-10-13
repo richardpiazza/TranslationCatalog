@@ -4,6 +4,9 @@ import TranslationCatalog
 
 public struct KeyHierarchy {
 
+    typealias NodeID = [String]
+    typealias NodePath = [NodeID]
+
     static let reservedTypeTokens: [String] = [
         "Any",
         "Type",
@@ -16,11 +19,6 @@ public struct KeyHierarchy {
         "in",
         "self",
     ]
-
-    enum KeyHierarchyError: Error {
-        case emptyNodeId
-        case nodeNotFound
-    }
 
     public private(set) var id: [String]
     public private(set) var prefix: [String]
@@ -96,97 +94,161 @@ public struct KeyHierarchy {
 
     /// Creates an instance of the hierarchy in which `nodes` that only have a single `contents` item
     /// will be merged into the parent `node`.
-    public func compressed() throws -> KeyHierarchy {
+    public func compressed(
+        mergePhantoms: Bool = true,
+        mergeOrphans: Bool = true,
+    ) throws -> KeyHierarchy {
         var hierarchy = self
-        try hierarchy.compress()
+        try hierarchy.compress(mergePhantoms: mergePhantoms, mergeOrphans: mergeOrphans)
         return hierarchy
     }
 
-    /// Mutates the hierarchy by merging `nodes` with only a single `contents` item into the parent `node`.
-    public mutating func compress() throws {
-        var phantoms = singleNodeNodes()
-        while !phantoms.isEmpty {
-            for phantom in phantoms.reversed() {
-                guard let node = node(phantom) else {
-                    continue
+    /// Mutates the hierarchy by merging phantom or orphaned nodes.
+    public mutating func compress(
+        mergePhantoms: Bool = true,
+        mergeOrphans: Bool = true,
+    ) throws {
+        var lastIteration: Int = 0
+
+        if mergePhantoms {
+            lastIteration = -1
+
+            var phantoms = phantomNodes()
+            while !phantoms.isEmpty {
+                if phantoms.count == lastIteration {
+                    throw CocoaError(.userCancelled, userInfo: [
+                        NSLocalizedDescriptionKey: "Phantoms not reducing",
+                    ])
+                } else {
+                    lastIteration = phantoms.count
                 }
 
-                guard node.nodes.count == 1 else {
+                for phantom in phantoms.reversed() {
+                    guard let node = node(with: phantom) else {
+                        continue
+                    }
+
                     // Only process phantoms which are _still_ valid.
-                    continue
+                    guard let child = node.nodes.first, node.nodes.count == 1, node.contents.isEmpty else {
+                        continue
+                    }
+
+                    let nodeId = phantom + child.id
+                    if let hierarchy = removeNode(nodeId) {
+                        mergeNode(hierarchy, into: phantom)
+                    }
                 }
 
-                guard let child = node.nodes.first else {
-                    continue
-                }
-
-                let nodeId = node.id + child.id
-                let hierarchy = try removeNode(nodeId)
-                try mergeNode(hierarchy, into: phantom)
+                phantoms = phantomNodes()
             }
-
-            phantoms = singleNodeNodes()
         }
 
-        var orphans = singleContentNodes()
-        while !orphans.isEmpty {
-            for orphan in orphans.reversed() {
-                if let node = node(orphan), node.contents.count > 1 {
-                    // Only process orphans which are _still_ orphaned.
-                    continue
+        if mergeOrphans {
+            lastIteration = -1
+
+            var orphans = orphanNodes()
+            while !orphans.isEmpty {
+                if orphans.count == lastIteration {
+                    throw CocoaError(.userCancelled, userInfo: [
+                        NSLocalizedDescriptionKey: "Orphans not reducing",
+                    ])
+                } else {
+                    lastIteration = orphans.count
                 }
 
-                let hierarchy = try removeNode(orphan)
-                var parent = orphan
-                parent.removeLast()
-                try mergeContents(of: hierarchy, into: parent)
-            }
+                for orphan in orphans.reversed() {
+                    guard let node = node(with: orphan) else {
+                        print("Skipped Orphan '\(orphan)'; No Node")
+                        continue
+                    }
 
-            orphans = singleContentNodes()
+                    // Only process orphans which are _still_ valid.
+                    guard node.contents.count == 1 else {
+                        print("Skipped Orphan '\(orphan)'; No Longer Valid")
+                        continue
+                    }
+                    
+                    if let hierarchy = removeNode(orphan) {
+                        var parent = orphan
+                        parent.removeLast()
+                        mergeContents(of: hierarchy, into: parent)
+                    }
+                }
+                
+                orphans = orphanNodes()
+            }
         }
     }
 
-    func node(_ id: [String]) -> KeyHierarchy? {
-        switch id.count {
-        case 0:
+    func node(with id: NodeID) -> KeyHierarchy? {
+        if self.id == id {
             return self
-        case 1:
-            guard let index = nodes.firstIndex(where: { $0.id == id }) else {
-                return nil
-            }
-
-            return nodes[index]
-        default:
-            var path = id
-            let nodeId = [path.removeFirst()]
-            guard let index = nodes.firstIndex(where: { $0.id == nodeId }) else {
-                return nil
-            }
-
-            return nodes[index].node(path)
         }
+
+        if let node = nodes.first(where: { $0.id == id }) {
+            return node
+        }
+
+        var path = id
+        let nodeId = [path.removeFirst()]
+
+        if let node = nodes.first(where: { $0.id == nodeId }) {
+            return node.node(with: path)
+        }
+
+        return nil
     }
 
-    func singleContentNodes(parentNodes: [String] = []) -> [[String]] {
-        var identifiedNodes: [[String]] = []
+    /// Nodes which have no child `nodes`, and have only one `content` item.
+    ///
+    /// In the following, `Time` would be considered an orphan:
+    /// ```swift
+    /// enum LocalizedStrings: String, LocalizedStringConvertible {
+    ///     case greeting = "Hello World!"
+    ///
+    ///     enum Zulu {
+    ///         enum Time: String, LocalizedStringConvertible {
+    ///             case definition
+    ///         }
+    ///     }
+    /// }
+    /// ```
+    func orphanNodes(parentNodes: [String] = []) -> [NodeID] {
+        var identifiedNodes: [NodeID] = []
 
         for node in nodes {
-            if node.contents.count == 1 {
+            if node.nodes.isEmpty && node.contents.count == 1 {
                 identifiedNodes.append(parentNodes + node.id)
             }
 
             identifiedNodes.append(
-                contentsOf: node.singleContentNodes(
+                contentsOf: node.orphanNodes(
                     parentNodes: parentNodes + node.id
                 )
             )
         }
 
-        return identifiedNodes
+        return identifiedNodes.sorted()
     }
 
-    func singleNodeNodes(parentNodes: [String] = []) -> [[String]] {
-        var identifiedNodes: [[String]] = []
+    /// Nodes which have no `contents` but have a single child `nodes`.
+    ///
+    /// This is similar to the practice of having 'phantom' enum types for grouping and/or generic contexts.
+    ///
+    /// In the following, `Zulu` would be a phantom node:
+    /// ```swift
+    /// enum LocalizedStrings: String, LocalizedStringConvertible {
+    ///     case greeting = "Hello World!"
+    ///
+    ///     enum Zulu {
+    ///         enum Time: String, LocalizedStringConvertible {
+    ///             case definition
+    ///         }
+    ///     }
+    /// }
+    /// ```
+    func phantomNodes(parentNodes: [String] = []) -> [NodeID] {
+        var identifiedNodes: [NodeID] = []
 
         for node in nodes {
             if node.contents.isEmpty && node.nodes.count == 1 {
@@ -194,86 +256,80 @@ public struct KeyHierarchy {
             }
 
             identifiedNodes.append(
-                contentsOf: node.singleNodeNodes(
+                contentsOf: node.phantomNodes(
                     parentNodes: parentNodes + node.id
                 )
             )
         }
 
-        return identifiedNodes
+        return identifiedNodes.sorted()
     }
 
-    mutating func removeNode(_ id: [String]) throws -> KeyHierarchy {
-        switch id.count {
-        case 0:
-            throw KeyHierarchyError.emptyNodeId
-        case 1:
-            guard let index = nodes.firstIndex(where: { $0.id == id }) else {
-                throw KeyHierarchyError.nodeNotFound
-            }
-
-            return nodes.remove(at: index)
-        default:
-            var path = id
-            let nodeId = [path.removeFirst()]
-            guard let index = nodes.firstIndex(where: { $0.id == nodeId }) else {
-                throw KeyHierarchyError.nodeNotFound
-            }
-
-            return try nodes[index].removeNode(path)
+    mutating func removeNode(_ nodeId: NodeID) -> KeyHierarchy? {
+        guard !nodeId.isEmpty else {
+            return nil
         }
+
+        var path = nodeId
+        let subNode = [path.removeFirst()]
+
+        if let index = nodes.firstIndex(where: { $0.id == nodeId }) {
+            return nodes.remove(at: index)
+        } else if let index = nodes.firstIndex(where: { $0.id == subNode }) {
+            return nodes[index].removeNode(path)
+        }
+
+        return nil
     }
 
-    mutating func mergeContents(of hierarchy: KeyHierarchy, into id: [String]) throws {
-        switch id.count {
-        case 0:
-            for (key, value) in hierarchy.contents {
-                let newKey = hierarchy.id + key
+    mutating func mergeContents(of node: KeyHierarchy, into nodeId: NodeID) {
+        guard !nodeId.isEmpty else {
+            for (key, value) in node.contents {
+                let newKey = node.id + key
                 contents[newKey] = value
             }
-        case 1:
-            guard let index = nodes.firstIndex(where: { $0.id == id }) else {
-                throw KeyHierarchyError.nodeNotFound
-            }
+            return
+        }
 
-            for (key, value) in hierarchy.contents {
-                let newKey = hierarchy.id + key
+        var path = nodeId
+        let subNode = [path.removeFirst()]
+
+        if let index = nodes.firstIndex(where: { $0.id == nodeId }) {
+            print("Merging Contents of '\(node.id)' into '\(nodes[index].id)'.")
+            for (key, value) in node.contents {
+                let newKey = node.id + key
                 nodes[index].contents[newKey] = value
             }
-        default:
-            var path = id
-            let nodeId = [path.removeFirst()]
-            guard let index = nodes.firstIndex(where: { $0.id == nodeId }) else {
-                throw KeyHierarchyError.nodeNotFound
+        } else if let index = nodes.firstIndex(where: { $0.id == subNode }) {
+            nodes[index].mergeContents(of: node, into: path)
+        } else {
+            // Merge into self
+            print("Merging Contents of '\(node.id)' into SELF '\(id)'.")
+            for (key, value) in node.contents {
+                let newKey = node.id + key
+                contents[newKey] = value
             }
-
-            try nodes[index].mergeContents(of: hierarchy, into: path)
         }
     }
 
-    mutating func mergeNode(_ hierarchy: KeyHierarchy, into id: [String]) throws {
-        switch id.count {
-        case 0:
-            self.id.append(contentsOf: hierarchy.id)
-            prefix = hierarchy.prefix
-            for (key, value) in hierarchy.contents {
-                let newKey = hierarchy.id + key
-                contents[newKey] = value
+    mutating func mergeNode(_ node: KeyHierarchy, into nodeId: NodeID) {
+        guard !nodeId.isEmpty else {
+            id.append(contentsOf: node.id)
+            prefix = node.prefix
+            for (key, value) in node.contents {
+                contents[key] = value
             }
-        case 1:
-            guard let index = nodes.firstIndex(where: { $0.id == id }) else {
-                throw KeyHierarchyError.nodeNotFound
-            }
+            nodes.append(contentsOf: node.nodes)
+            return
+        }
 
-            try nodes[index].mergeNode(hierarchy, into: [])
-        default:
-            var path = id
-            let nodeId = [path.removeFirst()]
-            guard let index = nodes.firstIndex(where: { $0.id == nodeId }) else {
-                throw KeyHierarchyError.nodeNotFound
-            }
+        var path = nodeId
+        let subNode = [path.removeFirst()]
 
-            try nodes[index].mergeNode(hierarchy, into: path)
+        if let index = nodes.firstIndex(where: { $0.id == nodeId }) {
+            nodes[index].mergeNode(node, into: [])
+        } else if let index = nodes.firstIndex(where: { $0.id == subNode }) {
+            nodes[index].mergeNode(node, into: path)
         }
     }
 }
