@@ -104,16 +104,66 @@ public struct KeyHierarchy {
 
     /// Mutates the hierarchy by merging `nodes` with only a single `contents` item into the parent `node`.
     public mutating func compress() throws {
-        let orphans = singleContentNodes()
-        guard !orphans.isEmpty else {
-            return
+        var phantoms = singleNodeNodes()
+        while !phantoms.isEmpty {
+            for phantom in phantoms.reversed() {
+                guard let node = node(phantom) else {
+                    continue
+                }
+
+                guard node.nodes.count == 1 else {
+                    // Only process phantoms which are _still_ valid.
+                    continue
+                }
+
+                guard let child = node.nodes.first else {
+                    continue
+                }
+
+                let nodeId = node.id + child.id
+                let hierarchy = try removeNode(nodeId)
+                try mergeNode(hierarchy, into: phantom)
+            }
+
+            phantoms = singleNodeNodes()
         }
 
-        for orphan in orphans.reversed() {
-            let hierarchy = try removeNode(orphan)
-            var parent = orphan
-            parent.removeLast()
-            try mergeContents(of: hierarchy, into: parent)
+        var orphans = singleContentNodes()
+        while !orphans.isEmpty {
+            for orphan in orphans.reversed() {
+                if let node = node(orphan), node.contents.count > 1 {
+                    // Only process orphans which are _still_ orphaned.
+                    continue
+                }
+
+                let hierarchy = try removeNode(orphan)
+                var parent = orphan
+                parent.removeLast()
+                try mergeContents(of: hierarchy, into: parent)
+            }
+
+            orphans = singleContentNodes()
+        }
+    }
+
+    func node(_ id: [String]) -> KeyHierarchy? {
+        switch id.count {
+        case 0:
+            return self
+        case 1:
+            guard let index = nodes.firstIndex(where: { $0.id == id }) else {
+                return nil
+            }
+
+            return nodes[index]
+        default:
+            var path = id
+            let nodeId = [path.removeFirst()]
+            guard let index = nodes.firstIndex(where: { $0.id == nodeId }) else {
+                return nil
+            }
+
+            return nodes[index].node(path)
         }
     }
 
@@ -127,6 +177,24 @@ public struct KeyHierarchy {
 
             identifiedNodes.append(
                 contentsOf: node.singleContentNodes(
+                    parentNodes: parentNodes + node.id
+                )
+            )
+        }
+
+        return identifiedNodes
+    }
+
+    func singleNodeNodes(parentNodes: [String] = []) -> [[String]] {
+        var identifiedNodes: [[String]] = []
+
+        for node in nodes {
+            if node.contents.isEmpty && node.nodes.count == 1 {
+                identifiedNodes.append(parentNodes + node.id)
+            }
+
+            identifiedNodes.append(
+                contentsOf: node.singleNodeNodes(
                     parentNodes: parentNodes + node.id
                 )
             )
@@ -180,6 +248,32 @@ public struct KeyHierarchy {
             }
 
             try nodes[index].mergeContents(of: hierarchy, into: path)
+        }
+    }
+
+    mutating func mergeNode(_ hierarchy: KeyHierarchy, into id: [String]) throws {
+        switch id.count {
+        case 0:
+            self.id.append(contentsOf: hierarchy.id)
+            prefix = hierarchy.prefix
+            for (key, value) in hierarchy.contents {
+                let newKey = hierarchy.id + key
+                contents[newKey] = value
+            }
+        case 1:
+            guard let index = nodes.firstIndex(where: { $0.id == id }) else {
+                throw KeyHierarchyError.nodeNotFound
+            }
+
+            try nodes[index].mergeNode(hierarchy, into: [])
+        default:
+            var path = id
+            let nodeId = [path.removeFirst()]
+            guard let index = nodes.firstIndex(where: { $0.id == nodeId }) else {
+                throw KeyHierarchyError.nodeNotFound
+            }
+
+            try nodes[index].mergeNode(hierarchy, into: path)
         }
     }
 }

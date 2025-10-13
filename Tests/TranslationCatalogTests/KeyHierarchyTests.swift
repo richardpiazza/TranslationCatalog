@@ -47,6 +47,12 @@ final class KeyHierarchyTests: XCTestCase {
             value: "Web",
             languageCode: .english
         ),
+        Expression(
+            id: UUID(uuidString: "185CA880-88DB-4CA6-98A4-FD544B908900")!,
+            key: "ZULU_TIME_DEFINITION",
+            value: "definition",
+            languageCode: .english
+        )
     ]
 
     var hierarchy: KeyHierarchy!
@@ -59,8 +65,8 @@ final class KeyHierarchyTests: XCTestCase {
     func testHierarchyGeneration() throws {
         XCTAssertEqual(hierarchy.contents.count, 1)
         XCTAssertEqual(hierarchy.contents.keys.sorted(), [["GREETING"]])
-        XCTAssertEqual(hierarchy.nodes.count, 3)
-        XCTAssertEqual(hierarchy.nodes.map(\.id), [["APPLICATION"], ["HIDDEN"], ["PLATFORM"]])
+        XCTAssertEqual(hierarchy.nodes.count, 4)
+        XCTAssertEqual(hierarchy.nodes.map(\.id), [["APPLICATION"], ["HIDDEN"], ["PLATFORM"], ["ZULU"]])
     }
 
     func testSyntax() throws {
@@ -105,14 +111,38 @@ final class KeyHierarchyTests: XCTestCase {
                     }
                 }
             }
+        
+            enum Zulu {
+
+                enum Time: String, LocalizedStringConvertible {
+                    case definition
+
+                    var prefix: String? {
+                        "zuluTime"
+                    }
+                }
+            }
         }
         """)
     }
 
     func testSingleContentNodes() throws {
         let nodes = hierarchy.singleContentNodes()
-        XCTAssertEqual(nodes.count, 3)
-        XCTAssertEqual(nodes, [["APPLICATION"], ["HIDDEN"], ["PLATFORM", "APPLE"]])
+        XCTAssertEqual(nodes.count, 4)
+        XCTAssertEqual(nodes, [
+            ["APPLICATION"],
+            ["HIDDEN"],
+            ["PLATFORM", "APPLE"],
+            ["ZULU", "TIME"],
+        ])
+    }
+
+    func testSingleNodeNodes() throws {
+        let nodes = hierarchy.singleNodeNodes()
+        XCTAssertEqual(nodes.count, 1)
+        XCTAssertEqual(nodes, [
+            ["ZULU"],
+        ])
     }
 
     func testCompression() throws {
@@ -126,6 +156,7 @@ final class KeyHierarchyTests: XCTestCase {
             case applicationName = "Lingua"
             case greeting = "Hello World!"
             case hiddenMessage = ""
+            case zuluTimeDefinition = "definition"
 
             enum Platform: String, LocalizedStringConvertible {
                 case android = "Android"

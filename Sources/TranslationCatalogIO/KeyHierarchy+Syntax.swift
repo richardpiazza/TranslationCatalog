@@ -107,13 +107,19 @@ extension EnumCaseDeclSyntax {
             TokenSyntax(stringLiteral: key)
         }
 
+        let rawValue: InitializerClauseSyntax? = if key != value {
+            InitializerClauseSyntax(value: StringLiteralExprSyntax(content: value))
+        } else {
+            nil
+        }
+
         return EnumCaseDeclSyntax(
             leadingTrivia: trivia
         ) {
             EnumCaseElementListSyntax {
                 EnumCaseElementSyntax(
                     name: token,
-                    rawValue: InitializerClauseSyntax(value: StringLiteralExprSyntax(content: value))
+                    rawValue: rawValue
                 )
             }
         }
