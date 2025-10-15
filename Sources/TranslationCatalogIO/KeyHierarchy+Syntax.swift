@@ -20,7 +20,7 @@ public extension KeyHierarchy {
     }
 
     internal var declName: String {
-        id.map { $0.capitalized }.joined()
+        id.map { $0.joined().capitalized }.joined()
     }
 }
 
@@ -68,22 +68,22 @@ extension EnumDeclSyntax {
             name: TokenSyntax(stringLiteral: name ?? hierarchy.declName),
             inheritanceClause: inheritanceClause
         ) {
-            for (path, key) in hierarchy.contents.sorted(by: { $0.key < $1.key }) {
+            for (path, key) in hierarchy.contents.sorted(by: { $0.key.flatJoined() < $1.key.flatJoined() }) {
                 EnumCaseDeclSyntax.stringEnumerationCase(
-                    key: path.lowerCamelCased,
+                    key: path.flatMap { $0 }.lowerCamelCased,
                     value: key.defaultValue,
                     comment: key.comment
                 )
             }
 
             if !hierarchy.contents.isEmpty {
-                let prefix = hierarchy.prefix.lowerCamelCased
+                let prefix = (hierarchy.parent + hierarchy.id).flatMap { $0 }.lowerCamelCased
                 if !prefix.isEmpty {
                     VariableDeclSyntax.stringValuePrefix(prefix)
                 }
             }
 
-            let nodes = hierarchy.nodes.sorted(by: { $0.id < $1.id })
+            let nodes = hierarchy.nodes.sorted(by: { $0.id.flatMap { $0 } < $1.id.flatMap { $0 } })
             for node in nodes {
                 stringEnumerationDecl(for: node)
             }

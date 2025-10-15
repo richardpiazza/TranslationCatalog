@@ -63,7 +63,7 @@ extension Catalog {
                 try catalog.expressions()
             }
 
-            var keyHierarchy = try KeyHierarchy.make(with: expressions)
+            var keyHierarchy = try LocalizationKeyHierarchy.make(with: expressions)
             if compressed {
                 try keyHierarchy.compress(
                     mergePhantoms: !excludePhantoms,

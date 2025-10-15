@@ -3,7 +3,7 @@ import LocaleSupport
 @testable import TranslationCatalogIO
 import XCTest
 
-final class KeyHierarchyTests: XCTestCase {
+final class LocalizationKeyHierarchyTests: XCTestCase {
 
     let expressions: [TranslationCatalog.Expression] = [
         Expression(
@@ -56,24 +56,24 @@ final class KeyHierarchyTests: XCTestCase {
         )
     ]
 
-    var hierarchy: KeyHierarchy!
+    var hierarchy: LocalizationKeyHierarchy!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        hierarchy = try KeyHierarchy.make(with: expressions)
+        hierarchy = try LocalizationKeyHierarchy.make(with: expressions)
     }
 
     func testHierarchyGeneration() throws {
         XCTAssertEqual(hierarchy.contents.count, 1)
         XCTAssertEqual(Array(hierarchy.contents.keys), [
-            [["GREETING"]],
+            ["GREETING"],
         ])
         XCTAssertEqual(hierarchy.nodes.count, 4)
         XCTAssertEqual(hierarchy.nodes.map(\.id), [
-            [["APPLICATION"]],
-            [["HIDDEN"]],
-            [["PLATFORM"]],
-            [["ZULU"]],
+            ["APPLICATION"],
+            ["HIDDEN"],
+            ["PLATFORM"],
+            ["ZULU"],
         ])
         XCTAssertFalse(hierarchy.isOrphan)
         XCTAssertTrue(hierarchy.containsOrphans)
@@ -81,13 +81,19 @@ final class KeyHierarchyTests: XCTestCase {
         XCTAssertTrue(hierarchy.containsPhantoms)
     }
 
-    func testNodeWithId() throws {
-        var node = hierarchy.node(with: [["UNKNOWN"]])
+    func testNodeAtPath() throws {
+        var node = hierarchy.node(at: [["UNKNOWN"]])
         XCTAssertNil(node)
-        node = hierarchy.node(with: [["HIDDEN"]])
+        node = hierarchy.node(at: [["HIDDEN"]])
         XCTAssertNotNil(node)
-        node = hierarchy.node(with: [["PLATFORM"], ["APPLE"]])
+        node = hierarchy.node(at: [["PLATFORM"], ["APPLE"]])
         XCTAssertNotNil(node)
+    }
+
+    func testRemoveNodeAtPath() throws {
+        let node = hierarchy.removeNode(at: [["PLATFORM"]])
+        XCTAssertNotNil(node)
+        XCTAssertEqual(hierarchy.nodes.count, 3)
     }
 
     func testOrphanNodes() throws {
@@ -227,7 +233,7 @@ final class KeyHierarchyTests: XCTestCase {
             defaultValue: "zone"
         )
         var test = hierarchy!
-        test.processKey(key, path: [["ZULU"], ["ZONE"]])
+        try test.processKey(key, path: [["ZULU"], ["ZONE"]])
         let data = try test
             .compressed(mergePhantoms: false)
             .localizedStringConvertible()
