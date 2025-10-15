@@ -19,6 +19,10 @@ public extension LocalizationKeyHierarchy {
         return dataStream.data
     }
 
+    func syntaxTree() -> String {
+        String(decoding: localizedStringConvertible(), as: UTF8.self)
+    }
+
     internal var declName: String {
         id.map { $0.capitalized }.joined()
     }

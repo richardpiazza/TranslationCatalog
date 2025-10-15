@@ -95,7 +95,7 @@ public struct LocalizationKeyHierarchy {
         return hierarchy
     }
 
-    mutating func processKey(_ key: LocalizationKey, path: KeyNodePath) throws {
+    private mutating func processKey(_ key: LocalizationKey, path: KeyNodePath) throws {
         // key.key: "Welcome_Screen_Greeting"
         // path: [["Welcome"], ["Screen"], ["Greeting"]]
         guard !path.isEmpty else {
@@ -165,8 +165,8 @@ public struct LocalizationKeyHierarchy {
         }
 
         var _parent = parent
-        if _parent == [[]] {
-            _parent.removeAll()
+        if _parent.first == [] {
+            _parent.removeFirst()
         }
         _parent.append(id)
 
@@ -229,18 +229,18 @@ public struct LocalizationKeyHierarchy {
     ///     }
     /// }
     /// ```
-    func orphanNodes(parent: KeyNodePath = []) -> [KeyNodePath] {
+    func orphanNodes(breadcrumb: KeyNodePath = []) -> [KeyNodePath] {
         var identifiedNodes: [KeyNodePath] = []
 
         for node in nodes {
-            let path = parent + [node.id]
+            let path = breadcrumb + [node.id]
 
             if node.isOrphan {
                 identifiedNodes.append(path)
             }
 
             if node.containsOrphans {
-                identifiedNodes.append(contentsOf: node.orphanNodes(parent: path))
+                identifiedNodes.append(contentsOf: node.orphanNodes(breadcrumb: path))
             }
         }
 
@@ -263,18 +263,18 @@ public struct LocalizationKeyHierarchy {
     ///     }
     /// }
     /// ```
-    func phantomNodes(parent: KeyNodePath = []) -> [KeyNodePath] {
+    func phantomNodes(breadcrumb: KeyNodePath = []) -> [KeyNodePath] {
         var identifiedNodes: [KeyNodePath] = []
 
         for node in nodes {
-            let path = parent + [node.id]
+            let path = breadcrumb + [node.id]
 
             if node.isPhantom {
                 identifiedNodes.append(path)
             }
 
             if node.containsPhantoms {
-                identifiedNodes.append(contentsOf: node.phantomNodes(parent: path))
+                identifiedNodes.append(contentsOf: node.phantomNodes(breadcrumb: path))
             }
         }
 
@@ -368,7 +368,7 @@ public struct LocalizationKeyHierarchy {
             }
 
             for var subNode in node.nodes {
-                subNode.parent = parent
+                subNode.parent = parent + [newId]
                 nodes.append(subNode)
             }
 
@@ -398,6 +398,11 @@ public struct LocalizationKeyHierarchy {
                 lastIteration = orphans.count
             }
 
+//            print("Orphan Nodes")
+//            orphans.forEach {
+//                print("\t\($0)")
+//            }
+
             for path in orphans.reversed() {
                 guard let orphan = node(at: path) else {
 //                    print("No node at path '\(path)'")
@@ -415,12 +420,10 @@ public struct LocalizationKeyHierarchy {
                     continue
                 }
 
-                var parent = node.parent
-                if parent == [[]] {
-                    parent.removeAll()
-                }
+                var _parent = path
+                _parent.removeLast()
 
-                mergeContents(of: node, intoNodeAt: parent)
+                mergeContents(of: node, intoNodeAt: _parent)
             }
 
             orphans = orphanNodes()
