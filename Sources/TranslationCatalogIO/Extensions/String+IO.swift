@@ -76,23 +76,3 @@ extension String {
         return output
     }
 }
-
-extension [[String]] {
-    func flatJoined() -> String {
-        map { $0.joined() }.joined()
-    }
-
-    func sorted() -> Self {
-        sorted { lhs, rhs in
-            lhs.joined() < rhs.joined()
-        }
-    }
-}
-
-extension [[[String]]] {
-    func sorted() -> Self {
-        sorted { lhs, rhs in
-            lhs.flatJoined() < rhs.flatJoined()
-        }
-    }
-}

@@ -4,18 +4,13 @@ import TranslationCatalog
 
 public struct KeyHierarchy {
 
-    /// Represents a path of multi-part strings.
-    ///
-    /// The human readable path `Strings > EnumName > SubType > Category` would be represented by:
-    /// ```swift
-    /// [
-    ///   ["Strings"],
-    ///   ["Enum", "Name"],
-    ///   ["Sub", "Type"],
-    ///   ["Category"]
-    /// ]
-    /// ```
-    public typealias NodeID = [[String]]
+    enum HierarchyError: Error {
+        case emptyNodeID
+        case emptyNodePath
+        case reservedType(Any.Type)
+        case reservedTypeToken(String)
+        case unexpectedNodeIdComponents
+    }
 
     static let reservedTypeTokens: [String] = [
         "Any",
@@ -30,12 +25,13 @@ public struct KeyHierarchy {
         "self",
     ]
 
-    public private(set) var id: NodeID
-    public private(set) var parent: NodeID
-    public private(set) var contents: [NodeID: LocalizationKey]
+    public private(set) var id: KeyNodeID
+    public private(set) var parent: KeyNodePath
+    public private(set) var contents: [KeyNodeID: LocalizationKey]
     public private(set) var nodes: [KeyHierarchy]
 
-    private let nodeSort = NodePathSortComparator()
+    private let pathSort = NodePathSortComparator()
+    private let idSort = NodeIDSortComparator()
 
     var isPhantom: Bool {
         contents.isEmpty && nodes.count <= 1
@@ -53,10 +49,20 @@ public struct KeyHierarchy {
         nodes.contains(where: { $0.isOrphan || $0.containsOrphans })
     }
 
+    var sortedContentsKeys: [KeyNodeID] {
+        contents.keys.sorted(using: idSort)
+    }
+
+    var sortedNodes: [KeyHierarchy] {
+        nodes.sorted { lhs, rhs in
+            idSort.compare(lhs.id, rhs.id) == .orderedAscending
+        }
+    }
+
     public init(
-        id: NodeID = [],
-        parent: NodeID = [],
-        contents: [NodeID: LocalizationKey] = [:],
+        id: KeyNodeID = [],
+        parent: KeyNodePath = [],
+        contents: [KeyNodeID: LocalizationKey] = [:],
         nodes: [KeyHierarchy] = []
     ) {
         self.id = id
@@ -70,9 +76,9 @@ public struct KeyHierarchy {
 
         try expressions
             .map {
-                LocalizationKey(
+                try LocalizationKey(
                     key: $0.key,
-                    defaultValue: try $0.defaultValue.encodingDarwinStrings(),
+                    defaultValue: $0.defaultValue.encodingDarwinStrings(),
                     comment: $0.context
                 )
             }
@@ -82,53 +88,194 @@ public struct KeyHierarchy {
                     .map {
                         [$0]
                     }
-                hierarchy.processKey(key, path: id)
+
+                try hierarchy.processKey(key, path: id)
             }
 
         return hierarchy
     }
 
-    mutating func processKey(_ key: LocalizationKey, path nodeId: NodeID) {
-        guard !nodeId.isEmpty else {
-            return
+    mutating func processKey(_ key: LocalizationKey, path: KeyNodePath) throws {
+        guard !path.isEmpty else {
+            throw HierarchyError.emptyNodePath
         }
 
-        guard nodeId.count > 1 else {
+        var components = path
+        let nodeId = components.removeFirst()
+
+        guard nodeId.count == 1 else {
+            throw HierarchyError.unexpectedNodeIdComponents
+        }
+
+        guard let component = nodeId.first else {
+            throw HierarchyError.unexpectedNodeIdComponents
+        }
+
+        guard !components.isEmpty else {
+            if let token = Self.reservedTypeTokens.first(where: { $0.caseInsensitiveCompare(component) == .orderedSame }) {
+                throw HierarchyError.reservedTypeToken(token)
+            }
+
+            if Int(component) != nil {
+                throw HierarchyError.reservedType(Int.self)
+            }
+
             contents[nodeId] = key
             return
         }
 
-        var path = nodeId
-        let component = path.removeFirst()
+        let _nodeId: KeyNodeID
+        let _path: KeyNodePath
 
-        // Component is reserved.
-        if let first = component.first, Self.reservedTypeTokens.contains(where: { $0.caseInsensitiveCompare(first) == .orderedSame }) {
-            contents[nodeId] = key
+        let nextNodeId = components.removeFirst()
+
+        guard nextNodeId.count == 1 else {
+            throw HierarchyError.unexpectedNodeIdComponents
+        }
+
+        guard let nextComponent = nextNodeId.first else {
+            throw HierarchyError.unexpectedNodeIdComponents
+        }
+
+        let typeReservation = Self.reservedTypeTokens.contains(where: { $0.caseInsensitiveCompare(component) == .orderedSame })
+        let integerCheck = Int(nextComponent) != nil
+
+        switch (typeReservation, integerCheck) {
+        case (false, false):
+            _nodeId = nodeId
+            _path = [nextNodeId] + components
+        default:
+            _nodeId = [component, nextComponent]
+            _path = components
+        }
+
+        guard !_path.isEmpty else {
+            contents[_nodeId] = key
             return
         }
 
-        // (Next) Component is Integer
-        if let nextElement = path.first?.first, Int(nextElement) != nil {
-            contents[nodeId] = key
-            return
+        var _parent = parent
+        if _parent.first == [] {
+            _parent.removeFirst()
         }
+        _parent.append(id)
 
-        let id = [component]
-
-        if let index = nodes.firstIndex(where: { $0.id == id }) {
-            nodes[index].processKey(key, path: path)
+        if let index = nodes.firstIndex(where: { $0.id == _nodeId }) {
+            try nodes[index].processKey(key, path: _path)
         } else {
-            var node = KeyHierarchy(id: id, parent: self.id)
-            node.processKey(key, path: path)
+            var node = KeyHierarchy(id: _nodeId, parent: _parent)
+            if !_path.isEmpty {
+                try node.processKey(key, path: _path)
+            }
             nodes.append(node)
         }
+    }
+
+    func node(at path: KeyNodePath) -> KeyHierarchy? {
+        guard !path.isEmpty else {
+            return self
+        }
+
+        var components = path
+        let nodeId = components.removeFirst()
+
+        guard let node = nodes.first(where: { $0.id == nodeId }) else {
+            return nil
+        }
+
+        return node.node(at: components)
+    }
+
+    mutating func removeNode(at path: KeyNodePath) -> KeyHierarchy? {
+        guard !path.isEmpty else {
+            return nil
+        }
+
+        var components = path
+        let nodeId = components.removeFirst()
+
+        guard let index = nodes.firstIndex(where: { $0.id == nodeId }) else {
+            return nil
+        }
+
+        guard !components.isEmpty else {
+            return nodes.remove(at: index)
+        }
+
+        return nodes[index].removeNode(at: components)
+    }
+
+    /// Nodes which have no child `nodes`, and have only one `content` item.
+    ///
+    /// In the following, `Time` would be considered an orphan:
+    /// ```swift
+    /// enum LocalizedStrings: String, LocalizedStringConvertible {
+    ///     case greeting = "Hello World!"
+    ///
+    ///     enum Zulu {
+    ///         enum Time: String, LocalizedStringConvertible {
+    ///             case definition
+    ///         }
+    ///     }
+    /// }
+    /// ```
+    func orphanNodes(breadcrumb: KeyNodePath = []) -> [KeyNodePath] {
+        var identifiedNodes: [KeyNodePath] = []
+
+        for node in nodes {
+            let path = breadcrumb + [node.id]
+
+            if node.isOrphan {
+                identifiedNodes.append(path)
+            }
+
+            if node.containsOrphans {
+                identifiedNodes.append(contentsOf: node.orphanNodes(breadcrumb: path))
+            }
+        }
+
+        return identifiedNodes.sorted(using: pathSort)
+    }
+
+    /// Nodes which have no `contents` but have a single child `nodes`.
+    ///
+    /// This is similar to the practice of having 'phantom' enum types for grouping and/or generic contexts.
+    ///
+    /// In the following, `Zulu` would be a phantom node:
+    /// ```swift
+    /// enum LocalizedStrings: String, LocalizedStringConvertible {
+    ///     case greeting = "Hello World!"
+    ///
+    ///     enum Zulu {
+    ///         enum Time: String, LocalizedStringConvertible {
+    ///             case definition
+    ///         }
+    ///     }
+    /// }
+    /// ```
+    func phantomNodes(breadcrumb: KeyNodePath = []) -> [KeyNodePath] {
+        var identifiedNodes: [KeyNodePath] = []
+
+        for node in nodes {
+            let path = breadcrumb + [node.id]
+
+            if node.isPhantom {
+                identifiedNodes.append(path)
+            }
+
+            if node.containsPhantoms {
+                identifiedNodes.append(contentsOf: node.phantomNodes(breadcrumb: path))
+            }
+        }
+
+        return identifiedNodes.sorted(using: pathSort)
     }
 
     /// Creates an instance of the hierarchy in which `nodes` that only have a single `contents` item
     /// will be merged into the parent `node`.
     public func compressed(
         mergePhantoms: Bool = true,
-        mergeOrphans: Bool = true,
+        mergeOrphans: Bool = true
     ) throws -> KeyHierarchy {
         var hierarchy = self
         try hierarchy.compress(
@@ -141,10 +288,10 @@ public struct KeyHierarchy {
     /// Mutates the hierarchy by merging phantom or orphaned nodes.
     public mutating func compress(
         mergePhantoms: Bool = true,
-        mergeOrphans: Bool = true,
+        mergeOrphans: Bool = true
     ) throws {
         if mergePhantoms {
-            try self.mergePhantoms2()
+            try self.mergePhantoms()
         }
 
         if mergeOrphans {
@@ -165,90 +312,58 @@ public struct KeyHierarchy {
                 lastIteration = phantoms.count
             }
 
-            for id in phantoms.reversed() {
-                guard let phantom = node(with: id) else {
-                    print("No Node With ID '\(id)'")
+            for path in phantoms.reversed() {
+                guard let phantom = node(at: path) else {
                     continue
                 }
 
                 guard phantom.isPhantom else {
-                    print("Node '\(id)' is no longer phantom.")
                     continue
                 }
 
                 guard let subNode = phantom.nodes.first else {
-                    print("Node '\(id)' has no sub-nodes.")
                     continue
                 }
 
-                if let node = removeNode(with: subNode.parent + subNode.id) {
-                    mergeNode(node, into: id)
-                } else {
-                    print("Failed to remove node with ID '\(subNode.parent + subNode.id)'")
+                let subNodePath = subNode.parent + [subNode.id]
+
+                guard let node = removeNode(at: subNodePath) else {
+                    continue
                 }
+
+                mergeNode(node, intoNodeAt: path)
             }
 
             phantoms = phantomNodes()
         }
     }
 
-    mutating func mergePhantoms2() throws {
-        var lastIteration: NodeID? = nil
+    mutating func mergeNode(_ node: KeyHierarchy, intoNodeAt path: KeyNodePath) {
+        guard !path.isEmpty else {
+            var newId = id
+            newId.append(contentsOf: node.id)
+            id = newId
 
-        while let id = nextPhantom() {
-            print("Processing Phantom Node: \(id)")
-            if id == lastIteration {
-                throw CocoaError(.userCancelled, userInfo: [
-                    NSLocalizedDescriptionKey: "Infinite Loop Detected - Phantoms not reducing",
-                ])
-            } else {
-                lastIteration = id
+            for (nodeId, key) in node.contents {
+                contents[nodeId] = key
             }
 
-            guard let phantom = node(with: id) else {
-                print("No Node With ID '\(id)'")
-                continue
-            }
-
-            guard phantom.isPhantom else {
-                print("Node '\(id)' is no longer phantom.")
-                continue
-            }
-
-            guard let subNode = phantom.nodes.first else {
-                print("Node '\(id)' has no sub-nodes.")
-                continue
-            }
-
-            if let node = removeNode(with: id + subNode.id) {
-                mergeNode(node, into: id)
-            } else {
-                print("Failed to remove node with ID '\(id + subNode.id)'")
-            }
-        }
-    }
-
-    mutating func mergeNode(_ node: KeyHierarchy, into nodeId: NodeID) {
-        guard !nodeId.isEmpty else {
-            id = id + node.id
-            for (key, value) in node.contents {
-                contents[key] = value
-            }
             for var subNode in node.nodes {
-                subNode.parent = parent
+                subNode.parent = parent + [newId]
                 nodes.append(subNode)
             }
+
             return
         }
 
-        var path = nodeId
-        let subNode = [path.removeFirst()]
+        var components = path
+        let nodeId = components.removeFirst()
 
-        if let index = nodes.firstIndex(where: { $0.id == nodeId }) {
-            nodes[index].mergeNode(node, into: [])
-        } else if let index = nodes.firstIndex(where: { $0.id == subNode }) {
-            nodes[index].mergeNode(node, into: path)
+        guard let index = nodes.firstIndex(where: { $0.id == nodeId }) else {
+            return
         }
+
+        nodes[index].mergeNode(node, intoNodeAt: components)
     }
 
     mutating func mergeOrphans() throws {
@@ -264,157 +379,48 @@ public struct KeyHierarchy {
                 lastIteration = orphans.count
             }
 
-            for id in orphans.reversed() {
-                guard let orphan = node(with: id), orphan.isOrphan else {
-                    // Only process orphans which are _still_ valid.
+            for path in orphans.reversed() {
+                guard let orphan = node(at: path) else {
                     continue
                 }
 
-                if let hierarchy = removeNode(with: orphan.parent + orphan.id) {
-                    mergeContents(of: hierarchy, into: orphan.parent)
+                guard orphan.isOrphan else {
+                    continue
                 }
+
+                guard let node = removeNode(at: path) else {
+                    continue
+                }
+
+                var _parent = path
+                _parent.removeLast()
+
+                mergeContents(of: node, intoNodeAt: _parent)
             }
 
             orphans = orphanNodes()
         }
     }
 
-    mutating func mergeContents(of node: KeyHierarchy, into nodeId: NodeID) {
-        guard !nodeId.isEmpty else {
-            for (key, value) in node.contents {
-                let newKey = node.id + key
-                contents[newKey] = value
+    mutating func mergeContents(of node: KeyHierarchy, intoNodeAt path: KeyNodePath) {
+        guard !path.isEmpty else {
+            for (nodeId, key) in node.contents {
+                var newId = nodeId
+                newId.insert(contentsOf: node.id, at: 0)
+
+                contents[newId] = key
             }
+
             return
         }
 
-        var path = nodeId
-        let subNode = [path.removeFirst()]
+        var components = path
+        let nodeId = components.removeFirst()
 
-        if let index = nodes.firstIndex(where: { $0.id == nodeId }) {
-            nodes[index].mergeContents(of: node, into: [])
-        } else if let index = nodes.firstIndex(where: { $0.id == subNode }) {
-            nodes[index].mergeContents(of: node, into: path)
-        }
-    }
-
-    mutating func removeNode(with id: NodeID) -> KeyHierarchy? {
-        guard !id.isEmpty else {
-            return nil
+        guard let index = nodes.firstIndex(where: { $0.id == nodeId }) else {
+            return
         }
 
-        var path = id
-        let nodeId = [path.removeFirst()]
-
-        if let index = nodes.firstIndex(where: { $0.id == id }) {
-            return nodes.remove(at: index)
-        } else if let index = nodes.firstIndex(where: { $0.id == nodeId }) {
-            return nodes[index].removeNode(with: path)
-        }
-
-        return nil
-    }
-
-    func node(with id: NodeID) -> KeyHierarchy? {
-        guard self.id != id && !id.isEmpty else {
-            return self
-        }
-
-        var path = id
-        let nodeId = [path.removeFirst()]
-
-        for node in nodes {
-            if let match = node.node(with: id) {
-                return match
-            }
-
-            if node.id == nodeId {
-                return node.node(with: path)
-            }
-        }
-
-        return nil
-    }
-
-    func nextPhantom(parent: NodeID = []) -> NodeID? {
-        for node in nodes {
-            let path = parent + node.id
-
-            if node.isPhantom {
-                return path
-            }
-
-            if node.containsPhantoms {
-                return node.nextPhantom(parent: path)
-            }
-        }
-
-        return nil
-    }
-
-    /// Nodes which have no `contents` but have a single child `nodes`.
-    ///
-    /// This is similar to the practice of having 'phantom' enum types for grouping and/or generic contexts.
-    ///
-    /// In the following, `Zulu` would be a phantom node:
-    /// ```swift
-    /// enum LocalizedStrings: String, LocalizedStringConvertible {
-    ///     case greeting = "Hello World!"
-    ///
-    ///     enum Zulu {
-    ///         enum Time: String, LocalizedStringConvertible {
-    ///             case definition
-    ///         }
-    ///     }
-    /// }
-    /// ```
-    func phantomNodes(parent: NodeID = []) -> [NodeID] {
-        var identifiedNodes: [NodeID] = []
-
-        for node in nodes {
-            let path = parent + node.id
-
-            if node.isPhantom {
-                identifiedNodes.append(path)
-            }
-
-            if node.containsPhantoms {
-                identifiedNodes.append(contentsOf: node.phantomNodes(parent: path))
-            }
-        }
-
-        return identifiedNodes.sorted(using: nodeSort)
-    }
-
-    /// Nodes which have no child `nodes`, and have only one `content` item.
-    ///
-    /// In the following, `Time` would be considered an orphan:
-    /// ```swift
-    /// enum LocalizedStrings: String, LocalizedStringConvertible {
-    ///     case greeting = "Hello World!"
-    ///
-    ///     enum Zulu {
-    ///         enum Time: String, LocalizedStringConvertible {
-    ///             case definition
-    ///         }
-    ///     }
-    /// }
-    /// ```
-    func orphanNodes(parent: NodeID = []) -> [NodeID] {
-        var identifiedNodes: [NodeID] = []
-
-        for node in nodes {
-            let path = parent + node.id
-
-            if node.isOrphan {
-                identifiedNodes.append(path)
-            }
-
-            if node.containsOrphans {
-                identifiedNodes.append(contentsOf: node.orphanNodes(parent: path))
-            }
-        }
-
-        return identifiedNodes.sorted(using: nodeSort)
+        nodes[index].mergeContents(of: node, intoNodeAt: components)
     }
 }

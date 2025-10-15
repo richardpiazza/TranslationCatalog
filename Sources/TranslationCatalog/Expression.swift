@@ -95,7 +95,7 @@ public struct Expression: Codable, Hashable, Identifiable, Sendable {
     }
 
     public func hasValuesForLocales(_ locales: Set<Locale>) -> Bool {
-        let currentLocales = Set([locale] + translations.map { $0.locale })
+        let currentLocales = Set([locale] + translations.map(\.locale))
         return locales.subtracting(currentLocales).isEmpty
     }
 }

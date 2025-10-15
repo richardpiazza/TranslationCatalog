@@ -53,7 +53,7 @@ final class KeyHierarchyTests: XCTestCase {
             key: "ZULU_TIME_DEFINITION",
             value: "definition",
             languageCode: .english
-        )
+        ),
     ]
 
     var hierarchy: KeyHierarchy!
@@ -66,14 +66,14 @@ final class KeyHierarchyTests: XCTestCase {
     func testHierarchyGeneration() throws {
         XCTAssertEqual(hierarchy.contents.count, 1)
         XCTAssertEqual(Array(hierarchy.contents.keys), [
-            [["GREETING"]],
+            ["GREETING"],
         ])
         XCTAssertEqual(hierarchy.nodes.count, 4)
         XCTAssertEqual(hierarchy.nodes.map(\.id), [
-            [["APPLICATION"]],
-            [["HIDDEN"]],
-            [["PLATFORM"]],
-            [["ZULU"]],
+            ["APPLICATION"],
+            ["HIDDEN"],
+            ["PLATFORM"],
+            ["ZULU"],
         ])
         XCTAssertFalse(hierarchy.isOrphan)
         XCTAssertTrue(hierarchy.containsOrphans)
@@ -81,12 +81,17 @@ final class KeyHierarchyTests: XCTestCase {
         XCTAssertTrue(hierarchy.containsPhantoms)
     }
 
-    func testNodeWithId() throws {
-        var node = hierarchy.node(with: [["UNKNOWN"]])
+    func testNodeAtPath() throws {
+        var node = hierarchy.node(at: [["UNKNOWN"]])
         XCTAssertNil(node)
-        node = hierarchy.node(with: [["HIDDEN"]])
+        node = hierarchy.node(at: [["HIDDEN"]])
         XCTAssertNotNil(node)
-        node = hierarchy.node(with: [["PLATFORM"], ["APPLE"]])
+        node = hierarchy.node(at: [["PLATFORM"], ["APPLE"]])
+        XCTAssertNotNil(node)
+    }
+
+    func testRemoveNodeAtPath() throws {
+        let node = hierarchy.removeNode(at: [["PLATFORM"], ["APPLE"]])
         XCTAssertNotNil(node)
     }
 
@@ -110,8 +115,7 @@ final class KeyHierarchyTests: XCTestCase {
     }
 
     func testLocalizedStringConvertible() throws {
-        let data = hierarchy.localizedStringConvertible()
-        let syntax = String(decoding: data, as: UTF8.self)
+        let syntax = hierarchy.syntaxTree()
         XCTAssertEqual(syntax, """
         import LocaleSupport
 
@@ -151,7 +155,7 @@ final class KeyHierarchyTests: XCTestCase {
                     }
                 }
             }
-        
+
             enum Zulu {
 
                 enum Time: String, LocalizedStringConvertible {
@@ -167,9 +171,9 @@ final class KeyHierarchyTests: XCTestCase {
     }
 
     func testPhantomOnlyCompression() throws {
-        let test = try hierarchy!.compressed(mergeOrphans: false)
-        let data = test.localizedStringConvertible()
-        let syntax = String(decoding: data, as: UTF8.self)
+        let syntax = try hierarchy
+            .compressed(mergeOrphans: false)
+            .syntaxTree()
         XCTAssertEqual(syntax, """
         import LocaleSupport
 
@@ -227,11 +231,10 @@ final class KeyHierarchyTests: XCTestCase {
             defaultValue: "zone"
         )
         var test = hierarchy!
-        test.processKey(key, path: [["ZULU"], ["ZONE"]])
-        let data = try test
+        try test.processKey(key, path: [["ZULU"], ["ZONE"]])
+        let syntax = try test
             .compressed(mergePhantoms: false)
-            .localizedStringConvertible()
-        let syntax = String(decoding: data, as: UTF8.self)
+            .syntaxTree()
         XCTAssertEqual(syntax, """
         import LocaleSupport
 
@@ -264,9 +267,9 @@ final class KeyHierarchyTests: XCTestCase {
     }
 
     func testCompression() throws {
-        let test = try hierarchy!.compressed()
-        let data = test.localizedStringConvertible()
-        let syntax = String(decoding: data, as: UTF8.self)
+        let syntax = try hierarchy
+            .compressed()
+            .syntaxTree()
         XCTAssertEqual(syntax, """
         import LocaleSupport
 

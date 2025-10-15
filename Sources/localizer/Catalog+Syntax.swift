@@ -12,15 +12,15 @@ extension Catalog {
             abstract: "Create a enumerated syntax tree.",
             discussion: """
             Generate a enumerate reference to strings. For example:
-            
+
             enum LocalizedStrings: String, LocalizedStringConvertible {
                 /// Title for account screen.
                 case account = "Account"
-            
+
                 enum Account: String, LocalizedStringConvertible {
                     /// Action to navigate to the previous screen.
                     case back = "Back"
-            
+
                     var prefix: String? {
                         "account"
                     }
@@ -63,7 +63,7 @@ extension Catalog {
                 try catalog.expressions()
             }
 
-            var keyHierarchy = try LocalizationKeyHierarchy.make(with: expressions)
+            var keyHierarchy = try KeyHierarchy.make(with: expressions)
             if compressed {
                 try keyHierarchy.compress(
                     mergePhantoms: !excludePhantoms,

@@ -19,14 +19,12 @@ public extension KeyHierarchy {
         return dataStream.data
     }
 
-    internal var declName: String {
-        id.map { $0.joined().capitalized }.joined()
+    func syntaxTree() -> String {
+        String(decoding: localizedStringConvertible(), as: UTF8.self)
     }
-}
 
-extension [String]: @retroactive Comparable {
-    public static func < (lhs: [String], rhs: [String]) -> Bool {
-        lhs.joined() < rhs.joined()
+    internal var declName: String {
+        id.map(\.capitalized).joined()
     }
 }
 
@@ -68,23 +66,24 @@ extension EnumDeclSyntax {
             name: TokenSyntax(stringLiteral: name ?? hierarchy.declName),
             inheritanceClause: inheritanceClause
         ) {
-            for (path, key) in hierarchy.contents.sorted(by: { $0.key.flatJoined() < $1.key.flatJoined() }) {
-                EnumCaseDeclSyntax.stringEnumerationCase(
-                    key: path.flatMap { $0 }.lowerCamelCased,
-                    value: key.defaultValue,
-                    comment: key.comment
-                )
+            for key in hierarchy.sortedContentsKeys {
+                if let content = hierarchy.contents[key] {
+                    EnumCaseDeclSyntax.stringEnumerationCase(
+                        key: key.lowerCamelCased,
+                        value: content.defaultValue,
+                        comment: content.comment
+                    )
+                }
             }
 
             if !hierarchy.contents.isEmpty {
-                let prefix = (hierarchy.parent + hierarchy.id).flatMap { $0 }.lowerCamelCased
+                let prefix = (hierarchy.parent + [hierarchy.id]).flatMap { $0 }.lowerCamelCased
                 if !prefix.isEmpty {
                     VariableDeclSyntax.stringValuePrefix(prefix)
                 }
             }
 
-            let nodes = hierarchy.nodes.sorted(by: { $0.id.flatMap { $0 } < $1.id.flatMap { $0 } })
-            for node in nodes {
+            for node in hierarchy.sortedNodes {
                 stringEnumerationDecl(for: node)
             }
         }
@@ -129,7 +128,7 @@ extension EnumCaseDeclSyntax {
 extension VariableDeclSyntax {
     static func stringValuePrefix(_ value: String) -> VariableDeclSyntax {
         VariableDeclSyntax(
-            leadingTrivia:  .newlines(2),
+            leadingTrivia: .newlines(2),
             bindingSpecifier: TokenSyntax("var")
         ) {
             PatternBindingSyntax(

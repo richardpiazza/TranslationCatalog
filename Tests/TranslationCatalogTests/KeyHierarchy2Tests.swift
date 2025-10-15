@@ -3,7 +3,7 @@ import LocaleSupport
 @testable import TranslationCatalogIO
 import XCTest
 
-final class LocalizationKeyHierarchyTests: XCTestCase {
+final class KeyHierarchy2Tests: XCTestCase {
 
     let expressions: [TranslationCatalog.Expression] = [
         Expression(
@@ -59,14 +59,14 @@ final class LocalizationKeyHierarchyTests: XCTestCase {
             key: "PAYMENT_METHOD_SECTION_TITLE",
             value: "Payment Methods",
             languageCode: .english
-        )
+        ),
     ]
 
-    var hierarchy: LocalizationKeyHierarchy!
+    var hierarchy: KeyHierarchy!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        hierarchy = try LocalizationKeyHierarchy.make(with: expressions)
+        hierarchy = try KeyHierarchy.make(with: expressions)
     }
 
     func testHierarchyGeneration() throws {
