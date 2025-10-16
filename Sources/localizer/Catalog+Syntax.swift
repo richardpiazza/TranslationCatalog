@@ -31,7 +31,7 @@ extension Catalog {
             helpNames: .shortAndLong
         )
 
-        @Option(help: "Name used for the root declaration.")
+        @Option(help: "Name used for the root declaration. (Default 'LocalizedStrings')")
         var name: String?
 
         @Option(help: "Identifier of the project for which to limit results.")
@@ -46,10 +46,10 @@ extension Catalog {
         @Flag(help: "Reduce the instance of single-content nodes.")
         var compressed: Bool = false
 
-        @Flag(help: "Phantom nodes will not be merged when compression enabled.")
+        @Flag(help: "Phantom nodes (Single-Node Enum) will not be merged when compression enabled.")
         var excludePhantoms: Bool = false
 
-        @Flag(help: "Orphaned nodes will not be merged when compression enabled.")
+        @Flag(help: "Orphaned nodes (Single-Content Enum) will not be merged when compression enabled.")
         var excludeOrphans: Bool = false
 
         @Flag(help: "Additional execution details in the standard output.")
@@ -71,13 +71,13 @@ extension Catalog {
                 )
             }
 
-            let data = if let name, !name.isEmpty {
-                keyHierarchy.localizedStringConvertible(rootDeclaration: name)
+            let syntax = if let name, !name.isEmpty {
+                keyHierarchy.syntaxTree(rootDeclaration: name)
             } else {
-                keyHierarchy.localizedStringConvertible()
+                keyHierarchy.syntaxTree()
             }
-            let output = String(decoding: data, as: UTF8.self)
-            print(output)
+
+            print(syntax)
         }
     }
 }

@@ -1,16 +1,8 @@
 import Foundation
 
-/// Represents a path of multi-part strings.
+/// Represents a multi-part identifier.
 ///
-/// The human readable path `Strings > EnumName > SubType > Category` would be represented by:
-/// ```swift
-/// [
-///   ["Strings"],
-///   ["Enum", "Name"],
-///   ["Sub", "Type"],
-///   ["Category"]
-/// ]
-/// ```
+/// A 'node' is represented by a series of strings (words).
 public typealias KeyNodeID = [String]
 
 struct NodeIDSortComparator: SortComparator {

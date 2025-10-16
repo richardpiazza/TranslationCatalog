@@ -19,8 +19,11 @@ public extension KeyHierarchy {
         return dataStream.data
     }
 
-    func syntaxTree() -> String {
-        String(decoding: localizedStringConvertible(), as: UTF8.self)
+    func syntaxTree(rootDeclaration name: String = "LocalizedStrings") -> String {
+        String(
+            decoding: localizedStringConvertible(rootDeclaration: name),
+            as: UTF8.self
+        )
     }
 
     internal var declName: String {
