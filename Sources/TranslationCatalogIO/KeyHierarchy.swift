@@ -59,6 +59,10 @@ public struct KeyHierarchy {
         }
     }
 
+    var prefix: KeyNodePath {
+        parent + [id]
+    }
+
     public init(
         id: KeyNodeID = [],
         parent: KeyNodePath = [],
@@ -325,9 +329,7 @@ public struct KeyHierarchy {
                     continue
                 }
 
-                let subNodePath = subNode.parent + [subNode.id]
-
-                guard let node = removeNode(at: subNodePath) else {
+                guard let node = removeNode(at: subNode.prefix) else {
                     continue
                 }
 
@@ -349,7 +351,7 @@ public struct KeyHierarchy {
             }
 
             for var subNode in node.nodes {
-                subNode.parent = parent + [newId]
+                subNode.parent = prefix
                 nodes.append(subNode)
             }
 

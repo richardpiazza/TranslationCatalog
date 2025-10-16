@@ -80,7 +80,7 @@ extension EnumDeclSyntax {
             }
 
             if !hierarchy.contents.isEmpty {
-                let prefix = (hierarchy.parent + [hierarchy.id]).flatMap { $0 }.lowerCamelCased
+                let prefix = hierarchy.prefix.flatMap { $0 }.lowerCamelCased
                 if !prefix.isEmpty {
                     VariableDeclSyntax.stringValuePrefix(prefix)
                 }
