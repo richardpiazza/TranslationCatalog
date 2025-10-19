@@ -4,7 +4,7 @@ import Foundation
 ///
 /// - note: Expressions can exist outside the context of a Project
 /// and a single expression can be associated with multiple projects.
-public struct Expression: Codable, Hashable, Identifiable, Sendable {
+public struct Expression: Hashable, Sendable, Identifiable, Codable {
     /// Identifier that universally identifies this `Expression`
     public let id: UUID
     /// Localization file unique key identifier

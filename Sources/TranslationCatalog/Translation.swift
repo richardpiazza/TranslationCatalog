@@ -1,7 +1,7 @@
 import Foundation
 
 /// A specific language/region variation of an `Expression`.
-public struct Translation: Codable, Hashable, Identifiable, Sendable {
+public struct Translation: Hashable, Sendable, Identifiable, Codable {
     /// Identifier that universally identifies this `Translation`
     public let id: UUID
     /// Identifier of the `Expression` that contains this `Translation`
@@ -33,24 +33,6 @@ public struct Translation: Codable, Hashable, Identifiable, Sendable {
         self.script = script
         self.region = region
         self.state = state
-    }
-
-    @available(*, deprecated, renamed: "init(id:expressionId:value:language:script:region:state:)")
-    public init(
-        id: UUID = .zero,
-        expressionId: Expression.ID = .zero,
-        language: Locale.LanguageCode = .default,
-        script: Locale.Script? = nil,
-        region: Locale.Region? = nil,
-        value: String = ""
-    ) {
-        self.id = id
-        self.expressionId = expressionId
-        self.language = language
-        self.script = script
-        self.region = region
-        self.value = value
-        state = .needsReview
     }
 
     /// Convenience initializer to assigns all values from the provided `Translation`,

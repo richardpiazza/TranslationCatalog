@@ -33,7 +33,7 @@ final class FilesystemEmptyCatalogTests: EmptyCatalogTestCase {
     }
 
     override func setUpWithError() throws {
-        catalog = try FilesystemCatalog(url: url)
+        catalog = try DirectoryCatalog(url: url)
         try super.setUpWithError()
     }
 

@@ -1,7 +1,7 @@
 import Foundation
 
 /// A grouping of `Expression`s used for a common purpose, such as an application or service.
-public struct Project: Codable, Hashable, Identifiable, Sendable {
+public struct Project: Hashable, Sendable, Identifiable, Codable {
     /// Identifier that universally identifies this `Project`
     public let id: UUID
     /// A custom description
@@ -10,8 +10,8 @@ public struct Project: Codable, Hashable, Identifiable, Sendable {
     public let expressions: [Expression]
 
     public init(
-        id: UUID = .zero,
-        name: String = "",
+        id: UUID,
+        name: String,
         expressions: [Expression] = []
     ) {
         self.id = id
