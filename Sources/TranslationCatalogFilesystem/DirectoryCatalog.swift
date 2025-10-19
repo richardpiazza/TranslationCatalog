@@ -12,7 +12,7 @@ public class DirectoryCatalog: FilesystemContainer {
     var expressionDocuments: [ExpressionDocument] = []
     var projectDocuments: [ProjectDocument] = []
 
-    var translationContainer: Medium {
+    var translationContainer: URL {
         guard let url = try? directory(forPath: Self.translationsPath) else {
             preconditionFailure("Invalid Translation Directory")
         }
@@ -20,7 +20,7 @@ public class DirectoryCatalog: FilesystemContainer {
         return url
     }
 
-    var expressionContainer: Medium {
+    var expressionContainer: URL {
         guard let url = try? directory(forPath: Self.expressionsPath) else {
             preconditionFailure("Invalid Expression Directory")
         }
@@ -28,7 +28,7 @@ public class DirectoryCatalog: FilesystemContainer {
         return url
     }
 
-    var projectContainer: Medium {
+    var projectContainer: URL {
         guard let url = try? directory(forPath: Self.projectsPath) else {
             preconditionFailure("")
         }

@@ -9,15 +9,15 @@ public class FileWrapperCatalog: FilesystemContainer {
     var expressionDocuments: [ExpressionDocument] = []
     var projectDocuments: [ProjectDocument] = []
 
-    var translationContainer: Medium {
+    var translationContainer: FileWrapper {
         directory(forPath: Self.translationsPath)
     }
 
-    var expressionContainer: Medium {
+    var expressionContainer: FileWrapper {
         directory(forPath: Self.expressionsPath)
     }
 
-    var projectContainer: Medium {
+    var projectContainer: FileWrapper {
         directory(forPath: Self.projectsPath)
     }
 
