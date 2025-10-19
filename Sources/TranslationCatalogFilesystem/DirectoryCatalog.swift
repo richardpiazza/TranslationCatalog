@@ -80,7 +80,9 @@ public class DirectoryCatalog: FilesystemContainer {
             throw CocoaError(.fileWriteUnsupportedScheme)
         }
 
-        try document.write(to: container, using: encoder)
+        let data = try encoder.encode(document)
+        let url = URL(fileURLWithPath: container.appendingPathComponent(document.filename).path)
+        try data.write(to: url)
     }
 
     func removeDocument(_ document: any Document) throws {
@@ -95,7 +97,8 @@ public class DirectoryCatalog: FilesystemContainer {
             throw CocoaError(.fileWriteUnsupportedScheme)
         }
 
-        try document.remove(from: container)
+        let url = URL(fileURLWithPath: container.appendingPathComponent(document.filename).path)
+        try fileManager.removeItem(at: url)
     }
 
     func getSchemaVersion(using decoder: JSONDecoder) -> DocumentSchemaVersion? {

@@ -1,3 +1,4 @@
+#if os(macOS) || os(iOS) || os(watchOS) || os(tvOS) || os(visionOS)
 import Foundation
 import TranslationCatalog
 
@@ -65,7 +66,9 @@ public class FileWrapperCatalog: FilesystemContainer {
             throw CocoaError(.fileWriteUnsupportedScheme)
         }
 
-        try document.write(to: container, using: encoder)
+        let data = try encoder.encode(document)
+        try removeDocument(document)
+        container.addRegularFile(withContents: data, preferredFilename: document.filename)
     }
 
     func removeDocument(_ document: any Document) throws {
@@ -80,7 +83,11 @@ public class FileWrapperCatalog: FilesystemContainer {
             throw CocoaError(.fileWriteUnsupportedScheme)
         }
 
-        try document.remove(from: container)
+        guard let existing = container.fileWrappers?[document.filename] else {
+            return
+        }
+
+        container.removeFileWrapper(existing)
     }
 
     func getSchemaVersion(using decoder: JSONDecoder) -> DocumentSchemaVersion? {
@@ -105,3 +112,4 @@ public class FileWrapperCatalog: FilesystemContainer {
         medium.addRegularFile(withContents: data, preferredFilename: Self.versionPath)
     }
 }
+#endif
