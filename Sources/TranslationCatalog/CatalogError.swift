@@ -1,5 +1,5 @@
 public enum CatalogError: Error {
-    case badQuery(CatalogQuery)
+    case badQuery(any CatalogQuery)
     case dataTypeConversion(String? = nil)
     case expressionExistingWithId(Expression.ID, Expression)
     case expressionExistingWithKey(String, Expression)
@@ -9,6 +9,6 @@ public enum CatalogError: Error {
     case translationExistingWithId(Translation.ID, Translation)
     case translationExistingWithValue(String, Translation)
     case translationId(Translation.ID)
-    case unhandledQuery(CatalogQuery)
-    case unhandledUpdate(CatalogUpdate)
+    case unhandledQuery(any CatalogQuery)
+    case unhandledUpdate(any CatalogUpdate)
 }

@@ -6,10 +6,10 @@ public class ExpressionImporter {
     public enum Operation: CustomStringConvertible {
         case createdExpression(TranslationCatalog.Expression)
         case skippedExpression(TranslationCatalog.Expression)
-        case failedExpression(TranslationCatalog.Expression, Error)
+        case failedExpression(TranslationCatalog.Expression, any Error)
         case createdTranslation(Translation)
         case skippedTranslation(Translation)
-        case failedTranslation(Translation, Error)
+        case failedTranslation(Translation, any Error)
 
         public var description: String {
             switch self {
@@ -29,10 +29,10 @@ public class ExpressionImporter {
         }
     }
 
-    private let catalog: Catalog
+    private let catalog: any Catalog
     private let sequence = AsyncStream.makeStream(of: Operation.self)
 
-    public init(catalog: Catalog) {
+    public init(catalog: any Catalog) {
         self.catalog = catalog
     }
 
@@ -55,7 +55,7 @@ public class ExpressionImporter {
         sequence.continuation.finish()
     }
 
-    private func importExpression(_ expression: TranslationCatalog.Expression, into catalog: Catalog) {
+    private func importExpression(_ expression: TranslationCatalog.Expression, into catalog: any Catalog) {
         do {
             try catalog.createExpression(expression)
             sequence.continuation.yield(.createdExpression(expression))
@@ -67,7 +67,7 @@ public class ExpressionImporter {
         }
     }
 
-    private func importTranslations(_ expression: TranslationCatalog.Expression, into catalog: Catalog) {
+    private func importTranslations(_ expression: TranslationCatalog.Expression, into catalog: any Catalog) {
         guard let id = try? catalog.expression(matching: GenericExpressionQuery.key(expression.key)).id else {
             return
         }
@@ -82,7 +82,7 @@ public class ExpressionImporter {
         }
     }
 
-    private func importTranslation(_ translation: Translation, into catalog: Catalog) {
+    private func importTranslation(_ translation: Translation, into catalog: any Catalog) {
         do {
             try catalog.createTranslation(translation)
             sequence.continuation.yield(.createdTranslation(translation))

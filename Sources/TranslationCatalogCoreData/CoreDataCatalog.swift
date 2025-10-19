@@ -1,5 +1,5 @@
 #if canImport(CoreData)
-import CoreData
+@preconcurrency import CoreData
 import CoreDataPlus
 import Foundation
 import TranslationCatalog

@@ -121,8 +121,8 @@ extension SQLiteStatement {
                 .column(ProjectEntity.name)
             ),
             .VALUES(
-                .value(project.uuid as DataTypeConvertible),
-                .value(project.name as DataTypeConvertible)
+                .value(project.uuid as any DataTypeConvertible),
+                .value(project.name as any DataTypeConvertible)
             )
         )
     }

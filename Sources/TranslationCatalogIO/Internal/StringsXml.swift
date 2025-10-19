@@ -9,7 +9,7 @@ struct StringsXml: Decodable, DynamicNodeDecoding {
 
     var resources: [Resource]
 
-    static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
+    static func nodeDecoding(for key: any CodingKey) -> XMLDecoder.NodeDecoding {
         .element
     }
 

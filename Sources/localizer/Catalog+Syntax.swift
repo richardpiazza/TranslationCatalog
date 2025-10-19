@@ -7,7 +7,7 @@ import TranslationCatalogIO
 extension Catalog {
     struct Syntax: CatalogCommand {
 
-        static var configuration: CommandConfiguration = CommandConfiguration(
+        static let configuration: CommandConfiguration = CommandConfiguration(
             commandName: "syntax",
             abstract: "Create a enumerated syntax tree.",
             discussion: """

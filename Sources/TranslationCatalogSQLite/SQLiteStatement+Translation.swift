@@ -200,13 +200,13 @@ extension SQLiteStatement {
                 .column(TranslationEntity.stateRawValue)
             ),
             .VALUES(
-                .value(translation.uuid as DataTypeConvertible),
-                .value(translation.expressionID as DataTypeConvertible),
-                .value(translation.language as DataTypeConvertible),
-                .value(translation.region as DataTypeConvertible),
-                .value(translation.value as DataTypeConvertible),
-                .value(translation.script as DataTypeConvertible),
-                .value(translation.stateRawValue as DataTypeConvertible)
+                .value(translation.uuid as any DataTypeConvertible),
+                .value(translation.expressionID as any DataTypeConvertible),
+                .value(translation.language as any DataTypeConvertible),
+                .value(translation.region as any DataTypeConvertible),
+                .value(translation.value as any DataTypeConvertible),
+                .value(translation.script as any DataTypeConvertible),
+                .value(translation.stateRawValue as any DataTypeConvertible)
             )
         )
     }

@@ -16,9 +16,9 @@ struct ProjectEntity: Entity, Identifiable {
 
 extension ProjectEntity {
     static let entity = ProjectEntity()
-    static var id: Attribute { entity["id"]! }
-    static var uuid: Attribute { entity["uuid"]! }
-    static var name: Attribute { entity["name"]! }
+    static var id: any Attribute { entity["id"]! }
+    static var uuid: any Attribute { entity["uuid"]! }
+    static var name: any Attribute { entity["name"]! }
 
     init(_ project: Project) {
         uuid = project.id.uuidString

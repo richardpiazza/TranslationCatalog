@@ -11,7 +11,7 @@ struct Configuration: Codable {
         defaultStorage = .default
     }
 
-    init(from decoder: Decoder) throws {
+    init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         defaultLanguageCode = try container.decodeIfPresent(Locale.LanguageCode.self, forKey: .defaultLanguageCode) ?? .default
         defaultRegionCode = try container.decodeIfPresent(Locale.Region.self, forKey: .defaultRegionCode) ?? .default

@@ -271,13 +271,13 @@ extension SQLiteStatement {
                 .column(ExpressionEntity.feature)
             ),
             .VALUES(
-                .value(expression.uuid as DataTypeConvertible),
-                .value(expression.key as DataTypeConvertible),
-                .value(expression.name as DataTypeConvertible),
-                .value(expression.defaultLanguage as DataTypeConvertible),
-                .value(expression.defaultValue as DataTypeConvertible),
-                .value(expression.context as DataTypeConvertible),
-                .value(expression.feature as DataTypeConvertible)
+                .value(expression.uuid as any DataTypeConvertible),
+                .value(expression.key as any DataTypeConvertible),
+                .value(expression.name as any DataTypeConvertible),
+                .value(expression.defaultLanguage as any DataTypeConvertible),
+                .value(expression.defaultValue as any DataTypeConvertible),
+                .value(expression.context as any DataTypeConvertible),
+                .value(expression.feature as any DataTypeConvertible)
             )
         )
     }
@@ -292,7 +292,7 @@ extension SQLiteStatement {
             .SET(
                 .comparison(op: .equal, segments: [
                     Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.key),
-                    .value(key as DataTypeConvertible),
+                    .value(key as any DataTypeConvertible),
                 ])
             ),
             .WHERE(
@@ -309,7 +309,7 @@ extension SQLiteStatement {
             .SET(
                 .comparison(op: .equal, segments: [
                     Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.name),
-                    .value(name as DataTypeConvertible),
+                    .value(name as any DataTypeConvertible),
                 ])
             ),
             .WHERE(
@@ -326,7 +326,7 @@ extension SQLiteStatement {
             .SET(
                 .comparison(op: .equal, segments: [
                     Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.defaultLanguage),
-                    .value(defaultLanguage.identifier as DataTypeConvertible),
+                    .value(defaultLanguage.identifier as any DataTypeConvertible),
                 ])
             ),
             .WHERE(
@@ -343,7 +343,7 @@ extension SQLiteStatement {
             .SET(
                 .comparison(op: .equal, segments: [
                     Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.defaultValue),
-                    .value(defaultValue as DataTypeConvertible),
+                    .value(defaultValue as any DataTypeConvertible),
                 ])
             ),
             .WHERE(
@@ -361,11 +361,11 @@ extension SQLiteStatement {
                 .unwrap(context, transform: { value in
                     .comparison(op: .equal, segments: [
                         Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.context),
-                        .value(value as DataTypeConvertible),
+                        .value(value as any DataTypeConvertible),
                     ])
                 }, else: .comparison(op: .equal, segments: [
                     Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.context),
-                    .value(context as DataTypeConvertible),
+                    .value(context as any DataTypeConvertible),
                 ])
                 )
             ),
@@ -386,13 +386,13 @@ extension SQLiteStatement {
                     transform: { value in
                         .comparison(op: .equal, segments: [
                             Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.feature),
-                            .value(value as DataTypeConvertible),
+                            .value(value as any DataTypeConvertible),
                         ])
                     },
                     else:
                     .comparison(op: .equal, segments: [
                         Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.feature),
-                        .value(feature as DataTypeConvertible),
+                        .value(feature as any DataTypeConvertible),
                     ])
                 )
             ),

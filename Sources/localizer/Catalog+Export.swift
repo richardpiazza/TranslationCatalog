@@ -62,7 +62,7 @@ extension Catalog {
         }
 
         func queryExpressions(
-            from catalog: TranslationCatalog.Catalog,
+            from catalog: any TranslationCatalog.Catalog,
             using storage: Storage,
             projectId: Project.ID?
         ) throws -> [TranslationCatalog.Expression] {
