@@ -1,7 +1,7 @@
 import Foundation
 
 /// A specific language/region variation of an `Expression`.
-public struct Translation: Hashable, Sendable, Identifiable, Codable  {
+public struct Translation: Hashable, Sendable, Identifiable, Codable {
     /// Identifier that universally identifies this `Translation`
     public let id: UUID
     /// Identifier of the `Expression` that contains this `Translation`

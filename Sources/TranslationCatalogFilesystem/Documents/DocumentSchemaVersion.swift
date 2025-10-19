@@ -1,4 +1,4 @@
-enum SchemaVersion: Int {
+enum DocumentSchemaVersion: Int {
     case v1 = 1
     /// Expression Default Value
     case v2 = 2
@@ -8,8 +8,8 @@ enum SchemaVersion: Int {
     static var current: Self { .v3 }
 }
 
-extension SchemaVersion: Comparable {
-    static func < (lhs: SchemaVersion, rhs: SchemaVersion) -> Bool {
+extension DocumentSchemaVersion: Comparable {
+    static func < (lhs: DocumentSchemaVersion, rhs: DocumentSchemaVersion) -> Bool {
         lhs.rawValue < rhs.rawValue
     }
 }
