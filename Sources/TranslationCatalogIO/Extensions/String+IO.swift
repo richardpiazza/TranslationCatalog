@@ -1,8 +1,15 @@
 import Foundation
 
 extension String {
-    private static let darwinStringReplacement = "%@"
-    private static let posixStringReplacement = "%s"
+    /// Regex pattern for inline substitutions.
+    ///
+    /// Matches:
+    /// * **token**: Starts with `%`
+    /// * **position** Optional positional indication `1$`
+    /// * **type** Ends with one of `s` (string), `ld` (int), `llu` (unsigned int), `lf` (float), `@` (Darwin object)
+    private static let substitutionPattern = #"(?<token>%)(?<position>\d+\$)?(?<type>s|ld|llu|lf|@)"#
+    private static let darwinStringToken = "@"
+    private static let posixStringToken = "s"
 
     func simpleAppleDictionaryEscaped() -> String {
         let replacements: [(Character, String)] = [
@@ -38,41 +45,41 @@ extension String {
         return updated
     }
 
-    var hasMultipleReplacements: Bool {
-        (numberOfInstances("%@") > 1) || (numberOfInstances("%s") > 1)
+    var substitutionRanges: [Range<Self.Index>] {
+        get throws {
+            let regex = try Regex(Self.substitutionPattern)
+            return ranges(of: regex)
+        }
     }
 
-    func numberOfInstances(_ substring: String) -> Int {
-        guard !isEmpty else {
-            return 0
+    var hasMultipleReplacements: Bool {
+        do {
+            return try substitutionRanges.count > 1
+        } catch {
+            return false
+        }
+    }
+
+    func replaceToken(_ token: String, with replacement: String) throws -> String {
+        let ranges = try substitutionRanges
+        var modified = self
+
+        for range in ranges.reversed() {
+            let substring = modified[range]
+            if substring.hasSuffix(token) {
+                let lowerBound = modified.index(range.upperBound, offsetBy: -token.count)
+                modified.replaceSubrange(lowerBound ..< range.upperBound, with: replacement)
+            }
         }
 
-        var count = 0
-
-        var range: Range<String.Index>?
-        while let match = self.range(of: substring, options: [], range: range) {
-            count += 1
-            range = Range(uncheckedBounds: (lower: match.upperBound, upper: endIndex))
-        }
-
-        return count
+        return modified
     }
 
     func decodingDarwinStrings() throws -> String {
-        try replaceIn(self, pattern: Self.darwinStringReplacement, with: Self.posixStringReplacement)
+        try replaceToken(Self.darwinStringToken, with: Self.posixStringToken)
     }
 
     func encodingDarwinStrings() throws -> String {
-        try replaceIn(self, pattern: Self.posixStringReplacement, with: Self.darwinStringReplacement)
-    }
-
-    private func replaceIn(_ value: String, pattern: String, with: String) throws -> String {
-        let regex = try Regex(pattern)
-        var output = value
-        let ranges = value.ranges(of: regex).reversed()
-        for range in ranges {
-            output.replaceSubrange(range, with: with)
-        }
-        return output
+        try replaceToken(Self.posixStringToken, with: Self.darwinStringToken)
     }
 }
