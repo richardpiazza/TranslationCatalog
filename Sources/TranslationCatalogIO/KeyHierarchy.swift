@@ -75,10 +75,24 @@ public struct KeyHierarchy {
         self.nodes = nodes
     }
 
-    public static func make(with expressions: [TranslationCatalog.Expression]) throws -> KeyHierarchy {
+    public static func make(with localizationKeys: [LocalizationKey]) throws -> KeyHierarchy {
         var hierarchy = KeyHierarchy()
 
-        try expressions
+        try localizationKeys.forEach { key in
+            let id = key.key
+                .components(separatedBy: String(key.strategy.separator))
+                .map {
+                    [$0]
+                }
+
+            try hierarchy.processKey(key, path: id)
+        }
+
+        return hierarchy
+    }
+
+    public static func make(with expressions: [TranslationCatalog.Expression]) throws -> KeyHierarchy {
+        let localizationKeys = try expressions
             .map {
                 try LocalizationKey(
                     key: $0.key,
@@ -86,17 +100,8 @@ public struct KeyHierarchy {
                     comment: $0.context
                 )
             }
-            .forEach { key in
-                let id = key.key
-                    .components(separatedBy: String(key.strategy.separator))
-                    .map {
-                        [$0]
-                    }
 
-                try hierarchy.processKey(key, path: id)
-            }
-
-        return hierarchy
+        return try make(with: localizationKeys)
     }
 
     mutating func processKey(_ key: LocalizationKey, path: KeyNodePath) throws {
@@ -116,9 +121,10 @@ public struct KeyHierarchy {
         }
 
         guard !components.isEmpty else {
-            if let token = Self.reservedTypeTokens.first(where: { $0.caseInsensitiveCompare(component) == .orderedSame }) {
-                throw HierarchyError.reservedTypeToken(token)
-            }
+            // Since this is the last token, it will become a `enum case`; No need to block here?!
+            // if let token = Self.reservedTypeTokens.first(where: { $0.caseInsensitiveCompare(component) == .orderedSame }) {
+            //     throw HierarchyError.reservedTypeToken(token)
+            // }
 
             if Int(component) != nil {
                 throw HierarchyError.reservedType(Int.self)

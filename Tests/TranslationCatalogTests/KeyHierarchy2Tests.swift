@@ -5,60 +5,42 @@ import XCTest
 
 final class KeyHierarchy2Tests: XCTestCase {
 
-    let expressions: [TranslationCatalog.Expression] = [
-        Expression(
-            id: UUID(uuidString: "0681BB4E-A63F-4E3C-AA15-5E152844B7EC")!,
+    let keys: [LocalizationKey] = [
+        LocalizationKey(
             key: "PAYMENT_METHOD_ADD_ACTION",
-            value: "Add payment method",
-            languageCode: .english
+            defaultValue: "Add payment method"
         ),
-        Expression(
-            id: UUID(uuidString: "B7FA5A95-2FE5-4887-8619-566CDA83F23E")!,
+        LocalizationKey(
             key: "PAYMENT_METHOD_ADD_CARD_FAILURE_MESSAGE",
-            value: "Your payment method could not be added at this time.",
-            languageCode: .english
+            defaultValue: "Your payment method could not be added at this time."
         ),
-        Expression(
-            id: UUID(uuidString: "76C37D84-8AF3-4011-88B1-BCC80B2D6C6A")!,
+        LocalizationKey(
             key: "PAYMENT_METHOD_ADD_CARD_SUCCESS_MESSAGE",
-            value: "Your payment method has been added.",
-            languageCode: .english
+            defaultValue: "Your payment method has been added."
         ),
-        Expression(
-            id: UUID(uuidString: "52B6650F-F041-4CA3-ACE6-38E7930D026D")!,
+        LocalizationKey(
             key: "PAYMENT_METHOD_CONFIRM_DELETE",
-            value: "Are you sure you want to delete this payment method?",
-            languageCode: .english
+            defaultValue: "Are you sure you want to delete this payment method?"
         ),
-        Expression(
-            id: UUID(uuidString: "943D6EF9-A37A-4BB6-8C93-05FECAD1DA8C")!,
+        LocalizationKey(
             key: "PAYMENT_METHOD_EXPIRATION_ABBREVIATION",
-            value: "Exp",
-            languageCode: .english
+            defaultValue: "Exp"
         ),
-        Expression(
-            id: UUID(uuidString: "95C73B79-8111-43E7-85AC-EF4C74586594")!,
+        LocalizationKey(
             key: "PAYMENT_METHOD_NAVIGATION_TITLE",
-            value: "Manage Payments",
-            languageCode: .english
+            defaultValue: "Manage Payments"
         ),
-        Expression(
-            id: UUID(uuidString: "E5792937-3C63-4C10-8B58-0E405E76AB56")!,
+        LocalizationKey(
             key: "PAYMENT_METHOD_REMOVE_CARD_FAILURE_MESSAGE",
-            value: "Your payment method could not be deleted at this time.",
-            languageCode: .english
+            defaultValue: "Your payment method could not be deleted at this time."
         ),
-        Expression(
-            id: UUID(uuidString: "185CA880-88DB-4CA6-98A4-FD544B908900")!,
+        LocalizationKey(
             key: "PAYMENT_METHOD_REMOVE_CARD_SUCCESS_MESSAGE",
-            value: "Your payment method has been deleted.",
-            languageCode: .english
+            defaultValue: "Your payment method has been deleted."
         ),
-        Expression(
-            id: UUID(uuidString: "9E141C73-8D8C-40B6-AF56-AFD94C230752")!,
+        LocalizationKey(
             key: "PAYMENT_METHOD_SECTION_TITLE",
-            value: "Payment Methods",
-            languageCode: .english
+            defaultValue: "Payment Methods"
         ),
     ]
 
@@ -66,7 +48,7 @@ final class KeyHierarchy2Tests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        hierarchy = try KeyHierarchy.make(with: expressions)
+        hierarchy = try KeyHierarchy.make(with: keys)
     }
 
     func testHierarchyGeneration() throws {
