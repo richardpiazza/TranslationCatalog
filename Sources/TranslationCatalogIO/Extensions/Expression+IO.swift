@@ -1,5 +1,4 @@
 import Foundation
-import Plot
 import TranslationCatalog
 
 extension TranslationCatalog.Expression {

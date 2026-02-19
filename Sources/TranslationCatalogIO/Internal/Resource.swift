@@ -2,23 +2,36 @@ import Foundation
 import TranslationCatalog
 import XMLCoder
 
-struct Resource: Decodable, DynamicNodeDecoding {
+struct Resource: Codable, DynamicNodeDecoding, DynamicNodeEncoding {
     enum CodingKeys: String, CodingKey {
         case name
+        case formatted
         case value = ""
     }
 
     var name: String
     var value: String
+    var formatted: Bool?
 
     static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
         switch key {
-        case CodingKeys.name:
+        case CodingKeys.name, CodingKeys.formatted:
             .attribute
         case CodingKeys.value:
             .element
         default:
             .elementOrAttribute
+        }
+    }
+    
+    static func nodeEncoding(for key: any CodingKey) -> XMLEncoder.NodeEncoding {
+        switch key {
+        case CodingKeys.name, CodingKeys.formatted:
+            .attribute
+        case CodingKeys.value:
+            .element
+        default:
+            .both
         }
     }
 }

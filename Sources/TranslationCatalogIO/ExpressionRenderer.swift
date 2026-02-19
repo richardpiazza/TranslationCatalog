@@ -2,6 +2,7 @@ import Plot
 import TranslationCatalog
 
 /// Utility for rendering expressions in multiple formats.
+@available(*, deprecated)
 public struct ExpressionRenderer {
 
     private init() {}

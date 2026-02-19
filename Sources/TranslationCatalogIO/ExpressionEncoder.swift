@@ -24,13 +24,24 @@ public struct ExpressionEncoder {
         switch format {
         case .androidXML:
             let sorted = expressions.sorted(by: { $0.key < $1.key })
-            let xml = XML.make(
-                with: sorted,
-                locale: locale,
-                fallback: fallback
-            )
-            let raw = xml.render(indentedBy: .spaces(2))
-            return raw.data(using: .utf8) ?? Data()
+            let resources = sorted.map { exp -> Resource in
+                let multipleReplacements = exp.defaultValue.hasMultipleReplacements
+                return Resource(
+                    name: exp.key,
+                    value: exp.valueOrDefault(for: locale),
+                    formatted: multipleReplacements ? false : nil
+                )
+            }
+            let strings = StringsXml(resources: resources)
+            return try strings.encoded()
+            
+//            let xml = XML.make(
+//                with: sorted,
+//                locale: locale,
+//                fallback: fallback
+//            )
+//            let raw = xml.render(indentedBy: .spaces(2))
+//            return raw.data(using: .utf8) ?? Data()
         case .appleStrings:
             let sorted = expressions.sorted(by: { $0.key < $1.key })
             var output: [String] = []

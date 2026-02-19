@@ -4,11 +4,12 @@ import TranslationCatalog
 import TranslationCatalogIO
 
 extension Catalog {
+    @available(*, deprecated)
     struct Generate: CatalogCommand {
 
         static let configuration = CommandConfiguration(
             commandName: "generate",
-            abstract: "Generate a viewable document using the strings catalog.",
+            abstract: "DEPRECATED - Generate a viewable document using the strings catalog.",
             discussion: """
             Available formats: \(RenderFormat.allCases.map(\.rawValue).joined(separator: " "))
             """,

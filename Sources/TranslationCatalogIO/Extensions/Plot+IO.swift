@@ -3,6 +3,7 @@ import Plot
 import TranslationCatalog
 
 extension HTML {
+    @available(*, deprecated)
     static func make(with expressions: [Expression]) -> Self {
         HTML(
             .head(
@@ -43,6 +44,7 @@ extension HTML {
 }
 
 extension Node where Context == HTML.BodyContext {
+    @available(*, deprecated)
     static func localization(_ expression: Expression) -> Self {
         let values = expression.translations.sorted(by: { $0.language.identifier < $1.language.identifier })
 
@@ -74,6 +76,7 @@ extension Node where Context == HTML.BodyContext {
 }
 
 extension Node where Context == HTML.TableContext {
+    @available(*, deprecated)
     static func value(_ translation: Translation) -> Self {
         .tr(
             .td(
@@ -88,6 +91,7 @@ extension Node where Context == HTML.TableContext {
         )
     }
 
+    @available(*, deprecated)
     static func defaultValue(_ translation: Translation) -> Self {
         .tr(
             .td(
