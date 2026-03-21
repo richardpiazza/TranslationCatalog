@@ -12,7 +12,7 @@ struct StringsXml: Codable, DynamicNodeDecoding, DynamicNodeEncoding {
     static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
         .element
     }
-    
+
     static func nodeEncoding(for key: any CodingKey) -> XMLEncoder.NodeEncoding {
         .element
     }
@@ -25,7 +25,7 @@ struct StringsXml: Codable, DynamicNodeDecoding, DynamicNodeEncoding {
     static func make(with data: Data) throws -> StringsXml {
         try XMLDecoder().decode(StringsXml.self, from: data)
     }
-    
+
     func encoded() throws -> Data {
         let encoder = XMLEncoder()
         encoder.outputFormatting = [.sortedKeys]

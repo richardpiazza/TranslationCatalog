@@ -47,7 +47,7 @@ final class KeyHierarchyTests: XCTestCase {
         hierarchy = try KeyHierarchy.make(with: keys)
     }
 
-    func testHierarchyGeneration() throws {
+    func testHierarchyGeneration() {
         XCTAssertEqual(hierarchy.contents.count, 1)
         XCTAssertEqual(Array(hierarchy.contents.keys), [
             ["GREETING"],
@@ -65,7 +65,7 @@ final class KeyHierarchyTests: XCTestCase {
         XCTAssertTrue(hierarchy.containsPhantoms)
     }
 
-    func testNodeAtPath() throws {
+    func testNodeAtPath() {
         var node = hierarchy.node(at: [["UNKNOWN"]])
         XCTAssertNil(node)
         node = hierarchy.node(at: [["HIDDEN"]])
@@ -74,12 +74,12 @@ final class KeyHierarchyTests: XCTestCase {
         XCTAssertNotNil(node)
     }
 
-    func testRemoveNodeAtPath() throws {
+    func testRemoveNodeAtPath() {
         let node = hierarchy.removeNode(at: [["PLATFORM"], ["APPLE"]])
         XCTAssertNotNil(node)
     }
 
-    func testOrphanNodes() throws {
+    func testOrphanNodes() {
         let nodes = hierarchy.orphanNodes()
         XCTAssertEqual(nodes.count, 4)
         XCTAssertEqual(nodes, [
@@ -90,7 +90,7 @@ final class KeyHierarchyTests: XCTestCase {
         ])
     }
 
-    func testPhantomNodes() throws {
+    func testPhantomNodes() {
         let nodes = hierarchy.phantomNodes()
         XCTAssertEqual(nodes.count, 1)
         XCTAssertEqual(nodes, [
@@ -98,7 +98,7 @@ final class KeyHierarchyTests: XCTestCase {
         ])
     }
 
-    func testLocalizedStringConvertible() throws {
+    func testLocalizedStringConvertible() {
         let syntax = hierarchy.syntaxTree()
         XCTAssertEqual(syntax, """
         import LocaleSupport
@@ -214,7 +214,7 @@ final class KeyHierarchyTests: XCTestCase {
             key: "ZULU_ZONE",
             defaultValue: "zone"
         )
-        var test = hierarchy!
+        var test = try XCTUnwrap(hierarchy)
         try test.processKey(key, path: [["ZULU"], ["ZONE"]])
         let syntax = try test
             .compressed(mergePhantoms: false)

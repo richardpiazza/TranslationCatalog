@@ -3,7 +3,7 @@ import TranslationCatalog
 import XCTest
 
 final class ExpressionEncoderTests: XCTestCase {
-    
+
     private let locale: Locale = Locale(identifier: "en_US")
     private let expressions: [TranslationCatalog.Expression] = [
         Expression(
@@ -25,7 +25,7 @@ final class ExpressionEncoderTests: XCTestCase {
             languageCode: .english
         ),
     ]
-    
+
     func testAndroidXMLEncoding() throws {
         let data = try ExpressionEncoder.encodeValues(
             for: expressions,
@@ -43,7 +43,7 @@ final class ExpressionEncoderTests: XCTestCase {
         </resources>
         """)
     }
-    
+
     func testAppleStringsEncoding() throws {
         let data = try ExpressionEncoder.encodeValues(
             for: expressions,
@@ -58,7 +58,7 @@ final class ExpressionEncoderTests: XCTestCase {
         "EXP_03" = "Hello %@, welcome to %@!";
         """)
     }
-    
+
     func testJSONEncoding() throws {
         let data = try ExpressionEncoder.encodeValues(
             for: expressions,
