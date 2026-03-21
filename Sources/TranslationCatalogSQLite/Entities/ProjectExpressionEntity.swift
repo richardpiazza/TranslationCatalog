@@ -13,6 +13,6 @@ struct ProjectExpressionEntity: Entity {
 
 extension ProjectExpressionEntity {
     static let entity = ProjectExpressionEntity()
-    static var projectID: Attribute { entity["project_id"]! }
-    static var expressionID: Attribute { entity["expression_id"]! }
+    static var projectID: any Attribute { entity["project_id"]! }
+    static var expressionID: any Attribute { entity["expression_id"]! }
 }

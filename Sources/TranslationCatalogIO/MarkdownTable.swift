@@ -1,3 +1,5 @@
+import Foundation
+
 /// Creates a markdown formatted table when printed.
 public class MarkdownTable<T: Collection>: CustomStringConvertible {
 

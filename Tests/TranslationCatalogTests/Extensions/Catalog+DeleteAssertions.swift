@@ -7,13 +7,13 @@ extension Catalog {
         let projectId = UUID(uuidString: "06937A10-2E46-4FFD-A2E7-60A3F03ED007")!
         let project = Project(id: projectId, name: "Example Project")
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             try catalog.createProject(project)
             let projects = try catalog.projects()
             XCTAssertEqual(projects.count, 1)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             let projects = try catalog.projects()
             XCTAssertEqual(projects.count, 0)
         }
@@ -33,13 +33,13 @@ extension Catalog {
             languageCode: .english
         )
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             try catalog.createExpression(expression)
             let expressions = try catalog.expressions()
             XCTAssertEqual(expressions.count, 1)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             let expressions = try catalog.expressions()
             XCTAssertEqual(expressions.count, 0)
         }
@@ -68,14 +68,14 @@ extension Catalog {
             state: .translated
         )
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             try catalog.createExpression(expression)
             try catalog.createTranslation(translation)
             let translations = try catalog.translations()
             XCTAssertEqual(translations.count, 1)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             let translations = try catalog.translations()
             XCTAssertEqual(translations.count, 0)
         }
@@ -104,7 +104,7 @@ extension Catalog {
             state: .translated
         )
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             try catalog.createExpression(expression)
             try catalog.createTranslation(translation)
             let expressions = try catalog.expressions()
@@ -113,7 +113,7 @@ extension Catalog {
             XCTAssertEqual(translations.count, 1)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             let expressions = try catalog.expressions()
             XCTAssertEqual(expressions.count, 0)
             let translations = try catalog.translations()
@@ -137,7 +137,7 @@ extension Catalog {
             languageCode: .english
         )
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             try catalog.createProject(project)
             try catalog.createExpression(expression)
             try catalog.updateProject(projectId, action: GenericProjectUpdate.linkExpression(expressionId))
@@ -147,7 +147,7 @@ extension Catalog {
             XCTAssertEqual(expressions.count, 1)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             let projects = try catalog.projects()
             XCTAssertEqual(projects.count, 0)
             let expressions = try catalog.expressions()

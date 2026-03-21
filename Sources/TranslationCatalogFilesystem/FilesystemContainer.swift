@@ -137,7 +137,7 @@ extension FilesystemContainer {
         }
     }
 
-    public func projects(matching query: CatalogQuery) throws -> [Project] {
+    public func projects(matching query: any CatalogQuery) throws -> [Project] {
         let documents: [ProjectDocument]
 
         switch query {
@@ -158,7 +158,7 @@ extension FilesystemContainer {
         try project(matching: GenericProjectQuery.id(id))
     }
 
-    public func project(matching query: CatalogQuery) throws -> Project {
+    public func project(matching query: any CatalogQuery) throws -> Project {
         let document: ProjectDocument
 
         switch query {
@@ -212,7 +212,7 @@ extension FilesystemContainer {
         return id
     }
 
-    public func updateProject(_ id: Project.ID, action: CatalogUpdate) throws {
+    public func updateProject(_ id: Project.ID, action: any CatalogUpdate) throws {
         guard let index = projectDocuments.firstIndex(where: { $0.id == id }) else {
             throw CatalogError.projectId(id)
         }
@@ -249,7 +249,7 @@ extension FilesystemContainer {
         }
     }
 
-    public func expressions(matching query: CatalogQuery) throws -> [TranslationCatalog.Expression] {
+    public func expressions(matching query: any CatalogQuery) throws -> [TranslationCatalog.Expression] {
         switch query {
         case GenericExpressionQuery.projectId(let projectId):
             return try project(projectId).expressions
@@ -359,7 +359,7 @@ extension FilesystemContainer {
         try expression(matching: GenericExpressionQuery.id(id))
     }
 
-    public func expression(matching query: CatalogQuery) throws -> TranslationCatalog.Expression {
+    public func expression(matching query: any CatalogQuery) throws -> TranslationCatalog.Expression {
         let document: ExpressionDocument
 
         switch query {
@@ -423,7 +423,7 @@ extension FilesystemContainer {
         return id
     }
 
-    public func updateExpression(_ id: TranslationCatalog.Expression.ID, action: CatalogUpdate) throws {
+    public func updateExpression(_ id: TranslationCatalog.Expression.ID, action: any CatalogUpdate) throws {
         guard let index = expressionDocuments.firstIndex(where: { $0.id == id }) else {
             throw CatalogError.expressionId(id)
         }
@@ -493,7 +493,7 @@ extension FilesystemContainer {
         }
     }
 
-    public func translations(matching query: CatalogQuery) throws -> [Translation] {
+    public func translations(matching query: any CatalogQuery) throws -> [Translation] {
         var documents: [TranslationDocument]
 
         switch query {
@@ -532,7 +532,7 @@ extension FilesystemContainer {
         try translation(matching: GenericTranslationQuery.id(id))
     }
 
-    public func translation(matching query: CatalogQuery) throws -> Translation {
+    public func translation(matching query: any CatalogQuery) throws -> Translation {
         switch query {
         case GenericTranslationQuery.id(let uuid):
             guard let document = translationDocuments.first(where: { $0.id == uuid }) else {
@@ -589,7 +589,7 @@ extension FilesystemContainer {
         return id
     }
 
-    public func updateTranslation(_ id: Translation.ID, action: CatalogUpdate) throws {
+    public func updateTranslation(_ id: Translation.ID, action: any CatalogUpdate) throws {
         guard let index = translationDocuments.firstIndex(where: { $0.id == id }) else {
             throw CatalogError.translationId(id)
         }

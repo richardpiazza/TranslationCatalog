@@ -7,12 +7,12 @@ extension Catalog {
         let projectId = UUID(uuidString: "64BBF2A8-0423-4545-B3E1-4A373F6359AF")!
         let project = Project(id: projectId, name: "Project 1")
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             let projects = try catalog.projects()
             XCTAssertEqual(projects.count, 0)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             let projects = try catalog.projects()
             XCTAssertEqual(projects.count, 1)
             let entity = try XCTUnwrap(projects.first)
@@ -37,12 +37,12 @@ extension Catalog {
             feature: "Settings"
         )
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             let expressions = try catalog.expressions()
             XCTAssertEqual(expressions.count, 0)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             let expressions = try catalog.expressions()
             XCTAssertEqual(expressions.count, 1)
             let entity = try XCTUnwrap(expressions.first)
@@ -81,13 +81,13 @@ extension Catalog {
             state: .translated
         )
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             try catalog.createExpression(expression)
             let translations = try catalog.translations()
             XCTAssertEqual(translations.count, 0)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             let translations = try catalog.translations()
             XCTAssertEqual(translations.count, 1)
             let entity = try XCTUnwrap(translations.first)
@@ -118,14 +118,14 @@ extension Catalog {
         let projectId = UUID(uuidString: "CB3900B9-C4A8-4953-9CF7-C737323954E9")!
         let project = Project(id: projectId, name: "", expressions: [expression])
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             let projects = try catalog.projects()
             XCTAssertEqual(projects.count, 0)
             let expressions = try catalog.expressions()
             XCTAssertEqual(expressions.count, 0)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             let expressions = try catalog.expressions()
             XCTAssertEqual(expressions.count, 1)
             let projects = try catalog.projects()
@@ -161,14 +161,14 @@ extension Catalog {
             translations: [translation]
         )
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             let expressions = try catalog.expressions()
             XCTAssertEqual(expressions.count, 0)
             let translations = try catalog.translations()
             XCTAssertEqual(translations.count, 0)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             let expressions = try catalog.expressions()
             XCTAssertEqual(expressions.count, 1)
             let translations = try catalog.translations()

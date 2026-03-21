@@ -43,8 +43,8 @@ extension SQLiteStatement {
                 .column(ProjectExpressionEntity.expressionID)
             ),
             .VALUES(
-                .value(projectID as DataTypeConvertible),
-                .value(expressionID as DataTypeConvertible)
+                .value(projectID as any DataTypeConvertible),
+                .value(expressionID as any DataTypeConvertible)
             )
         )
     }

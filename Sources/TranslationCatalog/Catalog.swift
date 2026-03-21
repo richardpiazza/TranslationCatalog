@@ -9,7 +9,7 @@ public protocol Catalog {
     /// Retrieve all `Project`s that match the provided query parameters
     ///
     /// - parameter query: Parameters that filter the results
-    func projects(matching query: CatalogQuery) throws -> [Project]
+    func projects(matching query: any CatalogQuery) throws -> [Project]
     /// Retrieve a single project for the provided identifier.
     ///
     /// - parameter id: The unique identifier for the `Project`
@@ -17,7 +17,7 @@ public protocol Catalog {
     /// Retrieves the first `Project` matching the query
     ///
     /// - parameter query: Parameters that filter the results
-    func project(matching query: CatalogQuery) throws -> Project
+    func project(matching query: any CatalogQuery) throws -> Project
     /// Inserts a `Project` into the catalog.
     ///
     /// - parameter project: The entity to insert.
@@ -27,7 +27,7 @@ public protocol Catalog {
     ///
     /// - parameter id: The unique identifier for the `Project`
     /// - parameter action: The update to perform on the entity matching the provided id.
-    func updateProject(_ id: Project.ID, action: CatalogUpdate) throws
+    func updateProject(_ id: Project.ID, action: any CatalogUpdate) throws
     /// Removes a `Project` from the catalog.
     ///
     /// This should remove the `Project` only. Any `Expression`s that were linked to the project should remain intact, as expressions
@@ -39,15 +39,15 @@ public protocol Catalog {
     // MARK: - Expression
 
     func expressions() throws -> [Expression]
-    func expressions(matching query: CatalogQuery) throws -> [Expression]
+    func expressions(matching query: any CatalogQuery) throws -> [Expression]
     func expression(_ id: Expression.ID) throws -> Expression
-    func expression(matching query: CatalogQuery) throws -> Expression
+    func expression(matching query: any CatalogQuery) throws -> Expression
     /// Insert a `Expression` into the catalog.
     ///
     /// - parameter expression: The entity to insert.
     /// - returns The unique identifier created for the new entity.
     @discardableResult func createExpression(_ expression: Expression) throws -> Expression.ID
-    func updateExpression(_ id: Expression.ID, action: CatalogUpdate) throws
+    func updateExpression(_ id: Expression.ID, action: any CatalogUpdate) throws
     /// Remove a `Expression` from the catalog.
     ///
     /// When removed, the `Translation`s linked to the expression should be removed - as well as - any references that
@@ -59,9 +59,9 @@ public protocol Catalog {
     // MARK: - Translation
 
     func translations() throws -> [Translation]
-    func translations(matching query: CatalogQuery) throws -> [Translation]
+    func translations(matching query: any CatalogQuery) throws -> [Translation]
     func translation(_ id: Translation.ID) throws -> Translation
-    func translation(matching query: CatalogQuery) throws -> Translation
+    func translation(matching query: any CatalogQuery) throws -> Translation
     /// Insert a `Translation` into the catalog.
     ///
     /// - parameter translation: The entity to insert.
@@ -71,7 +71,7 @@ public protocol Catalog {
     ///
     /// - parameter id: The unique identifier for the `Translation`.
     /// - parameter action: The update to perform on the entity matching the provided id.
-    func updateTranslation(_ id: Translation.ID, action: CatalogUpdate) throws
+    func updateTranslation(_ id: Translation.ID, action: any CatalogUpdate) throws
     /// Remove a `Translation` from the catalog.
     ///
     /// - parameter id: The unique identifier for the `Translation`.

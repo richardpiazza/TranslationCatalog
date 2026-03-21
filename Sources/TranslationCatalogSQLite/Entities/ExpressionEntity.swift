@@ -32,14 +32,14 @@ extension ExpressionEntity {
 
 extension ExpressionEntity {
     static let entity = ExpressionEntity()
-    static var id: Attribute { entity["id"]! }
-    static var uuid: Attribute { entity["uuid"]! }
-    static var key: Attribute { entity["key"]! }
-    static var name: Attribute { entity["name"]! }
-    static var defaultLanguage: Attribute { entity["default_language"]! }
-    static var defaultValue: Attribute { entity["default_value"]! }
-    static var context: Attribute { entity["context"]! }
-    static var feature: Attribute { entity["feature"]! }
+    static var id: any Attribute { entity["id"]! }
+    static var uuid: any Attribute { entity["uuid"]! }
+    static var key: any Attribute { entity["key"]! }
+    static var name: any Attribute { entity["name"]! }
+    static var defaultLanguage: any Attribute { entity["default_language"]! }
+    static var defaultValue: any Attribute { entity["default_value"]! }
+    static var context: any Attribute { entity["context"]! }
+    static var feature: any Attribute { entity["feature"]! }
 
     init(_ expression: TranslationCatalog.Expression) {
         uuid = expression.id.uuidString

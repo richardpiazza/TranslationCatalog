@@ -1,3 +1,5 @@
+import Foundation
+
 /// Known/handled file types of expression/translation lists.
 public enum FileFormat: CaseIterable {
     /// Android-compatible XML format
