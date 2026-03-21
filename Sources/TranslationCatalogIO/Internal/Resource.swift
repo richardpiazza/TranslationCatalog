@@ -21,7 +21,7 @@ struct Resource: Codable, DynamicNodeDecoding, DynamicNodeEncoding {
             .element
         }
     }
-    
+
     static func nodeEncoding(for key: any CodingKey) -> XMLEncoder.NodeEncoding {
         switch key {
         case CodingKeys.name, CodingKeys.formatted:

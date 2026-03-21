@@ -11,8 +11,7 @@ extension FileManager {
 
         // Relative Path?
         let directory = URL(fileURLWithPath: currentDirectoryPath, isDirectory: true)
-        let relativeURL = directory.appendingPathComponent(filename)
-        return relativeURL
+        return directory.appendingPathComponent(filename)
     }
 
     @available(*, deprecated)

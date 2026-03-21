@@ -51,7 +51,7 @@ final class KeyHierarchy2Tests: XCTestCase {
         hierarchy = try KeyHierarchy.make(with: keys)
     }
 
-    func testHierarchyGeneration() throws {
+    func testHierarchyGeneration() {
         XCTAssertTrue(hierarchy.contents.isEmpty)
         XCTAssertEqual(hierarchy.nodes.count, 1)
         XCTAssertEqual(hierarchy.nodes.map(\.id), [
@@ -63,7 +63,7 @@ final class KeyHierarchy2Tests: XCTestCase {
         XCTAssertTrue(hierarchy.containsPhantoms)
     }
 
-    func testNodeAtPath() throws {
+    func testNodeAtPath() {
         var node = hierarchy.node(at: [["UNKNOWN"]])
         XCTAssertNil(node)
         node = hierarchy.node(at: [["PAYMENT"], ["METHOD"], ["EXPIRATION"]])
@@ -72,12 +72,12 @@ final class KeyHierarchy2Tests: XCTestCase {
         XCTAssertNotNil(node)
     }
 
-    func testRemoveNodeAtPath() throws {
+    func testRemoveNodeAtPath() {
         let node = hierarchy.removeNode(at: [["PAYMENT"], ["METHOD"], ["CONFIRM"]])
         XCTAssertNotNil(node)
     }
 
-    func testOrphanNodes() throws {
+    func testOrphanNodes() {
         let nodes = hierarchy.orphanNodes()
         XCTAssertEqual(nodes.count, 8)
         XCTAssertEqual(nodes, [
@@ -92,7 +92,7 @@ final class KeyHierarchy2Tests: XCTestCase {
         ])
     }
 
-    func testPhantomNodes() throws {
+    func testPhantomNodes() {
         let nodes = hierarchy.phantomNodes()
         XCTAssertEqual(nodes.count, 2)
         XCTAssertEqual(nodes, [
@@ -101,7 +101,7 @@ final class KeyHierarchy2Tests: XCTestCase {
         ])
     }
 
-    func testLocalizedStringConvertible() throws {
+    func testLocalizedStringConvertible() {
         let syntax = hierarchy.syntaxTree()
         XCTAssertEqual(syntax, """
         import LocaleSupport

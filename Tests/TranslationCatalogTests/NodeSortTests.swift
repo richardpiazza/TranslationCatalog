@@ -7,7 +7,7 @@ final class NodeSortTests: XCTestCase {
 
     let comparator = NodePathSortComparator()
 
-    func testSorting() throws {
+    func testSorting() {
         let nodes: [Node] = [
             [["Account"], ["New"]],
             [["Account"], ["Add"]],
