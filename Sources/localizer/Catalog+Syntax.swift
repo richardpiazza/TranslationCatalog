@@ -11,7 +11,7 @@ extension Catalog {
             commandName: "syntax",
             abstract: "Create a enumerated syntax tree.",
             discussion: """
-            Generate a enumerate reference to strings. For example:
+            Generate an enumerated reference to strings. For example:
 
             enum LocalizedStrings: String, LocalizedStringConvertible {
                 /// Title for account screen.

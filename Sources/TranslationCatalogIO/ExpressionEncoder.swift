@@ -1,5 +1,4 @@
 import Foundation
-import Plot
 import TranslationCatalog
 
 /// Utility for encoding catalog `Translation`s for export/transfer.

@@ -28,15 +28,6 @@
       }
     },
     {
-      "identity" : "plot",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/JohnSundell/Plot.git",
-      "state" : {
-        "revision" : "271926b4413fe868739d99f5eadcf2bd6cd62fb8",
-        "version" : "0.14.0"
-      }
-    },
-    {
       "identity" : "sqlite.swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/stephencelis/SQLite.swift.git",

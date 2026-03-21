@@ -39,7 +39,6 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMajor(from: "1.5.1")),
         .package(url: "https://github.com/apple/swift-syntax.git", .upToNextMajor(from: "509.0.0")),
         .package(url: "https://github.com/CoreOffice/XMLCoder.git", .upToNextMajor(from: "0.17.1")),
-        .package(url: "https://github.com/JohnSundell/Plot.git", .upToNextMajor(from: "0.14.0")),
         .package(url: "https://github.com/alexisakers/HTMLString.git", .upToNextMajor(from: "6.0.0")),
         .package(url: "https://github.com/stephencelis/SQLite.swift.git", .upToNextMajor(from: "0.15.4")),
     ],
@@ -66,7 +65,6 @@ let package = Package(
             dependencies: [
                 "TranslationCatalog",
                 .product(name: "XMLCoder", package: "XMLCoder"),
-                .product(name: "Plot", package: "Plot"),
                 .product(name: "HTMLString", package: "HTMLString"),
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),

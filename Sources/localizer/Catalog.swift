@@ -24,7 +24,6 @@ struct Catalog: AsyncParsableCommand {
         subcommands: [
             Export.self,
             Delete.self,
-            Generate.self,
             Import.self,
             Insert.self,
             Query.self,
