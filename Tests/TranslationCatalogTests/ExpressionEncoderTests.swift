@@ -34,28 +34,13 @@ final class ExpressionEncoderTests: XCTestCase {
             format: .androidXML
         )
         let output = String(decoding: data, as: UTF8.self)
-        /*
-         <?xml version="1.0" encoding="UTF-8"?>
-         <resources>
-           <string name="EXP_01">
-             Hello World!
-           </string>
-           <string name="EXP_02">
-             Hello %s!
-           </string>
-           <string formatted="false" name="EXP_03">
-             Hello %s, welcome to %s!
-           </string>
-         </resources>
-         */
         XCTAssertEqual(output, """
         <?xml version="1.0" encoding="UTF-8"?>
-
-          <resources>
-            <string name="EXP_01">Hello World!</string>
-            <string name="EXP_02">Hello %s!</string>
-            <string name="EXP_03" formatted="false">Hello %s, welcome to %s!</string>
-          </resources>
+        <resources>
+          <string name="EXP_01">Hello World!</string>
+          <string name="EXP_02">Hello %s!</string>
+          <string formatted="false" name="EXP_03">Hello %s, welcome to %s!</string>
+        </resources>
         """)
     }
     

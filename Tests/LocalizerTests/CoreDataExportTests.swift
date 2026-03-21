@@ -48,15 +48,14 @@ final class CoreDataExportTests: LocalizerTestCase {
 
         XCTAssertEqual(output, """
         <?xml version="1.0" encoding="UTF-8"?>
-
-          <resources>
-            <string name="APPLICATION_NAME">Lingua</string>
-            <string name="GREETING">Hello World!</string>
-            <string name="HIDDEN_MESSAGE"></string>
-            <string name="PLATFORM_ANDROID">Android</string>
-            <string name="PLATFORM_APPLE">Apple</string>
-            <string name="PLATFORM_WEB">Web</string>
-          </resources>
+        <resources>
+          <string name="APPLICATION_NAME">Lingua</string>
+          <string name="GREETING">Hello World!</string>
+          <string name="HIDDEN_MESSAGE"></string>
+          <string name="PLATFORM_ANDROID">Android</string>
+          <string name="PLATFORM_APPLE">Apple</string>
+          <string name="PLATFORM_WEB">Web</string>
+        </resources>
 
         """)
     }
@@ -68,11 +67,10 @@ final class CoreDataExportTests: LocalizerTestCase {
 
         XCTAssertEqual(output, """
         <?xml version="1.0" encoding="UTF-8"?>
-
-          <resources>
-            <string name="GREETING">Hola Mundo!</string>
-            <string name="HIDDEN_MESSAGE">solo en español</string>
-          </resources>
+        <resources>
+          <string name="GREETING">Hola Mundo!</string>
+          <string name="HIDDEN_MESSAGE">solo en español</string>
+        </resources>
 
         """)
     }
@@ -84,15 +82,14 @@ final class CoreDataExportTests: LocalizerTestCase {
 
         XCTAssertEqual(output, """
         <?xml version="1.0" encoding="UTF-8"?>
-
-          <resources>
-            <string name="APPLICATION_NAME">Lingua</string>
-            <string name="GREETING">Hola Mundo!</string>
-            <string name="HIDDEN_MESSAGE">solo en español</string>
-            <string name="PLATFORM_ANDROID">Android</string>
-            <string name="PLATFORM_APPLE">Apple</string>
-            <string name="PLATFORM_WEB">Web</string>
-          </resources>
+        <resources>
+          <string name="APPLICATION_NAME">Lingua</string>
+          <string name="GREETING">Hola Mundo!</string>
+          <string name="HIDDEN_MESSAGE">solo en español</string>
+          <string name="PLATFORM_ANDROID">Android</string>
+          <string name="PLATFORM_APPLE">Apple</string>
+          <string name="PLATFORM_WEB">Web</string>
+        </resources>
 
         """)
     }

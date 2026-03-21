@@ -9,18 +9,16 @@ struct Resource: Codable, DynamicNodeDecoding, DynamicNodeEncoding {
         case value = ""
     }
 
-    var name: String
-    var value: String
-    var formatted: Bool?
+    let name: String
+    let value: String
+    let formatted: Bool?
 
     static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
         switch key {
         case CodingKeys.name, CodingKeys.formatted:
             .attribute
-        case CodingKeys.value:
-            .element
         default:
-            .elementOrAttribute
+            .element
         }
     }
     
@@ -28,10 +26,8 @@ struct Resource: Codable, DynamicNodeDecoding, DynamicNodeEncoding {
         switch key {
         case CodingKeys.name, CodingKeys.formatted:
             .attribute
-        case CodingKeys.value:
-            .element
         default:
-            .both
+            .element
         }
     }
 }
