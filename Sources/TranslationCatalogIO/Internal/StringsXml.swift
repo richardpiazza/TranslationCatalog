@@ -2,14 +2,18 @@ import Foundation
 import TranslationCatalog
 import XMLCoder
 
-struct StringsXml: Decodable, DynamicNodeDecoding {
+struct StringsXml: Codable, DynamicNodeDecoding, DynamicNodeEncoding {
     enum CodingKeys: String, CodingKey {
         case resources = "string"
     }
 
-    var resources: [Resource]
+    let resources: [Resource]
 
     static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
+        .element
+    }
+    
+    static func nodeEncoding(for key: any CodingKey) -> XMLEncoder.NodeEncoding {
         .element
     }
 
@@ -20,6 +24,24 @@ struct StringsXml: Decodable, DynamicNodeDecoding {
 
     static func make(with data: Data) throws -> StringsXml {
         try XMLDecoder().decode(StringsXml.self, from: data)
+    }
+    
+    func encoded() throws -> Data {
+        let encoder = XMLEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        let encoded = try encoder.encode(
+            self,
+            withRootKey: "resources",
+            header: XMLHeader(
+                version: 1.0,
+                encoding: "UTF-8"
+            )
+        )
+        var string = String(decoding: encoded, as: UTF8.self)
+        string = string.replacingOccurrences(of: "><resources>", with: ">\n<resources>")
+        string = string.replacingOccurrences(of: "><string", with: ">\n  <string")
+        string = string.replacingOccurrences(of: "></resources>", with: ">\n</resources>")
+        return string.data(using: .utf8) ?? encoded
     }
 }
 
