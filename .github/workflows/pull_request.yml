@@ -79,7 +79,7 @@ jobs:
     - name: Build
       env:
         DESTINATION: "generic/platform=${{ matrix.platform }}"
-      shell:
+      shell: bash
       run: |
         xcodebuild \
         -scheme "$SCHEME" \
