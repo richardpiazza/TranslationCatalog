@@ -1,13 +1,14 @@
+import Foundation
+import Testing
 @testable import TranslationCatalogIO
-import XCTest
 
-final class NodeSortTests: XCTestCase {
+struct NodeSortTests {
 
     typealias Node = [[String]]
 
     let comparator = NodePathSortComparator()
 
-    func testSorting() {
+    @Test func sorting() {
         let nodes: [Node] = [
             [["Account"], ["New"]],
             [["Account"], ["Add"]],
@@ -17,7 +18,7 @@ final class NodeSortTests: XCTestCase {
             [["Billing"]],
         ]
         let sorted = nodes.sorted(using: comparator)
-        XCTAssertEqual(sorted, [
+        #expect(sorted == [
             [["Account"], ["Add"]],
             [["Account"], ["Add"], ["Patient"]],
             [["Account"], ["Holder"], ["Relationship"]],
