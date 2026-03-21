@@ -1,4 +1,5 @@
 import ArgumentParser
+import Foundation
 import TranslationCatalogIO
 
 extension FileFormat: ExpressibleByArgument {

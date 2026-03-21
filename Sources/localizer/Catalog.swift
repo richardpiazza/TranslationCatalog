@@ -41,7 +41,7 @@ protocol CatalogCommand: AsyncParsableCommand {
 }
 
 extension CatalogCommand {
-    func catalog() throws -> TranslationCatalog.Catalog {
+    func catalog() throws -> any TranslationCatalog.Catalog {
         let url = switch storage {
         #if os(macOS)
         case .coreData:
@@ -65,7 +65,7 @@ extension CatalogCommand {
             }
         }
 
-        let catalog: TranslationCatalog.Catalog
+        let catalog: any TranslationCatalog.Catalog
 
         switch storage {
         #if os(macOS)

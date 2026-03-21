@@ -1,4 +1,6 @@
 import Foundation
+import LocaleSupport
+import SwiftBasicFormat
 import SwiftSyntax
 import SwiftSyntaxBuilder
 import TranslationCatalog

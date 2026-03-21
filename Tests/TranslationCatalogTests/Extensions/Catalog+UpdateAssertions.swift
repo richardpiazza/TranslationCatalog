@@ -7,11 +7,11 @@ extension Catalog {
         let id = UUID(uuidString: "2CF3BCAD-18A6-4839-9A26-3A3D1348156C")!
         let project = Project(id: id, name: "Example 1")
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             try catalog.createProject(project)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             let entity = try catalog.project(id)
             XCTAssertEqual(entity.name, "Example-2")
         }
@@ -33,12 +33,12 @@ extension Catalog {
             languageCode: .english
         )
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             try catalog.createProject(project)
             try catalog.createExpression(expression)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             let expressions = try catalog.expressions(matching: GenericExpressionQuery.projectId(projectId))
             XCTAssertEqual(expressions.count, 1)
         }
@@ -60,11 +60,11 @@ extension Catalog {
         )
         let project = Project(id: projectId, name: "Project", expressions: [expression])
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             try catalog.createProject(project)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             let expressions = try catalog.expressions(matching: GenericExpressionQuery.projectId(projectId))
             XCTAssertEqual(expressions.count, 0)
         }
@@ -84,11 +84,11 @@ extension Catalog {
             languageCode: .english
         )
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             try catalog.createExpression(expression)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             let entity = try catalog.expression(expressionId)
             XCTAssertEqual(entity.key, "KEY_ONE")
         }
@@ -108,11 +108,11 @@ extension Catalog {
             languageCode: .english
         )
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             try catalog.createExpression(expression)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             let entity = try catalog.expression(expressionId)
             XCTAssertEqual(entity.name, "Example")
         }
@@ -132,11 +132,11 @@ extension Catalog {
             languageCode: .english
         )
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             try catalog.createExpression(expression)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             let entity = try catalog.expression(expressionId)
             XCTAssertEqual(entity.defaultLanguageCode, .french)
         }
@@ -173,13 +173,13 @@ extension Catalog {
             context: "Common"
         )
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             try catalog.createExpression(expression1)
             try catalog.createExpression(expression2)
             try catalog.createExpression(expression3)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             var entity = try catalog.expression(id1)
             XCTAssertEqual(entity.context, "Common")
             entity = try catalog.expression(id2)
@@ -222,13 +222,13 @@ extension Catalog {
             feature: "Common"
         )
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             try catalog.createExpression(expression1)
             try catalog.createExpression(expression2)
             try catalog.createExpression(expression3)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             var entity = try catalog.expression(id1)
             XCTAssertEqual(entity.feature, "Common")
             entity = try catalog.expression(id2)
@@ -265,11 +265,11 @@ extension Catalog {
             translations: [translation]
         )
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             try catalog.createExpression(expression)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             let entity = try catalog.translation(translationId)
             XCTAssertEqual(entity.language, .french)
         }
@@ -320,11 +320,11 @@ extension Catalog {
             translations: [t1, t2, t3]
         )
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             try catalog.createExpression(expression)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             var entity = try catalog.translation(id1)
             XCTAssertEqual(entity.script, .devanagari)
             entity = try catalog.translation(id2)
@@ -378,11 +378,11 @@ extension Catalog {
             translations: [t1, t2, t3]
         )
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             try catalog.createExpression(expression)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             var entity = try catalog.translation(id1)
             XCTAssertEqual(entity.region, .australia)
             entity = try catalog.translation(id2)
@@ -417,11 +417,11 @@ extension Catalog {
             translations: [translation]
         )
 
-        func preConditions(catalog: Catalog) throws {
+        func preConditions(catalog: any Catalog) throws {
             try catalog.createExpression(expression)
         }
 
-        func postConditions(catalog: Catalog) throws {
+        func postConditions(catalog: any Catalog) throws {
             let entity = try catalog.translation(translationId)
             XCTAssertEqual(entity.value, "Updated")
         }

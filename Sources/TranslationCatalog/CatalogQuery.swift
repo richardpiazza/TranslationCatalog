@@ -1,7 +1,7 @@
 import Foundation
 
 /// Associated parameters for performing query operations
-public protocol CatalogQuery {}
+public protocol CatalogQuery: Sendable {}
 
 public enum GenericProjectQuery: CatalogQuery {
     case id(Project.ID)

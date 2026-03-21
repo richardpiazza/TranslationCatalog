@@ -26,14 +26,14 @@ struct TranslationEntity: Entity {
 
 extension TranslationEntity {
     static let entity = TranslationEntity()
-    static var id: Attribute { entity["id"]! }
-    static var uuid: Attribute { entity["uuid"]! }
-    static var expressionID: Attribute { entity["expression_id"]! }
-    static var language: Attribute { entity["language_code"]! }
-    static var script: Attribute { entity["script_code"]! }
-    static var region: Attribute { entity["region_code"]! }
-    static var value: Attribute { entity["value"]! }
-    static var stateRawValue: Attribute { entity["state_raw_value"]! }
+    static var id: any Attribute { entity["id"]! }
+    static var uuid: any Attribute { entity["uuid"]! }
+    static var expressionID: any Attribute { entity["expression_id"]! }
+    static var language: any Attribute { entity["language_code"]! }
+    static var script: any Attribute { entity["script_code"]! }
+    static var region: any Attribute { entity["region_code"]! }
+    static var value: any Attribute { entity["value"]! }
+    static var stateRawValue: any Attribute { entity["state_raw_value"]! }
 
     init(_ translation: TranslationCatalog.Translation) {
         uuid = translation.id.uuidString
