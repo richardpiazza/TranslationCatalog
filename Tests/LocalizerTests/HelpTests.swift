@@ -1,12 +1,12 @@
-import XCTest
+import Testing
 
-final class HelpTests: XCTestCase {
+struct HelpTests {
 
-    func testNoArguments() throws {
+    @Test func noArguments() throws {
         let process = LocalizerProcess()
         let output = try process.runOutputting()
 
-        XCTAssertEqual(output, """
+        #expect(output == """
         OVERVIEW: Utility for interacting with Android 'strings.xml', Apple
         'Localizable.strings', and Web '*.json' localization files.
 

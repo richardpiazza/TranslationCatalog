@@ -1,16 +1,16 @@
-import TranslationCatalogSQLite
-import XCTest
+import Foundation
+import Testing
 
-final class CatalogDeleteProjectTests: XCTestCase {
+struct DeleteTests {
 
-    func testNoParameters() throws {
+    @Test func noParameters() throws {
         let process = LocalizerProcess()
         let (terminationStatus, _, error) = try process.runReporting(with: [
             "catalog", "delete", "project",
         ])
 
-        XCTAssertNotEqual(terminationStatus, 0)
-        XCTAssertEqual(error, """
+        #expect(terminationStatus != 0)
+        #expect(error == """
         Error: Missing expected argument '<id>'
         Help:  <id>  Unique ID of the Project.
         Usage: localizer catalog delete project <id> [--storage <storage>] [--path <path>] [--verbose]
@@ -21,29 +21,29 @@ final class CatalogDeleteProjectTests: XCTestCase {
         try process.recycle()
     }
 
-    func testHelp() throws {
+    @Test func help() throws {
         let process = LocalizerProcess()
         let (terminationStatus, output, _) = try process.runReporting(with: [
             "catalog", "delete", "project", "--help",
         ])
 
-        XCTAssertEqual(terminationStatus, 0)
-        XCTAssertTrue(output.contains("OVERVIEW: Delete a Project from the catalog."))
-        XCTAssertTrue(output.contains("USAGE: localizer catalog delete project <id> [--storage <storage>] [--path <path>] [--verbose]"))
-        XCTAssertTrue(output.contains("ARGUMENTS:"))
-        XCTAssertTrue(output.contains("OPTIONS:"))
+        #expect(terminationStatus == 0)
+        #expect(output.contains("OVERVIEW: Delete a Project from the catalog."))
+        #expect(output.contains("USAGE: localizer catalog delete project <id> [--storage <storage>] [--path <path>] [--verbose]"))
+        #expect(output.contains("ARGUMENTS:"))
+        #expect(output.contains("OPTIONS:"))
 
         try process.recycle()
     }
 
-    func testInvalidProjectID() throws {
+    @Test func invalidProjectID() throws {
         let process = LocalizerProcess()
         let (terminationStatus, _, error) = try process.runReporting(with: [
             "catalog", "delete", "project", "123ABC", "--path", process.url.path(),
         ])
 
-        XCTAssertNotEqual(terminationStatus, 0)
-        XCTAssertEqual(error, """
+        #expect(terminationStatus != 0)
+        #expect(error == """
         Error: The value '123ABC' is invalid for '<id>'
         Help:  <id>  Unique ID of the Project.
         Usage: localizer catalog delete project <id> [--storage <storage>] [--path <path>] [--verbose]
@@ -54,14 +54,14 @@ final class CatalogDeleteProjectTests: XCTestCase {
         try process.recycle()
     }
 
-    func testUnknownProjectID() throws {
+    @Test func unknownProjectID() throws {
         let process = LocalizerProcess()
         let (terminationStatus, _, error) = try process.runReporting(with: [
             "catalog", "delete", "project", "399150E5-6709-4CA8-AE54-C665EC3D1916", "--path", process.url.lastPathComponent,
         ])
 
-        XCTAssertNotEqual(terminationStatus, 0)
-        XCTAssertEqual(error, """
+        #expect(terminationStatus != 0)
+        #expect(error == """
         Error: Unknown Project '399150E5-6709-4CA8-AE54-C665EC3D1916'.
         Usage: project <id> [--storage <storage>] [--path <path>] [--verbose]
           See 'project --help' for more information.
@@ -71,14 +71,14 @@ final class CatalogDeleteProjectTests: XCTestCase {
         try process.recycle()
     }
 
-    func testUnknownProjectIDDebug() throws {
+    @Test func unknownProjectIDDebug() throws {
         let process = LocalizerProcess()
         let (terminationStatus, output, error) = try process.runReporting(with: [
             "catalog", "delete", "project", "399150E5-6709-4CA8-AE54-C665EC3D1916", "--path", process.url.lastPathComponent, "--verbose",
         ])
 
-        XCTAssertNotEqual(terminationStatus, 0)
-        XCTAssertEqual(output, """
+        #expect(terminationStatus != 0)
+        #expect(output == """
         ======SQL======
         SELECT id, uuid, name
         FROM project
@@ -88,7 +88,7 @@ final class CatalogDeleteProjectTests: XCTestCase {
 
 
         """)
-        XCTAssertEqual(error, """
+        #expect(error == """
         Error: Unknown Project '399150E5-6709-4CA8-AE54-C665EC3D1916'.
         Usage: project <id> [--storage <storage>] [--path <path>] [--verbose]
           See 'project --help' for more information.
@@ -98,15 +98,15 @@ final class CatalogDeleteProjectTests: XCTestCase {
         try process.recycle()
     }
 
-    func testKnownProjectId() throws {
+    @Test func knownProjectIdVerbose() throws {
         let resource: TestResource = .file(Bundle.module.url(forResource: "test_single_project_entity_v5", withExtension: "sqlite"))
         let process = try LocalizerProcess(copying: resource)
         let (terminationStatus, output, _) = try process.runReporting(with: [
             "catalog", "delete", "project", "82362D51-8C80-4328-BADD-BBE2EA08889F", "--path", process.url.path(), "--verbose",
         ])
 
-        XCTAssertEqual(terminationStatus, 0)
-        XCTAssertEqual(output, """
+        #expect(terminationStatus == 0)
+        #expect(output == """
         ======SQL======
         SELECT id, uuid, name
         FROM project

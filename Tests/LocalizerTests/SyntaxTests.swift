@@ -1,22 +1,20 @@
-import XCTest
+import Foundation
+import Testing
 
-final class CatalogSyntaxTests: LocalizerTestCase {
+struct SyntaxTests {
 
-    override var resource: TestResource {
-        .directory(
+    @Test func syntax() throws {
+        let resource: TestResource = .directory(
             Bundle.module.resourceURL?
                 .appending(path: "StructuredResources", directoryHint: .isDirectory)
                 .appending(path: "MultiLanguageCatalog", directoryHint: .isDirectory)
         )
-    }
-
-    func testSyntax() throws {
-        let process = LocalizerProcess()
+        let process = try LocalizerProcess(copying: resource)
         let output = try process.runOutputting(with: [
-            "catalog", "syntax", "--storage", "filesystem", "--path", directory.path(),
+            "catalog", "syntax", "--storage", "filesystem", "--path", process.directory.path(),
         ])
 
-        XCTAssertEqual(output, """
+        #expect(output == """
         import LocaleSupport
 
         enum LocalizedStrings: String, LocalizedStringConvertible {

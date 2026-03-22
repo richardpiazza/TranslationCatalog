@@ -18,7 +18,7 @@ public struct KeyHierarchy {
     ]
 
     static let reservedVariableTokens: [String] = [
-        "any",
+//        "any", // Not Necessary to reserve when used as enum case
         "continue",
         "for",
         "in",
