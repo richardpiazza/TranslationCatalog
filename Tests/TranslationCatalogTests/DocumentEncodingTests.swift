@@ -10,13 +10,13 @@ import Testing
 struct DocumentEncodingTests {
 
     @Test func projectDocumentEncoding() throws {
-        let document = ProjectDocument(
-            id: try #require(UUID(uuidString: "24D67823-F859-40A1-88C2-A56F1170905B")),
+        let document = try ProjectDocument(
+            id: #require(UUID(uuidString: "24D67823-F859-40A1-88C2-A56F1170905B")),
             name: "Example",
             expressionIds: [
-                try #require(UUID(uuidString: "7F9D2FF1-31C1-47A1-94EE-E23BB0A7AD2B")),
-                try #require(UUID(uuidString: "592E488D-4E3C-490B-8725-C45FF7DEC872")),
-                try #require(UUID(uuidString: "FB7C761C-9026-49C2-BBC7-9B7B897CAA6D")),
+                #require(UUID(uuidString: "7F9D2FF1-31C1-47A1-94EE-E23BB0A7AD2B")),
+                #require(UUID(uuidString: "592E488D-4E3C-490B-8725-C45FF7DEC872")),
+                #require(UUID(uuidString: "FB7C761C-9026-49C2-BBC7-9B7B897CAA6D")),
             ]
         )
 

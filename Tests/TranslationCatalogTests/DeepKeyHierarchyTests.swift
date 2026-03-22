@@ -72,7 +72,7 @@ struct DeepKeyHierarchyTests {
     }
 
     @Test func removeNodeAtPath() {
-        var hierarchy = self.hierarchy
+        var hierarchy = hierarchy
         let node = hierarchy.removeNode(at: [["PAYMENT"], ["METHOD"], ["CONFIRM"]])
         #expect(node != nil)
     }

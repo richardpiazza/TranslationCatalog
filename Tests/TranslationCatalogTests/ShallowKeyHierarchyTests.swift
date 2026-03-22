@@ -41,7 +41,7 @@ struct ShallowKeyHierarchyTests {
     ]
 
     var hierarchy: KeyHierarchy
-    
+
     init() throws {
         hierarchy = try KeyHierarchy.make(with: keys)
     }
@@ -74,7 +74,7 @@ struct ShallowKeyHierarchyTests {
     }
 
     @Test func removeNodeAtPath() {
-        var hierarchy = self.hierarchy
+        var hierarchy = hierarchy
         let node = hierarchy.removeNode(at: [["PLATFORM"], ["APPLE"]])
         #expect(node != nil)
     }

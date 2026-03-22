@@ -7,10 +7,13 @@ public typealias FilesystemCatalog = DirectoryCatalog
 /// Implementation of `Catalog` the reads/writes data from/to a filesystem directory.
 public class DirectoryCatalog: FilesystemContainer {
 
-    let medium: URL
+    let url: URL
     var translationDocuments: [TranslationDocument] = []
     var expressionDocuments: [ExpressionDocument] = []
     var projectDocuments: [ProjectDocument] = []
+
+    @available(*, deprecated, renamed: "url")
+    var medium: URL { url }
 
     var translationContainer: URL {
         guard let url = try? directory(forPath: Self.translationsPath) else {
@@ -43,7 +46,7 @@ public class DirectoryCatalog: FilesystemContainer {
             throw URLError(.unsupportedURL)
         }
 
-        medium = url
+        self.url = url
         if let schemaVersion = getSchemaVersion() {
             try migrateSchema(from: schemaVersion, to: .current)
             try loadAllDocuments()
@@ -54,7 +57,7 @@ public class DirectoryCatalog: FilesystemContainer {
     }
 
     private func directory(forPath path: String) throws -> URL {
-        let url = medium.appending(path: path, directoryHint: .isDirectory)
+        let url = url.appending(path: path, directoryHint: .isDirectory)
         if !fileManager.fileExists(atPath: url.path()) {
             try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
         }
@@ -102,7 +105,7 @@ public class DirectoryCatalog: FilesystemContainer {
     }
 
     func getSchemaVersion(using decoder: JSONDecoder) -> DocumentSchemaVersion? {
-        let url = medium.appending(path: Self.versionPath, directoryHint: .notDirectory)
+        let url = url.appending(path: Self.versionPath, directoryHint: .notDirectory)
 
         do {
             let data = try Data(contentsOf: url)
@@ -114,7 +117,7 @@ public class DirectoryCatalog: FilesystemContainer {
     }
 
     func setSchemaVersion(_ version: DocumentSchemaVersion, using encoder: JSONEncoder) throws {
-        let url = medium.appending(path: Self.versionPath, directoryHint: .notDirectory)
+        let url = url.appending(path: Self.versionPath, directoryHint: .notDirectory)
         let data = try encoder.encode(version.rawValue)
         try data.write(to: url)
     }

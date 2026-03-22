@@ -5,6 +5,7 @@ public extension SQLiteCatalog {
 
     enum Error: Swift.Error {
         case invalidPrimaryKey(Int)
+        @available(*, deprecated, message: "Use CatalogError.badQuery()")
         case invalidStringValue(String)
     }
 

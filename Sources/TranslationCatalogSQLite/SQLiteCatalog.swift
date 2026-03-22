@@ -7,11 +7,13 @@ import TranslationCatalog
 public class SQLiteCatalog: TranslationCatalog.Catalog {
     public typealias RenderedStatementHook = (String) -> Void
 
+    let url: URL
     private let db: Connection
     /// A hook to observe statements that are rendered and executed.
     public var statementHook: RenderedStatementHook?
 
     public init(url: URL) throws {
+        self.url = url
         db = try Connection(url: url)
     }
 
@@ -80,7 +82,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             return try entity.project()
         case GenericProjectQuery.named(let name):
             guard let entity = try db.projectEntity(statement: renderStatement(.selectProject(withName: name))) else {
-                throw Error.invalidStringValue(name)
+                throw CatalogError.badQuery(query)
             }
 
             return try entity.project()
