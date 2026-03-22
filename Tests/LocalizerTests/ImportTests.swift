@@ -1,9 +1,10 @@
-import XCTest
+import Foundation
+import Testing
 
-final class FilesystemImportTests: XCTestCase {
+struct ImportTests {
 
     /// Assert that repeated imports of the same file produce the expected results
-    func testDoubleImport() throws {
+    @Test func doubleImport() throws {
         let resource: TestResource = .file(
             Bundle.module.url(forResource: "Import1", withExtension: "strings")
         )
@@ -12,7 +13,7 @@ final class FilesystemImportTests: XCTestCase {
             "catalog", "import", "en", process.url.path(), "--format", "apple", "--storage", "filesystem", "--path", process.directory.path(),
         ])
 
-        XCTAssertEqual(output, """
+        #expect(output == """
         Expression Created 'FIRST_NAME'
         Expression Created 'LAST_NAME'
         Expression Created 'TITLE'
@@ -27,7 +28,7 @@ final class FilesystemImportTests: XCTestCase {
             "catalog", "import", "en", process.url.path(), "--format", "apple", "--storage", "filesystem", "--path", process.directory.path(),
         ])
 
-        XCTAssertEqual(output, """
+        #expect(output == """
         Expression Exists with Key \'FIRST_NAME\'
         Expression Exists with Key \'LAST_NAME\'
         Expression Exists with Key \'TITLE\'
@@ -38,7 +39,7 @@ final class FilesystemImportTests: XCTestCase {
     }
 
     /// Assert that repeated imports of the same file (that has changes) produce the expected results
-    func testRepeatImport() throws {
+    @Test func repeatImport() throws {
         var resource: TestResource = .file(
             Bundle.module.url(forResource: "Import1", withExtension: "strings")
         )
@@ -47,7 +48,7 @@ final class FilesystemImportTests: XCTestCase {
             "catalog", "import", "en", process.url.path(), "--format", "apple", "--storage", "filesystem", "--path", process.directory.path(),
         ])
 
-        XCTAssertEqual(output, """
+        #expect(output == """
         Expression Created 'FIRST_NAME'
         Expression Created 'LAST_NAME'
         Expression Created 'TITLE'
@@ -65,7 +66,7 @@ final class FilesystemImportTests: XCTestCase {
             "catalog", "import", "en", process.url.path(), "--format", "apple", "--storage", "filesystem", "--path", process.directory.path(),
         ])
 
-        XCTAssertEqual(output, """
+        #expect(output == """
         Expression Created 'FAMILY_NAME'
         Expression Created 'GIVEN_NAME'
         Expression Exists with Key 'TITLE'

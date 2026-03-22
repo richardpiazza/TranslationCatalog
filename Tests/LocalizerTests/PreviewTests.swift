@@ -1,15 +1,16 @@
-import XCTest
+import Foundation
+import Testing
 
-final class LocalizerPreviewTests: XCTestCase {
+struct LocalizerPreviewTests {
 
-    func testPreviewAndroid() throws {
+    @Test func previewAndroidXML() throws {
         let resource: TestResource = .file(Bundle.module.url(forResource: "Strings", withExtension: "xml"))
         let process = try LocalizerProcess(copying: resource)
         let output = try process.runOutputting(with: [
             "preview", "android", process.url.path(),
         ])
 
-        XCTAssertEqual(output, """
+        #expect(output == """
         APP_NAME = Localizer
         NAVIGATION_TITLE = Welcome
         PERFORM_ACTION = Make It Go!
@@ -19,14 +20,14 @@ final class LocalizerPreviewTests: XCTestCase {
         try process.recycle()
     }
 
-    func testPreviewApple() throws {
+    @Test func previewAppleStrings() throws {
         let resource: TestResource = .file(Bundle.module.url(forResource: "Localizable", withExtension: "strings"))
         let process = try LocalizerProcess(copying: resource)
         let output = try process.runOutputting(with: [
             "preview", "apple-strings", process.url.path(),
         ])
 
-        XCTAssertEqual(output, """
+        #expect(output == """
         APP_NAME = Localizer
         NAVIGATION_TITLE = Welcome
         PERFORM_ACTION = Make It Go!
