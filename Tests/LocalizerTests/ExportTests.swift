@@ -1,39 +1,37 @@
 import Foundation
-import Testing
 @testable import localizer
+import Testing
 
 struct ExportTests {
 
     private static var resources: [(TestResource, Catalog.Storage)] {
-        get {
-            var resources: [(TestResource, Catalog.Storage)] = [
-                (
-                    .file(
-                        Bundle.module.url(forResource: "test_multi_language_v5", withExtension: "sqlite")
-                    ),
-                    .sqlite
+        var resources: [(TestResource, Catalog.Storage)] = [
+            (
+                .file(
+                    Bundle.module.url(forResource: "test_multi_language_v5", withExtension: "sqlite")
                 ),
-                (
-                    .directory(
-                        Bundle.module.resourceURL?
-                            .appending(path: "StructuredResources", directoryHint: .isDirectory)
-                            .appending(path: "MultiLanguageCatalog", directoryHint: .isDirectory)
-                    ),
-                    .filesystem
+                .sqlite
+            ),
+            (
+                .directory(
+                    Bundle.module.resourceURL?
+                        .appending(path: "StructuredResources", directoryHint: .isDirectory)
+                        .appending(path: "MultiLanguageCatalog", directoryHint: .isDirectory)
                 ),
-            ]
-            #if canImport(CoreData) && os(macOS)
-            resources.append(
-                (
-                    .file(
-                        Bundle.module.url(forResource: "test_multi_language_core_data_v3", withExtension: "sqlite")
-                    ),
-                    .coreData
+                .filesystem
+            ),
+        ]
+        #if canImport(CoreData) && os(macOS)
+        resources.append(
+            (
+                .file(
+                    Bundle.module.url(forResource: "test_multi_language_core_data_v3", withExtension: "sqlite")
                 ),
+                .coreData
             )
-            #endif
-            return resources
-        }
+        )
+        #endif
+        return resources
     }
 
     @Test(arguments: Self.resources)
@@ -52,7 +50,7 @@ struct ExportTests {
         "PLATFORM_WEB" = "Web";
 
         """)
-        
+
         try process.recycle()
     }
 
@@ -72,7 +70,7 @@ struct ExportTests {
         "PLATFORM_WEB" = "Web";
 
         """)
-        
+
         try process.recycle()
     }
 
@@ -95,7 +93,7 @@ struct ExportTests {
         </resources>
 
         """)
-        
+
         try process.recycle()
     }
 
@@ -135,7 +133,7 @@ struct ExportTests {
         </resources>
 
         """)
-        
+
         try process.recycle()
     }
 
@@ -157,7 +155,7 @@ struct ExportTests {
         }
 
         """)
-        
+
         try process.recycle()
     }
 
@@ -175,7 +173,7 @@ struct ExportTests {
         }
 
         """)
-        
+
         try process.recycle()
     }
 
@@ -197,7 +195,7 @@ struct ExportTests {
         }
 
         """)
-        
+
         try process.recycle()
     }
 }
