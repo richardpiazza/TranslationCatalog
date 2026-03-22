@@ -54,5 +54,7 @@ struct SyntaxTests {
         }
 
         """)
+
+        try process.recycle()
     }
 }

@@ -112,6 +112,8 @@ struct ExportTests {
         </resources>
 
         """)
+
+        try process.recycle()
     }
 
     @Test(arguments: Self.resources)

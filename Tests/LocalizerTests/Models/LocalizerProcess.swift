@@ -41,7 +41,7 @@ class LocalizerProcess {
     /// Returns path to the built products directory.
     private var productsDirectory: URL {
         #if os(macOS)
-        for bundle in Bundle.allBundles where bundle.bundlePath.hasSuffix(".xctest") {
+        for bundle in Bundle.allBundles where bundle.bundlePath.contains("LocalizerTests") {
             return bundle.bundleURL.deletingLastPathComponent()
         }
         fatalError("couldn't find the products directory")
