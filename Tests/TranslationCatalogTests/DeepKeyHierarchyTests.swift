@@ -1,9 +1,9 @@
 import LocaleSupport
+import Testing
 @testable import TranslationCatalog
 @testable import TranslationCatalogIO
-import XCTest
 
-final class KeyHierarchy2Tests: XCTestCase {
+struct DeepKeyHierarchyTests {
 
     let keys: [LocalizationKey] = [
         LocalizationKey(
@@ -44,43 +44,43 @@ final class KeyHierarchy2Tests: XCTestCase {
         ),
     ]
 
-    var hierarchy: KeyHierarchy!
+    var hierarchy: KeyHierarchy
 
-    override func setUpWithError() throws {
-        try super.setUpWithError()
+    init() throws {
         hierarchy = try KeyHierarchy.make(with: keys)
     }
 
-    func testHierarchyGeneration() {
-        XCTAssertTrue(hierarchy.contents.isEmpty)
-        XCTAssertEqual(hierarchy.nodes.count, 1)
-        XCTAssertEqual(hierarchy.nodes.map(\.id), [
+    @Test func hierarchyGeneration() {
+        #expect(hierarchy.contents.isEmpty)
+        #expect(hierarchy.nodes.count == 1)
+        #expect(hierarchy.nodes.map(\.id) == [
             ["PAYMENT"],
         ])
-        XCTAssertFalse(hierarchy.isOrphan)
-        XCTAssertTrue(hierarchy.containsOrphans)
-        XCTAssertTrue(hierarchy.isPhantom)
-        XCTAssertTrue(hierarchy.containsPhantoms)
+        #expect(!hierarchy.isOrphan)
+        #expect(hierarchy.containsOrphans)
+        #expect(hierarchy.isPhantom)
+        #expect(hierarchy.containsPhantoms)
     }
 
-    func testNodeAtPath() {
+    @Test func nodeAtPath() {
         var node = hierarchy.node(at: [["UNKNOWN"]])
-        XCTAssertNil(node)
+        #expect(node == nil)
         node = hierarchy.node(at: [["PAYMENT"], ["METHOD"], ["EXPIRATION"]])
-        XCTAssertNotNil(node)
+        #expect(node != nil)
         node = hierarchy.node(at: [["PAYMENT"], ["METHOD"], ["ADD"], ["CARD"], ["FAILURE"]])
-        XCTAssertNotNil(node)
+        #expect(node != nil)
     }
 
-    func testRemoveNodeAtPath() {
+    @Test func removeNodeAtPath() {
+        var hierarchy = hierarchy
         let node = hierarchy.removeNode(at: [["PAYMENT"], ["METHOD"], ["CONFIRM"]])
-        XCTAssertNotNil(node)
+        #expect(node != nil)
     }
 
-    func testOrphanNodes() {
+    @Test func orphanNodes() {
         let nodes = hierarchy.orphanNodes()
-        XCTAssertEqual(nodes.count, 8)
-        XCTAssertEqual(nodes, [
+        #expect(nodes.count == 8)
+        #expect(nodes == [
             [["PAYMENT"], ["METHOD"], ["ADD"], ["CARD"], ["FAILURE"]],
             [["PAYMENT"], ["METHOD"], ["ADD"], ["CARD"], ["SUCCESS"]],
             [["PAYMENT"], ["METHOD"], ["CONFIRM"]],
@@ -92,18 +92,18 @@ final class KeyHierarchy2Tests: XCTestCase {
         ])
     }
 
-    func testPhantomNodes() {
+    @Test func phantomNodes() {
         let nodes = hierarchy.phantomNodes()
-        XCTAssertEqual(nodes.count, 2)
-        XCTAssertEqual(nodes, [
+        #expect(nodes.count == 2)
+        #expect(nodes == [
             [["PAYMENT"]],
             [["PAYMENT"], ["METHOD"], ["REMOVE"]],
         ])
     }
 
-    func testLocalizedStringConvertible() {
+    @Test func localizedStringConvertible() {
         let syntax = hierarchy.syntaxTree()
-        XCTAssertEqual(syntax, """
+        #expect(syntax == """
         import LocaleSupport
 
         enum LocalizedStrings {
@@ -198,11 +198,11 @@ final class KeyHierarchy2Tests: XCTestCase {
         """)
     }
 
-    func testPhantomOnlyCompression() throws {
+    @Test func phantomOnlyCompression() throws {
         let syntax = try hierarchy
             .compressed(mergeOrphans: false)
             .syntaxTree()
-        XCTAssertEqual(syntax, """
+        #expect(syntax == """
         import LocaleSupport
 
         enum LocalizedStrings {
@@ -291,11 +291,11 @@ final class KeyHierarchy2Tests: XCTestCase {
         """)
     }
 
-    func testOrphanOnlyCompression() throws {
+    @Test func orphanOnlyCompression() throws {
         let syntax = try hierarchy
             .compressed(mergePhantoms: false)
             .syntaxTree()
-        XCTAssertEqual(syntax, """
+        #expect(syntax == """
         import LocaleSupport
 
         enum LocalizedStrings {
@@ -346,11 +346,11 @@ final class KeyHierarchy2Tests: XCTestCase {
         """)
     }
 
-    func testCompression() throws {
+    @Test func compression() throws {
         let syntax = try hierarchy
             .compressed()
             .syntaxTree()
-        XCTAssertEqual(syntax, """
+        #expect(syntax == """
         import LocaleSupport
 
         enum LocalizedStrings {

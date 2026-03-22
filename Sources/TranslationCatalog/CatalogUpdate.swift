@@ -1,7 +1,7 @@
 import Foundation
 
 /// Associated parameters when performing update operations
-public protocol CatalogUpdate: Sendable {}
+public protocol CatalogUpdate: Equatable, Sendable {}
 
 public enum GenericProjectUpdate: CatalogUpdate {
     case name(String)

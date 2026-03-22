@@ -1,8 +1,13 @@
+#if canImport(FoundationEssentials)
+import FoundationEssentials
+#else
+import Foundation
+#endif
+import Testing
 import TranslationCatalog
 @testable import TranslationCatalogIO
-import XCTest
 
-final class ExpressionEncoderTests: XCTestCase {
+struct ExpressionEncoderTests {
 
     private let locale: Locale = Locale(identifier: "en_US")
     private let expressions: [TranslationCatalog.Expression] = [
@@ -26,7 +31,7 @@ final class ExpressionEncoderTests: XCTestCase {
         ),
     ]
 
-    func testAndroidXMLEncoding() throws {
+    @Test func androidXMLEncoding() throws {
         let data = try ExpressionEncoder.encodeValues(
             for: expressions,
             locale: locale,
@@ -34,7 +39,7 @@ final class ExpressionEncoderTests: XCTestCase {
             format: .androidXML
         )
         let output = String(decoding: data, as: UTF8.self)
-        XCTAssertEqual(output, """
+        #expect(output == """
         <?xml version="1.0" encoding="UTF-8"?>
         <resources>
           <string name="EXP_01">Hello World!</string>
@@ -44,7 +49,7 @@ final class ExpressionEncoderTests: XCTestCase {
         """)
     }
 
-    func testAppleStringsEncoding() throws {
+    @Test func appleStringsEncoding() throws {
         let data = try ExpressionEncoder.encodeValues(
             for: expressions,
             locale: locale,
@@ -52,14 +57,14 @@ final class ExpressionEncoderTests: XCTestCase {
             format: .appleStrings
         )
         let output = String(decoding: data, as: UTF8.self)
-        XCTAssertEqual(output, """
+        #expect(output == """
         "EXP_01" = "Hello World!";
         "EXP_02" = "Hello %@!";
         "EXP_03" = "Hello %@, welcome to %@!";
         """)
     }
 
-    func testJSONEncoding() throws {
+    @Test func jsonEncoding() throws {
         let data = try ExpressionEncoder.encodeValues(
             for: expressions,
             locale: locale,
@@ -67,7 +72,7 @@ final class ExpressionEncoderTests: XCTestCase {
             format: .json
         )
         let output = String(decoding: data, as: UTF8.self)
-        XCTAssertEqual(output, """
+        #expect(output == """
         {
           "EXP_01" : "Hello World!",
           "EXP_02" : "Hello %s!",
