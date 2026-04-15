@@ -42,9 +42,9 @@ struct ExpressionEncoderTests {
         #expect(output == """
         <?xml version="1.0" encoding="UTF-8"?>
         <resources>
-          <string name="EXP_01">Hello World!</string>
-          <string name="EXP_02">Hello %s!</string>
-          <string formatted="false" name="EXP_03">Hello %s, welcome to %s!</string>
+            <string name="EXP_01">Hello World!</string>
+            <string name="EXP_02">Hello %s!</string>
+            <string formatted="false" name="EXP_03">Hello %s, welcome to %s!</string>
         </resources>
         """)
     }

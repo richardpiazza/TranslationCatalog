@@ -36,7 +36,7 @@ let package = Package(
         .package(url: "https://github.com/richardpiazza/CoreDataPlus.git", from: "0.5.0"),
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.7.1"),
         .package(url: "https://github.com/apple/swift-syntax.git", from: "509.0.0"),
-        .package(url: "https://github.com/CoreOffice/XMLCoder.git", from: "0.17.1"),
+        .package(url: "https://github.com/CoreOffice/XMLCoder.git", from: "0.18.1"),
         .package(url: "https://github.com/stephencelis/SQLite.swift.git", from: "0.16.0"),
     ],
     targets: [
