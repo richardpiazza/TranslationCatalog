@@ -2,6 +2,7 @@ import Foundation
 
 /// Interface providing storage and retrieval of the `Expression`s and associated `Translation`s.
 public protocol Catalog {
+
     // MARK: - Project
 
     /// Retrieve all `Project`s in the catalog.

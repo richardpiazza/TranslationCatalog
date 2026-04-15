@@ -18,6 +18,7 @@ extension SQLiteStatement {
 // MARK: - Expression (Queries)
 
 extension SQLiteStatement {
+
     // MARK: Select Expressions
 
     static var selectAllFromExpression: Self {

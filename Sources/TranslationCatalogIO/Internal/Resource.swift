@@ -13,7 +13,7 @@ struct Resource: Codable, DynamicNodeDecoding, DynamicNodeEncoding {
     let value: String
     let formatted: Bool?
 
-    static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
+    static func nodeDecoding(for key: any CodingKey) -> XMLDecoder.NodeDecoding {
         switch key {
         case CodingKeys.name, CodingKeys.formatted:
             .attribute
