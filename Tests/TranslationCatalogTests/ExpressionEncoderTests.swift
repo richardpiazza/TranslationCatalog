@@ -26,7 +26,7 @@ struct ExpressionEncoderTests {
         Expression(
             id: UUID(uuidString: "5870E853-35B9-4C71-B8D6-7EA922C72835")!,
             key: "EXP_03",
-            value: "Hello %s, welcome to %s!",
+            value: "Hello %s, welcome to '%s'!", // 'Hello{Non-Breaking-Space}%s
             languageCode: .english
         ),
     ]
@@ -44,7 +44,7 @@ struct ExpressionEncoderTests {
         <resources>
             <string name="EXP_01">Hello World!</string>
             <string name="EXP_02">Hello %s!</string>
-            <string formatted="false" name="EXP_03">Hello %s, welcome to %s!</string>
+            <string formatted="false" name="EXP_03">Hello&#160;%s, welcome to \\'%s\\'!</string>
         </resources>
         """)
     }
@@ -60,7 +60,7 @@ struct ExpressionEncoderTests {
         #expect(output == """
         "EXP_01" = "Hello World!";
         "EXP_02" = "Hello %@!";
-        "EXP_03" = "Hello %@, welcome to %@!";
+        "EXP_03" = "Hello\\U00A0%@, welcome to '%@'!";
         """)
     }
 
@@ -76,7 +76,7 @@ struct ExpressionEncoderTests {
         {
           "EXP_01" : "Hello World!",
           "EXP_02" : "Hello %s!",
-          "EXP_03" : "Hello %s, welcome to %s!"
+          "EXP_03" : "Hello %s, welcome to '%s'!"
         }
         """)
     }

@@ -29,7 +29,7 @@ struct StringsXml: Codable, DynamicNodeDecoding, DynamicNodeEncoding {
     func encoded() throws -> Data {
         let encoder = XMLEncoder()
         encoder.outputFormatting = [.sortedKeys, .prettyPrinted]
-        return try encoder.encode(
+        let encoded = try encoder.encode(
             self,
             withRootKey: "resources",
             header: XMLHeader(
@@ -37,6 +37,10 @@ struct StringsXml: Codable, DynamicNodeDecoding, DynamicNodeEncoding {
                 encoding: "UTF-8"
             )
         )
+        var string = String(decoding: encoded, as: UTF8.self)
+        string = string.replacingOccurrences(of: "&apos;", with: "\\'")
+        string = string.replacingOccurrences(of: " ", with: "&#160;") // Non-Breaking Space
+        return string.data(using: .utf8) ?? encoded
     }
 }
 
