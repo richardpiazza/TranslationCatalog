@@ -39,6 +39,7 @@ struct StringsXml: Codable, DynamicNodeDecoding, DynamicNodeEncoding {
         )
         var string = String(decoding: encoded, as: UTF8.self)
         string = string.replacingOccurrences(of: "&apos;", with: "\\'")
+        string = string.replacingOccurrences(of: "&quot;", with: "\\\"")
         string = string.replacingOccurrences(of: " ", with: "&#160;") // Non-Breaking Space
         return string.data(using: .utf8) ?? encoded
     }
