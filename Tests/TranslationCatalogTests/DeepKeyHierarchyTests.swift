@@ -198,7 +198,7 @@ struct DeepKeyHierarchyTests {
         """)
     }
 
-    @Test func phantomOnlyCompression() throws {
+    @Test func localizedStringConvertiblePhantomOnlyCompression() throws {
         let syntax = try hierarchy
             .compressed(mergeOrphans: false)
             .syntaxTree()
@@ -291,7 +291,7 @@ struct DeepKeyHierarchyTests {
         """)
     }
 
-    @Test func orphanOnlyCompression() throws {
+    @Test func localizedStringConvertibleOrphanOnlyCompression() throws {
         let syntax = try hierarchy
             .compressed(mergePhantoms: false)
             .syntaxTree()
@@ -346,7 +346,7 @@ struct DeepKeyHierarchyTests {
         """)
     }
 
-    @Test func compression() throws {
+    @Test func localizedStringConvertibleCompression() throws {
         let syntax = try hierarchy
             .compressed()
             .syntaxTree()
@@ -389,6 +389,232 @@ struct DeepKeyHierarchyTests {
                     var prefix: String? {
                         "paymentMethodRemoveCard"
                     }
+                }
+            }
+        }
+        """)
+    }
+
+    @Test func localizedStringKey() {
+        let syntax = hierarchy.syntaxTree(style: .swiftUI)
+        #expect(syntax == """
+        import SwiftUI
+
+        extension LocalizedStringKey {
+
+            enum Payment {
+
+                enum Method {
+
+                    enum Add {
+                        /// Add payment method
+                        static let action: LocalizedStringKey = "PAYMENT_METHOD_ADD_ACTION"
+
+                        enum Card {
+
+                            enum Failure {
+                                /// Your payment method could not be added at this time.
+                                static let message: LocalizedStringKey = "PAYMENT_METHOD_ADD_CARD_FAILURE_MESSAGE"
+                            }
+
+                            enum Success {
+                                /// Your payment method has been added.
+                                static let message: LocalizedStringKey = "PAYMENT_METHOD_ADD_CARD_SUCCESS_MESSAGE"
+                            }
+                        }
+                    }
+
+                    enum Confirm {
+                        /// Are you sure you want to delete this payment method?
+                        static let delete: LocalizedStringKey = "PAYMENT_METHOD_CONFIRM_DELETE"
+                    }
+
+                    enum Expiration {
+                        /// Exp
+                        static let abbreviation: LocalizedStringKey = "PAYMENT_METHOD_EXPIRATION_ABBREVIATION"
+                    }
+
+                    enum Navigation {
+                        /// Manage Payments
+                        static let title: LocalizedStringKey = "PAYMENT_METHOD_NAVIGATION_TITLE"
+                    }
+
+                    enum Remove {
+
+                        enum Card {
+
+                            enum Failure {
+                                /// Your payment method could not be deleted at this time.
+                                static let message: LocalizedStringKey = "PAYMENT_METHOD_REMOVE_CARD_FAILURE_MESSAGE"
+                            }
+
+                            enum Success {
+                                /// Your payment method has been deleted.
+                                static let message: LocalizedStringKey = "PAYMENT_METHOD_REMOVE_CARD_SUCCESS_MESSAGE"
+                            }
+                        }
+                    }
+
+                    enum Section {
+                        /// Payment Methods
+                        static let title: LocalizedStringKey = "PAYMENT_METHOD_SECTION_TITLE"
+                    }
+                }
+            }
+        }
+        """)
+    }
+
+    @Test func localizedStringKeyPhantomOnlyCompression() throws {
+        let syntax = try hierarchy
+            .compressed(mergeOrphans: false)
+            .syntaxTree(style: .swiftUI)
+        #expect(syntax == """
+        import SwiftUI
+
+        extension LocalizedStringKey {
+
+            enum PaymentMethod {
+
+                enum Add {
+                    /// Add payment method
+                    static let action: LocalizedStringKey = "PAYMENT_METHOD_ADD_ACTION"
+
+                    enum Card {
+
+                        enum Failure {
+                            /// Your payment method could not be added at this time.
+                            static let message: LocalizedStringKey = "PAYMENT_METHOD_ADD_CARD_FAILURE_MESSAGE"
+                        }
+
+                        enum Success {
+                            /// Your payment method has been added.
+                            static let message: LocalizedStringKey = "PAYMENT_METHOD_ADD_CARD_SUCCESS_MESSAGE"
+                        }
+                    }
+                }
+
+                enum Confirm {
+                    /// Are you sure you want to delete this payment method?
+                    static let delete: LocalizedStringKey = "PAYMENT_METHOD_CONFIRM_DELETE"
+                }
+
+                enum Expiration {
+                    /// Exp
+                    static let abbreviation: LocalizedStringKey = "PAYMENT_METHOD_EXPIRATION_ABBREVIATION"
+                }
+
+                enum Navigation {
+                    /// Manage Payments
+                    static let title: LocalizedStringKey = "PAYMENT_METHOD_NAVIGATION_TITLE"
+                }
+
+                enum RemoveCard {
+
+                    enum Failure {
+                        /// Your payment method could not be deleted at this time.
+                        static let message: LocalizedStringKey = "PAYMENT_METHOD_REMOVE_CARD_FAILURE_MESSAGE"
+                    }
+
+                    enum Success {
+                        /// Your payment method has been deleted.
+                        static let message: LocalizedStringKey = "PAYMENT_METHOD_REMOVE_CARD_SUCCESS_MESSAGE"
+                    }
+                }
+
+                enum Section {
+                    /// Payment Methods
+                    static let title: LocalizedStringKey = "PAYMENT_METHOD_SECTION_TITLE"
+                }
+            }
+        }
+        """)
+    }
+
+    @Test func localizedStringKeyOrphanOnlyCompression() throws {
+        let syntax = try hierarchy
+            .compressed(mergePhantoms: false)
+            .syntaxTree(style: .swiftUI)
+        #expect(syntax == """
+        import SwiftUI
+
+        extension LocalizedStringKey {
+
+            enum Payment {
+
+                enum Method {
+                    /// Are you sure you want to delete this payment method?
+                    static let confirmDelete: LocalizedStringKey = "PAYMENT_METHOD_CONFIRM_DELETE"
+                    /// Exp
+                    static let expirationAbbreviation: LocalizedStringKey = "PAYMENT_METHOD_EXPIRATION_ABBREVIATION"
+                    /// Manage Payments
+                    static let navigationTitle: LocalizedStringKey = "PAYMENT_METHOD_NAVIGATION_TITLE"
+                    /// Payment Methods
+                    static let sectionTitle: LocalizedStringKey = "PAYMENT_METHOD_SECTION_TITLE"
+
+                    enum Add {
+                        /// Add payment method
+                        static let action: LocalizedStringKey = "PAYMENT_METHOD_ADD_ACTION"
+
+                        enum Card {
+                            /// Your payment method could not be added at this time.
+                            static let failureMessage: LocalizedStringKey = "PAYMENT_METHOD_ADD_CARD_FAILURE_MESSAGE"
+                            /// Your payment method has been added.
+                            static let successMessage: LocalizedStringKey = "PAYMENT_METHOD_ADD_CARD_SUCCESS_MESSAGE"
+                        }
+                    }
+
+                    enum Remove {
+
+                        enum Card {
+                            /// Your payment method could not be deleted at this time.
+                            static let failureMessage: LocalizedStringKey = "PAYMENT_METHOD_REMOVE_CARD_FAILURE_MESSAGE"
+                            /// Your payment method has been deleted.
+                            static let successMessage: LocalizedStringKey = "PAYMENT_METHOD_REMOVE_CARD_SUCCESS_MESSAGE"
+                        }
+                    }
+                }
+            }
+        }
+        """)
+    }
+
+    @Test func localizedStringKeyCompression() throws {
+        let syntax = try hierarchy
+            .compressed()
+            .syntaxTree(style: .swiftUI)
+        #expect(syntax == """
+        import SwiftUI
+
+        extension LocalizedStringKey {
+
+            enum PaymentMethod {
+                /// Are you sure you want to delete this payment method?
+                static let confirmDelete: LocalizedStringKey = "PAYMENT_METHOD_CONFIRM_DELETE"
+                /// Exp
+                static let expirationAbbreviation: LocalizedStringKey = "PAYMENT_METHOD_EXPIRATION_ABBREVIATION"
+                /// Manage Payments
+                static let navigationTitle: LocalizedStringKey = "PAYMENT_METHOD_NAVIGATION_TITLE"
+                /// Payment Methods
+                static let sectionTitle: LocalizedStringKey = "PAYMENT_METHOD_SECTION_TITLE"
+
+                enum Add {
+                    /// Add payment method
+                    static let action: LocalizedStringKey = "PAYMENT_METHOD_ADD_ACTION"
+
+                    enum Card {
+                        /// Your payment method could not be added at this time.
+                        static let failureMessage: LocalizedStringKey = "PAYMENT_METHOD_ADD_CARD_FAILURE_MESSAGE"
+                        /// Your payment method has been added.
+                        static let successMessage: LocalizedStringKey = "PAYMENT_METHOD_ADD_CARD_SUCCESS_MESSAGE"
+                    }
+                }
+
+                enum RemoveCard {
+                    /// Your payment method could not be deleted at this time.
+                    static let failureMessage: LocalizedStringKey = "PAYMENT_METHOD_REMOVE_CARD_FAILURE_MESSAGE"
+                    /// Your payment method has been deleted.
+                    static let successMessage: LocalizedStringKey = "PAYMENT_METHOD_REMOVE_CARD_SUCCESS_MESSAGE"
                 }
             }
         }

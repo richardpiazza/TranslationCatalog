@@ -154,7 +154,7 @@ struct ShallowKeyHierarchyTests {
         """)
     }
 
-    @Test func phantomOnlyCompression() throws {
+    @Test func localizedStringConvertiblePhantomOnlyCompression() throws {
         let syntax = try hierarchy
             .compressed(mergeOrphans: false)
             .syntaxTree()
@@ -209,7 +209,7 @@ struct ShallowKeyHierarchyTests {
         """)
     }
 
-    @Test func orphanOnlyCompression() throws {
+    @Test func localizedStringConvertibleOrphanOnlyCompression() throws {
         let key = LocalizationKey(
             key: "ZULU_ZONE",
             defaultValue: "zone"
@@ -250,7 +250,7 @@ struct ShallowKeyHierarchyTests {
         """)
     }
 
-    @Test func compression() throws {
+    @Test func localizedStringConvertibleCompression() throws {
         let syntax = try hierarchy
             .compressed()
             .syntaxTree()
@@ -272,6 +272,162 @@ struct ShallowKeyHierarchyTests {
                 var prefix: String? {
                     "platform"
                 }
+            }
+        }
+        """)
+    }
+
+    @Test func localizedStringKey() {
+        let syntax = hierarchy.syntaxTree(style: .swiftUI)
+        #expect(syntax == """
+        import SwiftUI
+
+        extension LocalizedStringKey {
+            /// Hello World!
+            static let greeting: LocalizedStringKey = "GREETING"
+
+            enum Application {
+                /// Lingua
+                static let name: LocalizedStringKey = "APPLICATION_NAME"
+            }
+
+            enum Hidden {
+                static let message: LocalizedStringKey = "HIDDEN_MESSAGE"
+            }
+
+            enum Platform {
+                /// Android
+                static let android: LocalizedStringKey = "PLATFORM_ANDROID"
+                /// Apple
+                static let apple: LocalizedStringKey = "PLATFORM_APPLE"
+                /// Web
+                static let web: LocalizedStringKey = "PLATFORM_WEB"
+
+                enum Apple {
+                    /// macOS
+                    static let mac: LocalizedStringKey = "PLATFORM_APPLE_MAC"
+                }
+            }
+
+            enum Zulu {
+
+                enum Time {
+                    /// definition
+                    static let definition: LocalizedStringKey = "ZULU_TIME_DEFINITION"
+                }
+            }
+        }
+        """)
+    }
+
+    @Test func localizedStringKeyPhantomOnlyCompression() throws {
+        let syntax = try hierarchy
+            .compressed(mergeOrphans: false)
+            .syntaxTree(style: .swiftUI)
+        #expect(syntax == """
+        import SwiftUI
+
+        extension LocalizedStringKey {
+            /// Hello World!
+            static let greeting: LocalizedStringKey = "GREETING"
+
+            enum Application {
+                /// Lingua
+                static let name: LocalizedStringKey = "APPLICATION_NAME"
+            }
+
+            enum Hidden {
+                static let message: LocalizedStringKey = "HIDDEN_MESSAGE"
+            }
+
+            enum Platform {
+                /// Android
+                static let android: LocalizedStringKey = "PLATFORM_ANDROID"
+                /// Apple
+                static let apple: LocalizedStringKey = "PLATFORM_APPLE"
+                /// Web
+                static let web: LocalizedStringKey = "PLATFORM_WEB"
+
+                enum Apple {
+                    /// macOS
+                    static let mac: LocalizedStringKey = "PLATFORM_APPLE_MAC"
+                }
+            }
+
+            enum ZuluTime {
+                /// definition
+                static let definition: LocalizedStringKey = "ZULU_TIME_DEFINITION"
+            }
+        }
+        """)
+    }
+
+    @Test func localizedStringKeyOrphanOnlyCompression() throws {
+        let key = LocalizationKey(
+            key: "ZULU_ZONE",
+            defaultValue: "zone"
+        )
+        var test = hierarchy
+        try test.processKey(key, path: [["ZULU"], ["ZONE"]])
+        let syntax = try test
+            .compressed(mergePhantoms: false)
+            .syntaxTree(style: .swiftUI)
+        #expect(syntax == """
+        import SwiftUI
+
+        extension LocalizedStringKey {
+            /// Lingua
+            static let applicationName: LocalizedStringKey = "APPLICATION_NAME"
+            /// Hello World!
+            static let greeting: LocalizedStringKey = "GREETING"
+            static let hiddenMessage: LocalizedStringKey = "HIDDEN_MESSAGE"
+
+            enum Platform {
+                /// Android
+                static let android: LocalizedStringKey = "PLATFORM_ANDROID"
+                /// Apple
+                static let apple: LocalizedStringKey = "PLATFORM_APPLE"
+                /// macOS
+                static let appleMac: LocalizedStringKey = "PLATFORM_APPLE_MAC"
+                /// Web
+                static let web: LocalizedStringKey = "PLATFORM_WEB"
+            }
+
+            enum Zulu {
+                /// definition
+                static let timeDefinition: LocalizedStringKey = "ZULU_TIME_DEFINITION"
+                /// zone
+                static let zone: LocalizedStringKey = "ZULU_ZONE"
+            }
+        }
+        """)
+    }
+
+    @Test func localizedStringKeyCompression() throws {
+        let syntax = try hierarchy
+            .compressed()
+            .syntaxTree(style: .swiftUI)
+        #expect(syntax == """
+        import SwiftUI
+
+        extension LocalizedStringKey {
+            /// Lingua
+            static let applicationName: LocalizedStringKey = "APPLICATION_NAME"
+            /// Hello World!
+            static let greeting: LocalizedStringKey = "GREETING"
+            static let hiddenMessage: LocalizedStringKey = "HIDDEN_MESSAGE"
+            /// definition
+            static let zuluTimeDefinition: LocalizedStringKey = "ZULU_TIME_DEFINITION"
+
+            enum Platform {
+                /// Android
+                static let android: LocalizedStringKey = "PLATFORM_ANDROID"
+                /// Apple
+                static let apple: LocalizedStringKey = "PLATFORM_APPLE"
+                /// macOS
+                static let appleMac: LocalizedStringKey = "PLATFORM_APPLE_MAC"
+                /// Web
+                static let web: LocalizedStringKey = "PLATFORM_WEB"
             }
         }
         """)
