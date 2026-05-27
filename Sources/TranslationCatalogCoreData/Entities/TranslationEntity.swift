@@ -75,7 +75,7 @@ extension TranslationCatalog.Translation {
             language: entity.language,
             script: entity.script,
             region: entity.region,
-            state: entity.state
+            state: entity.state,
         )
     }
 }

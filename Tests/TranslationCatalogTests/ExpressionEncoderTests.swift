@@ -15,19 +15,19 @@ struct ExpressionEncoderTests {
             id: UUID(uuidString: "4D08CE7F-ED98-437E-B7CB-BB18147B9B1A")!,
             key: "EXP_01",
             value: "Hello World!",
-            languageCode: .english
+            languageCode: .english,
         ),
         Expression(
             id: UUID(uuidString: "5638B19C-2034-49F2-A163-54CC37269050")!,
             key: "EXP_02",
             value: #"Hello "%s"!"#,
-            languageCode: .english
+            languageCode: .english,
         ),
         Expression(
             id: UUID(uuidString: "5870E853-35B9-4C71-B8D6-7EA922C72835")!,
             key: "EXP_03",
             value: "Hello %s, welcome to '%s'!", // 'Hello{Non-Breaking-Space}%s
-            languageCode: .english
+            languageCode: .english,
         ),
     ]
 
@@ -36,7 +36,7 @@ struct ExpressionEncoderTests {
             for: expressions,
             locale: locale,
             fallback: true,
-            format: .androidXML
+            format: .androidXML,
         )
         let output = String(decoding: data, as: UTF8.self)
         #expect(output == """
@@ -54,7 +54,7 @@ struct ExpressionEncoderTests {
             for: expressions,
             locale: locale,
             fallback: true,
-            format: .appleStrings
+            format: .appleStrings,
         )
         let output = String(decoding: data, as: UTF8.self)
         #expect(output == """
@@ -69,7 +69,7 @@ struct ExpressionEncoderTests {
             for: expressions,
             locale: locale,
             fallback: true,
-            format: .json
+            format: .json,
         )
         let output = String(decoding: data, as: UTF8.self)
         #expect(output == """

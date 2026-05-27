@@ -9,7 +9,7 @@ struct Preview: AsyncParsableCommand {
         commandName: "preview",
         abstract: "Displays the localizations found in a translation file.",
         version: "1.0.0",
-        helpNames: .shortAndLong
+        helpNames: .shortAndLong,
     )
 
     @Argument(help: "The source of the file 'android-xml', 'apple-strings', 'json'.")
@@ -46,7 +46,7 @@ struct Preview: AsyncParsableCommand {
             defaultLanguage: language,
             language: language,
             script: script,
-            region: region
+            region: region,
         )
 
         for expression in expressions.sorted(by: { $0.key < $1.key }) {

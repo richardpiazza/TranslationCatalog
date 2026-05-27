@@ -37,7 +37,7 @@ extension FileManager {
             for: .applicationSupportDirectory,
             in: .userDomainMask,
             appropriateFor: nil,
-            create: true
+            create: true,
         )
         let application = url.appendingPathComponent("localizer")
         try createDirectory(at: application, withIntermediateDirectories: true, attributes: nil)

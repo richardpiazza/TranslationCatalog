@@ -11,7 +11,7 @@ extension TranslationCatalog.Expression {
             name: name,
             context: context,
             feature: feature,
-            translations: translations.map { Translation(translation: $0, expressionId: id) }
+            translations: translations.map { Translation(translation: $0, expressionId: id) },
         )
     }
 }
@@ -20,7 +20,7 @@ extension [TranslationCatalog.Expression] {
     /// Has value for the `locale` or should fallback
     func compactMap(
         locale: Locale,
-        fallback: Bool
+        fallback: Bool,
     ) -> [TranslationCatalog.Expression] {
         compactMap { expression -> TranslationCatalog.Expression? in
             if expression.value(for: locale) != nil || fallback {

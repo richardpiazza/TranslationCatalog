@@ -12,6 +12,6 @@ struct Configure: AsyncParsableCommand {
             Set.self,
         ],
         defaultSubcommand: Get.self,
-        helpNames: .shortAndLong
+        helpNames: .shortAndLong,
     )
 }

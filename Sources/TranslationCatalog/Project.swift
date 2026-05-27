@@ -12,7 +12,7 @@ public struct Project: Hashable, Sendable, Identifiable, Codable {
     public init(
         id: UUID,
         name: String,
-        expressions: [Expression] = []
+        expressions: [Expression] = [],
     ) {
         self.id = id
         self.name = name

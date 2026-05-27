@@ -87,7 +87,7 @@ extension FilesystemContainer {
                     defaultLanguage: expression.defaultLanguage,
                     defaultValue: value,
                     context: expression.context,
-                    feature: expression.feature
+                    feature: expression.feature,
                 )
 
                 try writeDocument(document)
@@ -105,7 +105,7 @@ extension FilesystemContainer {
                     languageCode: translation.languageCode,
                     scriptCode: translation.scriptCode,
                     regionCode: translation.regionCode,
-                    state: .needsReview
+                    state: .needsReview,
                 )
 
                 try writeDocument(document)
@@ -205,7 +205,7 @@ extension FilesystemContainer {
         let document = ProjectDocument(
             id: id,
             name: project.name,
-            expressionIds: Set(expressionIds)
+            expressionIds: Set(expressionIds),
         )
 
         try writeDocument(document)
@@ -416,7 +416,7 @@ extension FilesystemContainer {
             defaultLanguage: expression.defaultLanguageCode,
             defaultValue: expression.defaultValue,
             context: expression.context,
-            feature: expression.feature
+            feature: expression.feature,
         )
 
         try writeDocument(document)
@@ -582,7 +582,7 @@ extension FilesystemContainer {
             languageCode: translation.language,
             scriptCode: translation.script,
             regionCode: translation.region,
-            state: translation.state
+            state: translation.state,
         )
 
         try writeDocument(document)
@@ -627,14 +627,14 @@ extension FilesystemContainer {
 
     public func locales() throws -> Set<Locale> {
         let expressionLocales = Set(
-            expressionDocuments.map { Locale(languageCode: $0.defaultLanguage) }
+            expressionDocuments.map { Locale(languageCode: $0.defaultLanguage) },
         )
 
         let translationLocales = Set(
             translationDocuments
                 .map { translation in
                     Locale(languageCode: translation.languageCode, script: translation.scriptCode, languageRegion: translation.regionCode)
-                }
+                },
         )
 
         return expressionLocales.union(translationLocales)

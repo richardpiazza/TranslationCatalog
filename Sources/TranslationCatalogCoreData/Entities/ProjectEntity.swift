@@ -49,7 +49,7 @@ extension TranslationCatalog.Project {
 
         self.init(
             id: id,
-            name: name
+            name: name,
         )
     }
 }

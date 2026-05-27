@@ -165,17 +165,17 @@ enum CatalogData {
     static let project1 = Project(
         id: .project1,
         name: "Bakeshop",
-        expressions: [expression1, expression2]
+        expressions: [expression1, expression2],
     )
     static let project2 = Project(
         id: .project2,
         name: "Shopclass",
-        expressions: [expression1, expression2, expression3]
+        expressions: [expression1, expression2, expression3],
     )
     static let project3 = Project(
         id: .project3,
         name: "Classmate",
-        expressions: [expression1, expression5]
+        expressions: [expression1, expression5],
     )
     static let expression1 = Expression(
         id: .expression1,
@@ -184,7 +184,7 @@ enum CatalogData {
         languageCode: .english,
         context: "Button/Action Title",
         feature: "Buttons",
-        translations: [translation1, translation2, translation3, translation14, translation15, translation16]
+        translations: [translation1, translation2, translation3, translation14, translation15, translation16],
     )
     static let expression2 = Expression(
         id: .expression2,
@@ -193,7 +193,7 @@ enum CatalogData {
         languageCode: .english,
         context: "Button/Action Title",
         feature: "Buttons",
-        translations: [translation4, translation5, translation6]
+        translations: [translation4, translation5, translation6],
     )
     static let expression3 = Expression(
         id: .expression3,
@@ -203,7 +203,7 @@ enum CatalogData {
         name: "Pull to Refresh",
         context: "Manual Refresh Action",
         feature: "Common",
-        translations: [translation7, translation8, translation9]
+        translations: [translation7, translation8, translation9],
     )
     static let expression4 = Expression(
         id: .expression4,
@@ -213,7 +213,7 @@ enum CatalogData {
         name: "Fully Qualified Domain Name",
         context: "Test Entry Prompt",
         feature: "Git,Internet",
-        translations: [translation10]
+        translations: [translation10],
     )
     static let expression5 = Expression(
         id: .expression5,
@@ -223,7 +223,7 @@ enum CatalogData {
         name: "Authentication Failure Message",
         context: "Authentication Alert Message",
         feature: "Alert,Auth",
-        translations: [translation11, translation12, translation13]
+        translations: [translation11, translation12, translation13],
     )
     static let translation1 = TranslationCatalog.Translation(
         id: .translation1,
@@ -232,7 +232,7 @@ enum CatalogData {
         language: .english,
         script: nil,
         region: .unitedKingdom,
-        state: .translated
+        state: .translated,
     )
     static let translation2 = TranslationCatalog.Translation(
         id: .translation2,
@@ -241,7 +241,7 @@ enum CatalogData {
         language: .spanish,
         script: nil,
         region: nil,
-        state: .translated
+        state: .translated,
     )
     static let translation3 = TranslationCatalog.Translation(
         id: .translation3,
@@ -250,7 +250,7 @@ enum CatalogData {
         language: .french,
         script: nil,
         region: nil,
-        state: .needsReview
+        state: .needsReview,
     )
     static let translation4 = TranslationCatalog.Translation(
         id: .translation4,
@@ -259,7 +259,7 @@ enum CatalogData {
         language: .english,
         script: nil,
         region: .unitedKingdom,
-        state: .translated
+        state: .translated,
     )
     static let translation5 = TranslationCatalog.Translation(
         id: .translation5,
@@ -268,7 +268,7 @@ enum CatalogData {
         language: .spanish,
         script: nil,
         region: nil,
-        state: .translated
+        state: .translated,
     )
     static let translation6 = TranslationCatalog.Translation(
         id: .translation6,
@@ -277,7 +277,7 @@ enum CatalogData {
         language: .french,
         script: nil,
         region: nil,
-        state: .needsReview
+        state: .needsReview,
     )
     static let translation7 = TranslationCatalog.Translation(
         id: .translation7,
@@ -286,7 +286,7 @@ enum CatalogData {
         language: .english,
         script: nil,
         region: .unitedKingdom,
-        state: .translated
+        state: .translated,
     )
     static let translation8 = TranslationCatalog.Translation(
         id: .translation8,
@@ -295,7 +295,7 @@ enum CatalogData {
         language: .chinese,
         script: .hanSimplified,
         region: nil,
-        state: .needsReview
+        state: .needsReview,
     )
     static let translation9 = TranslationCatalog.Translation(
         id: .translation9,
@@ -304,7 +304,7 @@ enum CatalogData {
         language: .portuguese,
         script: nil,
         region: .brazil,
-        state: .needsReview
+        state: .needsReview,
     )
     static let translation10 = TranslationCatalog.Translation(
         id: .translation10,
@@ -313,7 +313,7 @@ enum CatalogData {
         language: .english,
         script: nil,
         region: .unitedKingdom,
-        state: .translated
+        state: .translated,
     )
     static let translation11 = TranslationCatalog.Translation(
         id: .translation11,
@@ -322,7 +322,7 @@ enum CatalogData {
         language: .english,
         script: nil,
         region: .unitedKingdom,
-        state: .translated
+        state: .translated,
     )
     static let translation12 = TranslationCatalog.Translation(
         id: .translation12,
@@ -331,7 +331,7 @@ enum CatalogData {
         language: .french,
         script: nil,
         region: nil,
-        state: .needsReview
+        state: .needsReview,
     )
     static let translation13 = TranslationCatalog.Translation(
         id: .translation13,
@@ -340,7 +340,7 @@ enum CatalogData {
         language: .french,
         script: nil,
         region: .canada,
-        state: .needsReview
+        state: .needsReview,
     )
     static let translation14 = TranslationCatalog.Translation(
         id: .translation14,
@@ -349,7 +349,7 @@ enum CatalogData {
         language: .french,
         script: nil,
         region: .canada,
-        state: .needsReview
+        state: .needsReview,
     )
     static let translation15 = TranslationCatalog.Translation(
         id: .translation15,
@@ -358,7 +358,7 @@ enum CatalogData {
         language: .portuguese,
         script: nil,
         region: .brazil,
-        state: .needsReview
+        state: .needsReview,
     )
     static let translation16 = TranslationCatalog.Translation(
         id: .translation16,
@@ -367,6 +367,6 @@ enum CatalogData {
         language: .chinese,
         script: .hanSimplified,
         region: nil,
-        state: .needsReview
+        state: .needsReview,
     )
 }

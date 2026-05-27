@@ -199,7 +199,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             let mappedExpressions = expressions.map { expression in
                 TranslationCatalog.Expression(
                     expression: expression,
-                    translations: translations.filter { $0.expressionId == expression.id }
+                    translations: translations.filter { $0.expressionId == expression.id },
                 )
             }
             return mappedExpressions.filter { !$0.hasValuesForLocales(locales) }
@@ -268,7 +268,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
         for translation in expression.translations {
             let expressionTranslation = Translation(
                 translation: translation,
-                expressionId: id
+                expressionId: id,
             )
             try createTranslation(expressionTranslation)
         }
@@ -521,7 +521,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
     public func locales() throws -> Set<Locale> {
         let expressionEntities = try db.expressionEntities(statement: renderStatement(.selectAllFromExpression))
         let expressionLocales = Set(
-            expressionEntities.map { Locale(languageCode: $0.languageCode) }
+            expressionEntities.map { Locale(languageCode: $0.languageCode) },
         )
 
         let translationEntities = try db.translationEntities(statement: renderStatement(.selectAllFromTranslation))
@@ -529,7 +529,7 @@ public class SQLiteCatalog: TranslationCatalog.Catalog {
             translationEntities
                 .map { translation in
                     Locale(languageCode: translation.languageCode, script: translation.scriptCode, languageRegion: translation.regionCode)
-                }
+                },
         )
 
         return expressionLocales.union(translationLocales)

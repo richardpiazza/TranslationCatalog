@@ -22,7 +22,7 @@ public struct ExpressionDecoder {
         defaultLanguage: Locale.LanguageCode,
         language: Locale.LanguageCode,
         script: Locale.Script?,
-        region: Locale.Region?
+        region: Locale.Region?,
     ) throws -> [TranslationCatalog.Expression] {
         let expressions: [TranslationCatalog.Expression]
 
@@ -33,7 +33,7 @@ public struct ExpressionDecoder {
                 defaultLanguage: defaultLanguage,
                 language: language,
                 script: script,
-                region: region
+                region: region,
             )
         case .appleStrings:
             let dictionary = try Dictionary(data: data)
@@ -41,7 +41,7 @@ public struct ExpressionDecoder {
                 defaultLanguage: defaultLanguage,
                 language: language,
                 script: script,
-                region: region
+                region: region,
             )
         case .json:
             let dictionary = try JSONDecoder().decode([String: String].self, from: data)
@@ -49,7 +49,7 @@ public struct ExpressionDecoder {
                 defaultLanguage: defaultLanguage,
                 language: language,
                 script: script,
-                region: region
+                region: region,
             )
         }
 
