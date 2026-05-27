@@ -13,6 +13,8 @@ extension Catalog {
             discussion: """
             Generate an enumerated reference to strings. For example:
 
+            (Using Style: 'locale-support', default)
+            import LocaleSupport
             enum LocalizedStrings: String, LocalizedStringConvertible {
                 /// Title for account screen.
                 case account = "Account"
@@ -24,6 +26,18 @@ extension Catalog {
                     var prefix: String? {
                         "account"
                     }
+                }
+            }
+
+            (Using Style: 'swift-ui')
+            import SwiftUI
+            extension LocalizedStringKey {
+                /// Title for account screen.
+                static let account: LocalizedStringKey = "ACCOUNT"
+
+                enum Account {
+                    /// Action to navigate to the previous screen.
+                    static let back = "ACCOUNT_BACK"
                 }
             }
             """,
@@ -42,6 +56,9 @@ extension Catalog {
 
         @Option(help: "Path to catalog to use in place of the application library.")
         var path: String?
+
+        @Option(help: "Generated reference style.")
+        var style: SyntaxStyle = .localeSupport
 
         @Flag(help: "Reduce the instance of single-content nodes.")
         var compressed: Bool = false
@@ -72,9 +89,14 @@ extension Catalog {
             }
 
             let syntax = if let name, !name.isEmpty {
-                keyHierarchy.syntaxTree(rootDeclaration: name)
+                keyHierarchy.syntaxTree(
+                    style: style,
+                    rootDeclaration: name
+                )
             } else {
-                keyHierarchy.syntaxTree()
+                keyHierarchy.syntaxTree(
+                    style: style
+                )
             }
 
             print(syntax)
