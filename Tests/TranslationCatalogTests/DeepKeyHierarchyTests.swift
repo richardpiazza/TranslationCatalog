@@ -400,7 +400,7 @@ struct DeepKeyHierarchyTests {
         #expect(syntax == """
         import SwiftUI
 
-        extension LocalizedStringKey {
+        @MainActor extension LocalizedStringKey {
 
             enum Payment {
 
@@ -472,7 +472,7 @@ struct DeepKeyHierarchyTests {
         #expect(syntax == """
         import SwiftUI
 
-        extension LocalizedStringKey {
+        @MainActor extension LocalizedStringKey {
 
             enum PaymentMethod {
 
@@ -538,7 +538,7 @@ struct DeepKeyHierarchyTests {
         #expect(syntax == """
         import SwiftUI
 
-        extension LocalizedStringKey {
+        @MainActor extension LocalizedStringKey {
 
             enum Payment {
 
@@ -586,7 +586,7 @@ struct DeepKeyHierarchyTests {
         #expect(syntax == """
         import SwiftUI
 
-        extension LocalizedStringKey {
+        @MainActor extension LocalizedStringKey {
 
             enum PaymentMethod {
                 /// Are you sure you want to delete this payment method?

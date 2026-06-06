@@ -37,6 +37,7 @@ public extension KeyHierarchy {
 
                 ExtensionDeclSyntax(
                     leadingTrivia: .newlines(2),
+                    attributes: AttributeListSyntax([.attribute("@MainActor")]),
                     extendedType: TypeSyntax(stringLiteral: "LocalizedStringKey")
                 ) {
                     let hierarchy = self

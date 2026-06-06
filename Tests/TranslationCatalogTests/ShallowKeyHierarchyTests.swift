@@ -282,7 +282,7 @@ struct ShallowKeyHierarchyTests {
         #expect(syntax == """
         import SwiftUI
 
-        extension LocalizedStringKey {
+        @MainActor extension LocalizedStringKey {
             /// Hello World!
             static let greeting: LocalizedStringKey = "GREETING"
 
@@ -327,7 +327,7 @@ struct ShallowKeyHierarchyTests {
         #expect(syntax == """
         import SwiftUI
 
-        extension LocalizedStringKey {
+        @MainActor extension LocalizedStringKey {
             /// Hello World!
             static let greeting: LocalizedStringKey = "GREETING"
 
@@ -375,7 +375,7 @@ struct ShallowKeyHierarchyTests {
         #expect(syntax == """
         import SwiftUI
 
-        extension LocalizedStringKey {
+        @MainActor extension LocalizedStringKey {
             /// Lingua
             static let applicationName: LocalizedStringKey = "APPLICATION_NAME"
             /// Hello World!
@@ -410,7 +410,7 @@ struct ShallowKeyHierarchyTests {
         #expect(syntax == """
         import SwiftUI
 
-        extension LocalizedStringKey {
+        @MainActor extension LocalizedStringKey {
             /// Lingua
             static let applicationName: LocalizedStringKey = "APPLICATION_NAME"
             /// Hello World!

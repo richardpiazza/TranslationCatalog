@@ -22,6 +22,7 @@ public struct KeyHierarchy {
         "continue",
         "for",
         "in",
+        "import",
         "self",
     ]
 
