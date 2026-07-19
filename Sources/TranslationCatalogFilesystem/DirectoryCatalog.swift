@@ -8,36 +8,15 @@ public typealias FilesystemCatalog = DirectoryCatalog
 public class DirectoryCatalog: FilesystemContainer {
 
     let url: URL
+    let translationContainer: URL
+    let expressionContainer: URL
+    let projectContainer: URL
     var translationDocuments: [TranslationDocument] = []
     var expressionDocuments: [ExpressionDocument] = []
     var projectDocuments: [ProjectDocument] = []
 
     @available(*, deprecated, renamed: "url")
     var medium: URL { url }
-
-    var translationContainer: URL {
-        guard let url = try? directory(forPath: Self.translationsPath) else {
-            preconditionFailure("Invalid Translation Directory")
-        }
-
-        return url
-    }
-
-    var expressionContainer: URL {
-        guard let url = try? directory(forPath: Self.expressionsPath) else {
-            preconditionFailure("Invalid Expression Directory")
-        }
-
-        return url
-    }
-
-    var projectContainer: URL {
-        guard let url = try? directory(forPath: Self.projectsPath) else {
-            preconditionFailure("")
-        }
-
-        return url
-    }
 
     private let fileManager = FileManager.default
 
@@ -47,6 +26,9 @@ public class DirectoryCatalog: FilesystemContainer {
         }
 
         self.url = url
+        translationContainer = try FileManager.default.directory(forPath: Self.translationsPath, of: url)
+        expressionContainer = try FileManager.default.directory(forPath: Self.expressionsPath, of: url)
+        projectContainer = try FileManager.default.directory(forPath: Self.projectsPath, of: url)
         if let schemaVersion = getSchemaVersion() {
             try migrateSchema(from: schemaVersion, to: .current)
             try loadAllDocuments()
@@ -54,14 +36,6 @@ public class DirectoryCatalog: FilesystemContainer {
             try migrateSchema(from: .v1, to: .current)
             try loadAllDocuments()
         }
-    }
-
-    private func directory(forPath path: String) throws -> URL {
-        let url = url.appending(path: path, directoryHint: .isDirectory)
-        if !fileManager.fileExists(atPath: url.path()) {
-            try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
-        }
-        return url
     }
 
     func loadDocuments<T: Document>(from container: URL, using decoder: JSONDecoder) throws -> [T] {

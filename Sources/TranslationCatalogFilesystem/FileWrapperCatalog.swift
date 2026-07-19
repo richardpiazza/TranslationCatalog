@@ -6,21 +6,12 @@ import TranslationCatalog
 public class FileWrapperCatalog: FilesystemContainer {
 
     let medium: FileWrapper
+    let translationContainer: FileWrapper
+    let expressionContainer: FileWrapper
+    let projectContainer: FileWrapper
     var translationDocuments: [TranslationDocument] = []
     var expressionDocuments: [ExpressionDocument] = []
     var projectDocuments: [ProjectDocument] = []
-
-    var translationContainer: FileWrapper {
-        directory(forPath: Self.translationsPath)
-    }
-
-    var expressionContainer: FileWrapper {
-        directory(forPath: Self.expressionsPath)
-    }
-
-    var projectContainer: FileWrapper {
-        directory(forPath: Self.projectsPath)
-    }
 
     public init(fileWrapper: FileWrapper) throws {
         guard fileWrapper.isDirectory else {
@@ -28,6 +19,10 @@ public class FileWrapperCatalog: FilesystemContainer {
         }
 
         medium = fileWrapper
+        translationContainer = fileWrapper.directory(forPath: Self.translationsPath)
+        expressionContainer = fileWrapper.directory(forPath: Self.expressionsPath)
+        projectContainer = fileWrapper.directory(forPath: Self.projectsPath)
+
         if let schemaVersion = getSchemaVersion() {
             try migrateSchema(from: schemaVersion, to: .current)
             try loadAllDocuments()
@@ -37,15 +32,26 @@ public class FileWrapperCatalog: FilesystemContainer {
         }
     }
 
-    private func directory(forPath path: String) -> FileWrapper {
-        guard let wrapper = medium.fileWrappers?[path] else {
-            let directoryWrapper = FileWrapper(directoryWithFileWrappers: [:])
-            directoryWrapper.preferredFilename = path
-            medium.addFileWrapper(directoryWrapper)
-            return directoryWrapper
+    /// Add all catalog content to the provided `FileWrapper`
+    public func snapshot(to fileWrapper: FileWrapper, using encoder: JSONEncoder) throws {
+        let translationsWrapper = fileWrapper.directory(forPath: Self.translationsPath)
+        let expressionsWrapper = fileWrapper.directory(forPath: Self.expressionsPath)
+        let projectsWrapper = fileWrapper.directory(forPath: Self.projectsPath)
+
+        for document in translationDocuments {
+            let data = try encoder.encode(document)
+            translationsWrapper.addRegularFile(withContents: data, preferredFilename: document.filename)
         }
 
-        return wrapper
+        for document in expressionDocuments {
+            let data = try encoder.encode(document)
+            expressionsWrapper.addRegularFile(withContents: data, preferredFilename: document.filename)
+        }
+
+        for document in projectDocuments {
+            let data = try encoder.encode(document)
+            projectsWrapper.addRegularFile(withContents: data, preferredFilename: document.filename)
+        }
     }
 
     func loadDocuments<T: Document>(from container: FileWrapper, using decoder: JSONDecoder) throws -> [T] {
