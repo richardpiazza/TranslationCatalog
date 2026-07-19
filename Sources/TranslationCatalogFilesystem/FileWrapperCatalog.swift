@@ -6,21 +6,12 @@ import TranslationCatalog
 public class FileWrapperCatalog: FilesystemContainer {
 
     let medium: FileWrapper
+    let translationContainer: FileWrapper
+    let expressionContainer: FileWrapper
+    let projectContainer: FileWrapper
     var translationDocuments: [TranslationDocument] = []
     var expressionDocuments: [ExpressionDocument] = []
     var projectDocuments: [ProjectDocument] = []
-
-    var translationContainer: FileWrapper {
-        directory(forPath: Self.translationsPath)
-    }
-
-    var expressionContainer: FileWrapper {
-        directory(forPath: Self.expressionsPath)
-    }
-
-    var projectContainer: FileWrapper {
-        directory(forPath: Self.projectsPath)
-    }
 
     public init(fileWrapper: FileWrapper) throws {
         guard fileWrapper.isDirectory else {
@@ -28,6 +19,10 @@ public class FileWrapperCatalog: FilesystemContainer {
         }
 
         medium = fileWrapper
+        translationContainer = fileWrapper.directory(forPath: Self.translationsPath)
+        expressionContainer = fileWrapper.directory(forPath: Self.expressionsPath)
+        projectContainer = fileWrapper.directory(forPath: Self.projectsPath)
+
         if let schemaVersion = getSchemaVersion() {
             try migrateSchema(from: schemaVersion, to: .current)
             try loadAllDocuments()
@@ -37,15 +32,76 @@ public class FileWrapperCatalog: FilesystemContainer {
         }
     }
 
-    private func directory(forPath path: String) -> FileWrapper {
-        guard let wrapper = medium.fileWrappers?[path] else {
-            let directoryWrapper = FileWrapper(directoryWithFileWrappers: [:])
-            directoryWrapper.preferredFilename = path
-            medium.addFileWrapper(directoryWrapper)
-            return directoryWrapper
+    /// Add all catalog content to the provided `FileWrapper`
+    public func snapshot(to fileWrapper: FileWrapper, using encoder: JSONEncoder) throws {
+        let translationsWrapper = fileWrapper.directory(forPath: Self.translationsPath)
+        let expressionsWrapper = fileWrapper.directory(forPath: Self.expressionsPath)
+        let projectsWrapper = fileWrapper.directory(forPath: Self.projectsPath)
+
+        let existingTranslations = Set((translationsWrapper.fileWrappers ?? [:]).keys)
+        let existingExpressions = Set((expressionsWrapper.fileWrappers ?? [:]).keys)
+        let existingProjects = Set((projectsWrapper.fileWrappers ?? [:]).keys)
+
+        let nextTranslations = Set(translationDocuments.map(\.filename))
+        let nextExpressions = Set(expressionDocuments.map(\.filename))
+        let nextProjects = Set(projectDocuments.map(\.filename))
+
+        // Translations
+        let addedTranslations = nextTranslations.subtracting(existingTranslations)
+        let removedTranslations = existingTranslations.subtracting(nextTranslations)
+        for filename in removedTranslations {
+            if let wrapper = translationsWrapper.fileWrappers?[filename] {
+                translationsWrapper.removeFileWrapper(wrapper)
+            }
         }
 
-        return wrapper
+        for document in translationDocuments {
+            let data = try encoder.encode(document)
+            if !addedTranslations.contains(document.filename) {
+                if let wrapper = translationsWrapper.fileWrappers?[document.filename] {
+                    translationsWrapper.removeFileWrapper(wrapper)
+                }
+            }
+            translationsWrapper.addRegularFile(withContents: data, preferredFilename: document.filename)
+        }
+
+        // Expressions
+        let addedExpressions = nextExpressions.subtracting(existingExpressions)
+        let removedExpressions = existingExpressions.subtracting(nextExpressions)
+        for filename in removedExpressions {
+            if let wrapper = expressionsWrapper.fileWrappers?[filename] {
+                expressionsWrapper.removeFileWrapper(wrapper)
+            }
+        }
+
+        for document in expressionDocuments {
+            let data = try encoder.encode(document)
+            if !addedExpressions.contains(document.filename) {
+                if let wrapper = expressionsWrapper.fileWrappers?[document.filename] {
+                    expressionsWrapper.removeFileWrapper(wrapper)
+                }
+            }
+            expressionsWrapper.addRegularFile(withContents: data, preferredFilename: document.filename)
+        }
+
+        // Projects
+        let addedProjects = nextProjects.subtracting(existingProjects)
+        let removedProjects = existingProjects.subtracting(nextProjects)
+        for filename in removedProjects {
+            if let wrapper = projectsWrapper.fileWrappers?[filename] {
+                projectsWrapper.removeFileWrapper(wrapper)
+            }
+        }
+
+        for document in projectDocuments {
+            let data = try encoder.encode(document)
+            if !addedProjects.contains(document.filename) {
+                if let wrapper = expressionsWrapper.fileWrappers?[document.filename] {
+                    expressionsWrapper.removeFileWrapper(wrapper)
+                }
+            }
+            projectsWrapper.addRegularFile(withContents: data, preferredFilename: document.filename)
+        }
     }
 
     func loadDocuments<T: Document>(from container: FileWrapper, using decoder: JSONDecoder) throws -> [T] {
