@@ -7,7 +7,7 @@ public typealias FilesystemCatalog = DirectoryCatalog
 /// Implementation of `Catalog` the reads/writes data from/to a filesystem directory.
 public class DirectoryCatalog: FilesystemContainer {
 
-    let url: URL
+    let medium: URL
     let translationContainer: URL
     let expressionContainer: URL
     let projectContainer: URL
@@ -15,8 +15,8 @@ public class DirectoryCatalog: FilesystemContainer {
     var expressionDocuments: [ExpressionDocument] = []
     var projectDocuments: [ProjectDocument] = []
 
-    @available(*, deprecated, renamed: "url")
-    var medium: URL { url }
+    @available(*, deprecated, message: "Match 'FilesystemContainer' protocol requirements.", renamed: "medium")
+    var url: URL { medium }
 
     private let fileManager = FileManager.default
 
@@ -25,7 +25,7 @@ public class DirectoryCatalog: FilesystemContainer {
             throw URLError(.unsupportedURL)
         }
 
-        self.url = url
+        medium = url
         translationContainer = try FileManager.default.directory(forPath: Self.translationsPath, of: url)
         expressionContainer = try FileManager.default.directory(forPath: Self.expressionsPath, of: url)
         projectContainer = try FileManager.default.directory(forPath: Self.projectsPath, of: url)
@@ -79,7 +79,7 @@ public class DirectoryCatalog: FilesystemContainer {
     }
 
     func getSchemaVersion(using decoder: JSONDecoder) -> DocumentSchemaVersion? {
-        let url = url.appending(path: Self.versionPath, directoryHint: .notDirectory)
+        let url = medium.appending(path: Self.versionPath, directoryHint: .notDirectory)
 
         do {
             let data = try Data(contentsOf: url)
@@ -91,7 +91,7 @@ public class DirectoryCatalog: FilesystemContainer {
     }
 
     func setSchemaVersion(_ version: DocumentSchemaVersion, using encoder: JSONEncoder) throws {
-        let url = url.appending(path: Self.versionPath, directoryHint: .notDirectory)
+        let url = medium.appending(path: Self.versionPath, directoryHint: .notDirectory)
         let data = try encoder.encode(version.rawValue)
         try data.write(to: url)
     }

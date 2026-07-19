@@ -1,4 +1,3 @@
-#if os(macOS) || os(iOS) || os(watchOS) || os(tvOS) || os(visionOS)
 import Foundation
 
 extension FileManager {
@@ -10,4 +9,3 @@ extension FileManager {
         return url
     }
 }
-#endif
