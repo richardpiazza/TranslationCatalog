@@ -38,18 +38,68 @@ public class FileWrapperCatalog: FilesystemContainer {
         let expressionsWrapper = fileWrapper.directory(forPath: Self.expressionsPath)
         let projectsWrapper = fileWrapper.directory(forPath: Self.projectsPath)
 
+        let existingTranslations = Set((translationsWrapper.fileWrappers ?? [:]).keys)
+        let existingExpressions = Set((translationsWrapper.fileWrappers ?? [:]).keys)
+        let existingProjects = Set((translationsWrapper.fileWrappers ?? [:]).keys)
+
+        let nextTranslations = Set(translationDocuments.map(\.filename))
+        let nextExpressions = Set(expressionDocuments.map(\.filename))
+        let nextProjects = Set(projectDocuments.map(\.filename))
+
+        // Translations
+        let addedTranslations = nextTranslations.subtracting(existingTranslations)
+        let removedTranslations = existingTranslations.subtracting(nextTranslations)
+        for filename in removedTranslations {
+            if let wrapper = translationsWrapper.fileWrappers?[filename] {
+                translationsWrapper.removeFileWrapper(wrapper)
+            }
+        }
+
         for document in translationDocuments {
             let data = try encoder.encode(document)
+            if !addedTranslations.contains(document.filename) {
+                if let wrapper = translationsWrapper.fileWrappers?[document.filename] {
+                    translationsWrapper.removeFileWrapper(wrapper)
+                }
+            }
             translationsWrapper.addRegularFile(withContents: data, preferredFilename: document.filename)
+        }
+
+        // Expressions
+        let addedExpressions = nextExpressions.subtracting(existingExpressions)
+        let removedExpressions = existingExpressions.subtracting(nextExpressions)
+        for filename in removedExpressions {
+            if let wrapper = expressionsWrapper.fileWrappers?[filename] {
+                expressionsWrapper.removeFileWrapper(wrapper)
+            }
         }
 
         for document in expressionDocuments {
             let data = try encoder.encode(document)
+            if !addedExpressions.contains(document.filename) {
+                if let wrapper = expressionsWrapper.fileWrappers?[document.filename] {
+                    expressionsWrapper.removeFileWrapper(wrapper)
+                }
+            }
             expressionsWrapper.addRegularFile(withContents: data, preferredFilename: document.filename)
+        }
+
+        // Projects
+        let addedProjects = nextProjects.subtracting(existingProjects)
+        let removedProjects = existingProjects.subtracting(nextProjects)
+        for filename in removedProjects {
+            if let wrapper = projectsWrapper.fileWrappers?[filename] {
+                projectsWrapper.removeFileWrapper(wrapper)
+            }
         }
 
         for document in projectDocuments {
             let data = try encoder.encode(document)
+            if !addedProjects.contains(document.filename) {
+                if let wrapper = expressionsWrapper.fileWrappers?[document.filename] {
+                    expressionsWrapper.removeFileWrapper(wrapper)
+                }
+            }
             projectsWrapper.addRegularFile(withContents: data, preferredFilename: document.filename)
         }
     }
