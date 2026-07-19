@@ -39,8 +39,8 @@ public class FileWrapperCatalog: FilesystemContainer {
         let projectsWrapper = fileWrapper.directory(forPath: Self.projectsPath)
 
         let existingTranslations = Set((translationsWrapper.fileWrappers ?? [:]).keys)
-        let existingExpressions = Set((translationsWrapper.fileWrappers ?? [:]).keys)
-        let existingProjects = Set((translationsWrapper.fileWrappers ?? [:]).keys)
+        let existingExpressions = Set((expressionsWrapper.fileWrappers ?? [:]).keys)
+        let existingProjects = Set((projectsWrapper.fileWrappers ?? [:]).keys)
 
         let nextTranslations = Set(translationDocuments.map(\.filename))
         let nextExpressions = Set(expressionDocuments.map(\.filename))
