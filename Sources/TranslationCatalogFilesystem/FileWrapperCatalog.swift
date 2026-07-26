@@ -96,8 +96,8 @@ public class FileWrapperCatalog: FilesystemContainer {
         for document in projectDocuments {
             let data = try encoder.encode(document)
             if !addedProjects.contains(document.filename) {
-                if let wrapper = expressionsWrapper.fileWrappers?[document.filename] {
-                    expressionsWrapper.removeFileWrapper(wrapper)
+                if let wrapper = projectsWrapper.fileWrappers?[document.filename] {
+                    projectsWrapper.removeFileWrapper(wrapper)
                 }
             }
             projectsWrapper.addRegularFile(withContents: data, preferredFilename: document.filename)
