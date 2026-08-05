@@ -10,7 +10,7 @@ extension Catalog {
             commandName: "import",
             abstract: "Imports a translation file into the catalog.",
             version: "1.0.0",
-            helpNames: .shortAndLong
+            helpNames: .shortAndLong,
         )
 
         @Argument(help: "The language code for the translations in the imported file.")
@@ -61,7 +61,7 @@ extension Catalog {
                 defaultLanguage: defaultLanguage,
                 language: language,
                 script: script,
-                region: region
+                region: region,
             )
 
             let importer = ExpressionImporter(catalog: catalog)

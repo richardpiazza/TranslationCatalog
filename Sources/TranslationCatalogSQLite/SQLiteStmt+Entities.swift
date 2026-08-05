@@ -46,7 +46,7 @@ extension Statement.Element {
         .init(
             id: columnInt(position: 0),
             uuid: columnText(position: 1),
-            name: columnText(position: 2)
+            name: columnText(position: 2),
         )
     }
 
@@ -63,7 +63,7 @@ extension Statement.Element {
             defaultLanguage: columnText(position: 4),
             defaultValue: columnText(position: 5),
             context: optional(position: 6),
-            feature: optional(position: 7)
+            feature: optional(position: 7),
         )
     }
 
@@ -76,7 +76,7 @@ extension Statement.Element {
             script: optional(position: 4),
             region: optional(position: 5),
             value: columnText(position: 6),
-            stateRawValue: columnText(position: 7)
+            stateRawValue: columnText(position: 7),
         )
     }
 }

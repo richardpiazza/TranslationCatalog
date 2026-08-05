@@ -31,7 +31,7 @@ final class CatalogInsertTests {
         let projectName = "Project 1"
         let project = Project(
             id: projectId,
-            name: projectName
+            name: projectName,
         )
 
         try catalog.createProject(project)
@@ -57,7 +57,7 @@ final class CatalogInsertTests {
             value: "Test Expression",
             languageCode: .english,
             context: "Generic Message",
-            feature: "Settings"
+            feature: "Settings",
         )
 
         try catalog.createExpression(expression)
@@ -87,7 +87,7 @@ final class CatalogInsertTests {
             value: "Test Expression",
             languageCode: .english,
             context: "Generic Message",
-            feature: "Settings"
+            feature: "Settings",
         )
 
         try catalog.createExpression(expression)
@@ -100,7 +100,7 @@ final class CatalogInsertTests {
             language: .english,
             script: nil,
             region: .unitedStates,
-            state: .translated
+            state: .translated,
         )
 
         try catalog.createTranslation(translation)
@@ -134,14 +134,14 @@ final class CatalogInsertTests {
             value: "Next",
             languageCode: .english,
             context: "Button Title",
-            feature: "Buttons"
+            feature: "Buttons",
         )
 
         let projectId = try #require(UUID(uuidString: "CB3900B9-C4A8-4953-9CF7-C737323954E9"))
         let project = Project(
             id: projectId,
             name: "",
-            expressions: [expression]
+            expressions: [expression],
         )
 
         try catalog.createProject(project)
@@ -172,7 +172,7 @@ final class CatalogInsertTests {
             language: .english,
             script: nil,
             region: .unitedStates,
-            state: .translated
+            state: .translated,
         )
 
         let expressionId = try #require(UUID(uuidString: "1721B307-9A67-4FC1-A529-3A128695E802"))
@@ -183,7 +183,7 @@ final class CatalogInsertTests {
             languageCode: .english,
             context: "Button Title",
             feature: "Buttons",
-            translations: [translation]
+            translations: [translation],
         )
 
         try catalog.createExpression(expression)

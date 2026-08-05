@@ -25,7 +25,7 @@ extension Project {
         self.init(
             id: document.id,
             name: document.name,
-            expressions: expressions
+            expressions: expressions,
         )
     }
 }

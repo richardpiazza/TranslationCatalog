@@ -32,7 +32,7 @@ public struct Expression: Hashable, Sendable, Identifiable, Codable {
         name: String = "",
         context: String? = nil,
         feature: String? = nil,
-        translations: [Translation] = []
+        translations: [Translation] = [],
     ) {
         self.id = id
         self.key = key
@@ -46,7 +46,7 @@ public struct Expression: Hashable, Sendable, Identifiable, Codable {
 
     public init(
         expression: Expression,
-        translations: [Translation]
+        translations: [Translation],
     ) {
         id = expression.id
         key = expression.key

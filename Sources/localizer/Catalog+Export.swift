@@ -15,7 +15,7 @@ extension Catalog {
             format, all expressions will be included (preferring the script/region).
             """,
             version: "1.0.0",
-            helpNames: .shortAndLong
+            helpNames: .shortAndLong,
         )
 
         @Argument(help: "The export format [android-xml, apple-strings, json]")
@@ -54,7 +54,7 @@ extension Catalog {
                 for: expressions,
                 locale: locale,
                 fallback: shouldFallback,
-                format: format
+                format: format,
             )
             let output = String(decoding: data, as: UTF8.self)
 
@@ -64,7 +64,7 @@ extension Catalog {
         func queryExpressions(
             from catalog: any TranslationCatalog.Catalog,
             using storage: Storage,
-            projectId: Project.ID?
+            projectId: Project.ID?,
         ) throws -> [TranslationCatalog.Expression] {
             var expressions: [TranslationCatalog.Expression] = if let id = projectId {
                 try catalog.expressions(matching: GenericExpressionQuery.projectId(id))

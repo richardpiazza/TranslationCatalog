@@ -37,7 +37,7 @@ public class ExpressionImporter {
     }
 
     public func importTranslations(
-        from expressions: [TranslationCatalog.Expression]
+        from expressions: [TranslationCatalog.Expression],
     ) async -> AsyncStream<Operation> {
         defer {
             importExpressions(expressions)
@@ -76,7 +76,7 @@ public class ExpressionImporter {
         for translation in translations {
             let expressionTranslation = Translation(
                 translation: translation,
-                expressionId: id
+                expressionId: id,
             )
             importTranslation(expressionTranslation, into: catalog)
         }

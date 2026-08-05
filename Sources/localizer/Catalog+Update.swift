@@ -13,7 +13,7 @@ extension Catalog {
                 ExpressionCommand.self,
                 TranslationCommand.self,
             ],
-            helpNames: .shortAndLong
+            helpNames: .shortAndLong,
         )
     }
 }
@@ -25,7 +25,7 @@ extension Catalog.Update {
             commandName: "project",
             abstract: "Update a Project in the catalog.",
             version: "1.0.0",
-            helpNames: .shortAndLong
+            helpNames: .shortAndLong,
         )
 
         @Argument(help: "Unique ID of the Project.")
@@ -87,7 +87,7 @@ extension Catalog.Update {
             commandName: "expression",
             abstract: "Update an Expression in the catalog.",
             version: "1.0.0",
-            helpNames: .shortAndLong
+            helpNames: .shortAndLong,
         )
 
         @Argument(help: "Unique ID of the Expression.")
@@ -189,7 +189,7 @@ extension Catalog.Update {
             commandName: "translation",
             abstract: "Update a Translation in the catalog.",
             version: "1.0.0",
-            helpNames: .shortAndLong
+            helpNames: .shortAndLong,
         )
 
         @Argument(help: "Unique ID of the Translation.")

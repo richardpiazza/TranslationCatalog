@@ -9,8 +9,8 @@ extension SQLiteStatement {
     static var createExpressionEntity: Self {
         .init(
             .CREATE(
-                .SCHEMA(ExpressionEntity.entity, ifNotExists: true)
-            )
+                .SCHEMA(ExpressionEntity.entity, ifNotExists: true),
+            ),
         )
     }
 }
@@ -31,9 +31,9 @@ extension SQLiteStatement {
                 .column(ExpressionEntity.defaultLanguage),
                 .column(ExpressionEntity.defaultValue),
                 .column(ExpressionEntity.context),
-                .column(ExpressionEntity.feature)
+                .column(ExpressionEntity.feature),
             ),
-            .FROM_TABLE(ExpressionEntity.self)
+            .FROM_TABLE(ExpressionEntity.self),
         )
     }
 
@@ -47,15 +47,15 @@ extension SQLiteStatement {
                 .column(ExpressionEntity.defaultLanguage),
                 .column(ExpressionEntity.defaultValue),
                 .column(ExpressionEntity.context),
-                .column(ExpressionEntity.feature)
+                .column(ExpressionEntity.feature),
             ),
             .FROM(
                 .TABLE(ExpressionEntity.self),
-                .JOIN_ON(ProjectExpressionEntity.self, attribute: ProjectExpressionEntity.expressionID, equals: ExpressionEntity.self, attribute: ExpressionEntity.id)
+                .JOIN_ON(ProjectExpressionEntity.self, attribute: ProjectExpressionEntity.expressionID, equals: ExpressionEntity.self, attribute: ExpressionEntity.id),
             ),
             .WHERE(
-                .column(ProjectExpressionEntity.projectID, op: .equal, value: id)
-            )
+                .column(ProjectExpressionEntity.projectID, op: .equal, value: id),
+            ),
         )
     }
 
@@ -69,14 +69,14 @@ extension SQLiteStatement {
                 .column(ExpressionEntity.defaultLanguage),
                 .column(ExpressionEntity.defaultValue),
                 .column(ExpressionEntity.context),
-                .column(ExpressionEntity.feature)
+                .column(ExpressionEntity.feature),
             ),
             .FROM(
-                .TABLE(ExpressionEntity.self)
+                .TABLE(ExpressionEntity.self),
             ),
             .WHERE(
-                .column(ExpressionEntity.key, op: .like, value: "%\(key)%")
-            )
+                .column(ExpressionEntity.key, op: .like, value: "%\(key)%"),
+            ),
         )
     }
 
@@ -90,14 +90,14 @@ extension SQLiteStatement {
                 .column(ExpressionEntity.defaultLanguage),
                 .column(ExpressionEntity.defaultValue),
                 .column(ExpressionEntity.context),
-                .column(ExpressionEntity.feature)
+                .column(ExpressionEntity.feature),
             ),
             .FROM(
-                .TABLE(ExpressionEntity.self)
+                .TABLE(ExpressionEntity.self),
             ),
             .WHERE(
-                .column(ExpressionEntity.defaultValue, op: .like, value: "%\(value)%")
-            )
+                .column(ExpressionEntity.defaultValue, op: .like, value: "%\(value)%"),
+            ),
         )
     }
 
@@ -111,14 +111,14 @@ extension SQLiteStatement {
                 .column(ExpressionEntity.defaultLanguage),
                 .column(ExpressionEntity.defaultValue),
                 .column(ExpressionEntity.context),
-                .column(ExpressionEntity.feature)
+                .column(ExpressionEntity.feature),
             ),
             .FROM(
-                .TABLE(ExpressionEntity.self)
+                .TABLE(ExpressionEntity.self),
             ),
             .WHERE(
-                .column(ExpressionEntity.name, op: .like, value: "%\(name)%")
-            )
+                .column(ExpressionEntity.name, op: .like, value: "%\(name)%"),
+            ),
         )
     }
 
@@ -132,19 +132,19 @@ extension SQLiteStatement {
                 .column(ExpressionEntity.defaultLanguage),
                 .column(ExpressionEntity.defaultValue),
                 .column(ExpressionEntity.context),
-                .column(ExpressionEntity.feature)
+                .column(ExpressionEntity.feature),
             ),
             .FROM(
                 .TABLE(ExpressionEntity.self),
-                .JOIN_ON(TranslationEntity.self, attribute: TranslationEntity.expressionID, equals: ExpressionEntity.self, attribute: ExpressionEntity.id)
+                .JOIN_ON(TranslationEntity.self, attribute: TranslationEntity.expressionID, equals: ExpressionEntity.self, attribute: ExpressionEntity.id),
             ),
             .WHERE(
                 .AND(
                     .column(TranslationEntity.self, attribute: TranslationEntity.language, op: .equal, value: languageCode.identifier),
                     .logical(op: .isNull, segments: [Segment<WhereContext>.column(TranslationEntity.script)]),
-                    .logical(op: .isNull, segments: [Segment<WhereContext>.column(TranslationEntity.region)])
-                )
-            )
+                    .logical(op: .isNull, segments: [Segment<WhereContext>.column(TranslationEntity.region)]),
+                ),
+            ),
         )
     }
 
@@ -158,19 +158,19 @@ extension SQLiteStatement {
                 .column(ExpressionEntity.defaultLanguage),
                 .column(ExpressionEntity.defaultValue),
                 .column(ExpressionEntity.context),
-                .column(ExpressionEntity.feature)
+                .column(ExpressionEntity.feature),
             ),
             .FROM(
                 .TABLE(ExpressionEntity.self),
-                .JOIN_ON(TranslationEntity.self, attribute: TranslationEntity.expressionID, equals: ExpressionEntity.self, attribute: ExpressionEntity.id)
+                .JOIN_ON(TranslationEntity.self, attribute: TranslationEntity.expressionID, equals: ExpressionEntity.self, attribute: ExpressionEntity.id),
             ),
             .WHERE(
                 .AND(
                     .column(TranslationEntity.self, attribute: TranslationEntity.language, op: .equal, value: languageCode.identifier),
                     .unwrap(scriptCode, transform: { .column(TranslationEntity.script, op: .equal, value: $0.identifier) }),
-                    .unwrap(regionCode, transform: { .column(TranslationEntity.region, op: .equal, value: $0.identifier) })
-                )
-            )
+                    .unwrap(regionCode, transform: { .column(TranslationEntity.region, op: .equal, value: $0.identifier) }),
+                ),
+            ),
         )
     }
 
@@ -184,15 +184,15 @@ extension SQLiteStatement {
                 .column(ExpressionEntity.defaultLanguage),
                 .column(ExpressionEntity.defaultValue),
                 .column(ExpressionEntity.context),
-                .column(ExpressionEntity.feature)
+                .column(ExpressionEntity.feature),
             ),
             .FROM(
                 .TABLE(ExpressionEntity.self),
-                .JOIN_ON(TranslationEntity.self, attribute: TranslationEntity.expressionID, equals: ExpressionEntity.self, attribute: ExpressionEntity.id)
+                .JOIN_ON(TranslationEntity.self, attribute: TranslationEntity.expressionID, equals: ExpressionEntity.self, attribute: ExpressionEntity.id),
             ),
             .WHERE(
-                .column(TranslationEntity.self, attribute: TranslationEntity.stateRawValue, op: .equal, value: state.rawValue)
-            )
+                .column(TranslationEntity.self, attribute: TranslationEntity.stateRawValue, op: .equal, value: state.rawValue),
+            ),
         )
     }
 
@@ -208,12 +208,12 @@ extension SQLiteStatement {
                 .column(ExpressionEntity.defaultLanguage),
                 .column(ExpressionEntity.defaultValue),
                 .column(ExpressionEntity.context),
-                .column(ExpressionEntity.feature)
+                .column(ExpressionEntity.feature),
             ),
             .FROM_TABLE(ExpressionEntity.self),
             .WHERE(
-                .column(ExpressionEntity.id, op: .equal, value: id)
-            )
+                .column(ExpressionEntity.id, op: .equal, value: id),
+            ),
         )
     }
 
@@ -227,13 +227,13 @@ extension SQLiteStatement {
                 .column(ExpressionEntity.defaultLanguage),
                 .column(ExpressionEntity.defaultValue),
                 .column(ExpressionEntity.context),
-                .column(ExpressionEntity.feature)
+                .column(ExpressionEntity.feature),
             ),
             .FROM_TABLE(ExpressionEntity.self),
             .WHERE(
-                .column(ExpressionEntity.uuid, op: .equal, value: id.uuidString)
+                .column(ExpressionEntity.uuid, op: .equal, value: id.uuidString),
             ),
-            .LIMIT(1)
+            .LIMIT(1),
         )
     }
 
@@ -247,13 +247,13 @@ extension SQLiteStatement {
                 .column(ExpressionEntity.defaultLanguage),
                 .column(ExpressionEntity.defaultValue),
                 .column(ExpressionEntity.context),
-                .column(ExpressionEntity.feature)
+                .column(ExpressionEntity.feature),
             ),
             .FROM_TABLE(ExpressionEntity.self),
             .WHERE(
-                .column(ExpressionEntity.key, op: .equal, value: key)
+                .column(ExpressionEntity.key, op: .equal, value: key),
             ),
-            .LIMIT(1)
+            .LIMIT(1),
         )
     }
 
@@ -269,7 +269,7 @@ extension SQLiteStatement {
                 .column(ExpressionEntity.defaultLanguage),
                 .column(ExpressionEntity.defaultValue),
                 .column(ExpressionEntity.context),
-                .column(ExpressionEntity.feature)
+                .column(ExpressionEntity.feature),
             ),
             .VALUES(
                 .value(expression.uuid as any DataTypeConvertible),
@@ -278,8 +278,8 @@ extension SQLiteStatement {
                 .value(expression.defaultLanguage as any DataTypeConvertible),
                 .value(expression.defaultValue as any DataTypeConvertible),
                 .value(expression.context as any DataTypeConvertible),
-                .value(expression.feature as any DataTypeConvertible)
-            )
+                .value(expression.feature as any DataTypeConvertible),
+            ),
         )
     }
 
@@ -288,75 +288,75 @@ extension SQLiteStatement {
     static func updateExpression(_ id: Int, key: String) -> Self {
         SQLiteStatement(
             .UPDATE(
-                .TABLE(ExpressionEntity.self)
+                .TABLE(ExpressionEntity.self),
             ),
             .SET(
                 .comparison(op: .equal, segments: [
                     Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.key),
                     .value(key as any DataTypeConvertible),
-                ])
+                ]),
             ),
             .WHERE(
-                .column(ExpressionEntity.id, op: .equal, value: id)
-            )
+                .column(ExpressionEntity.id, op: .equal, value: id),
+            ),
         )
     }
 
     static func updateExpression(_ id: Int, name: String) -> Self {
         SQLiteStatement(
             .UPDATE(
-                .TABLE(ExpressionEntity.self)
+                .TABLE(ExpressionEntity.self),
             ),
             .SET(
                 .comparison(op: .equal, segments: [
                     Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.name),
                     .value(name as any DataTypeConvertible),
-                ])
+                ]),
             ),
             .WHERE(
-                .column(ExpressionEntity.id, op: .equal, value: id)
-            )
+                .column(ExpressionEntity.id, op: .equal, value: id),
+            ),
         )
     }
 
     static func updateExpression(_ id: Int, defaultLanguage: Locale.LanguageCode) -> Self {
         SQLiteStatement(
             .UPDATE(
-                .TABLE(ExpressionEntity.self)
+                .TABLE(ExpressionEntity.self),
             ),
             .SET(
                 .comparison(op: .equal, segments: [
                     Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.defaultLanguage),
                     .value(defaultLanguage.identifier as any DataTypeConvertible),
-                ])
+                ]),
             ),
             .WHERE(
-                .column(ExpressionEntity.id, op: .equal, value: id)
-            )
+                .column(ExpressionEntity.id, op: .equal, value: id),
+            ),
         )
     }
 
     static func updateExpression(_ id: Int, defaultValue: String) -> Self {
         SQLiteStatement(
             .UPDATE(
-                .TABLE(ExpressionEntity.self)
+                .TABLE(ExpressionEntity.self),
             ),
             .SET(
                 .comparison(op: .equal, segments: [
                     Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.defaultValue),
                     .value(defaultValue as any DataTypeConvertible),
-                ])
+                ]),
             ),
             .WHERE(
-                .column(ExpressionEntity.id, op: .equal, value: id)
-            )
+                .column(ExpressionEntity.id, op: .equal, value: id),
+            ),
         )
     }
 
     static func updateExpression(_ id: Int, context: String?) -> Self {
         SQLiteStatement(
             .UPDATE(
-                .TABLE(ExpressionEntity.self)
+                .TABLE(ExpressionEntity.self),
             ),
             .SET(
                 .unwrap(context, transform: { value in
@@ -367,19 +367,19 @@ extension SQLiteStatement {
                 }, else: .comparison(op: .equal, segments: [
                     Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.context),
                     .value(context as any DataTypeConvertible),
-                ])
-                )
+                ]),
+                ),
             ),
             .WHERE(
-                .column(ExpressionEntity.id, op: .equal, value: id)
-            )
+                .column(ExpressionEntity.id, op: .equal, value: id),
+            ),
         )
     }
 
     static func updateExpression(_ id: Int, feature: String?) -> Self {
         SQLiteStatement(
             .UPDATE(
-                .TABLE(ExpressionEntity.self)
+                .TABLE(ExpressionEntity.self),
             ),
             .SET(
                 .unwrap(
@@ -394,12 +394,12 @@ extension SQLiteStatement {
                     .comparison(op: .equal, segments: [
                         Segment<SQLiteStatement.SetContext>.column(ExpressionEntity.feature),
                         .value(feature as any DataTypeConvertible),
-                    ])
-                )
+                    ]),
+                ),
             ),
             .WHERE(
-                .column(ExpressionEntity.id, op: .equal, value: id)
-            )
+                .column(ExpressionEntity.id, op: .equal, value: id),
+            ),
         )
     }
 
@@ -409,8 +409,8 @@ extension SQLiteStatement {
         .init(
             .DELETE_FROM(ExpressionEntity.self),
             .WHERE(
-                .column(ExpressionEntity.id, op: .equal, value: id)
-            )
+                .column(ExpressionEntity.id, op: .equal, value: id),
+            ),
         )
     }
 }

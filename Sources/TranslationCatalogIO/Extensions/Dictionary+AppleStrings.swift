@@ -57,7 +57,7 @@ extension [String: String] {
         feature: String? = nil,
         language: Locale.LanguageCode,
         script: Locale.Script? = nil,
-        region: Locale.Region? = nil
+        region: Locale.Region? = nil,
     ) -> [TranslationCatalog.Expression] {
         map { key, value -> TranslationCatalog.Expression in
             if defaultLanguage == language, script == nil, region == nil {
@@ -67,7 +67,7 @@ extension [String: String] {
                     value: value,
                     languageCode: defaultLanguage,
                     context: comment,
-                    feature: feature
+                    feature: feature,
                 )
             } else {
                 return TranslationCatalog.Expression(
@@ -86,9 +86,9 @@ extension [String: String] {
                             language: language,
                             script: script,
                             region: region,
-                            state: .new
+                            state: .new,
                         ),
-                    ]
+                    ],
                 )
             }
         }

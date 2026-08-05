@@ -18,7 +18,7 @@ public struct ExpressionEncoder {
         for expressions: [TranslationCatalog.Expression],
         locale: Locale,
         fallback: Bool,
-        format: FileFormat
+        format: FileFormat,
     ) throws -> Data {
         switch format {
         case .androidXML:
@@ -30,7 +30,7 @@ public struct ExpressionEncoder {
                 return Resource(
                     name: exp.key,
                     value: exp.valueOrDefault(for: locale),
-                    formatted: multipleReplacements ? false : nil
+                    formatted: multipleReplacements ? false : nil,
                 )
             }
             let strings = StringsXml(resources: resources)

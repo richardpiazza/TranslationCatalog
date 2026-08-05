@@ -27,14 +27,14 @@ class LocalizerProcess {
     var output: String {
         String(
             decoding: outputPipe.fileHandleForReading.readDataToEndOfFile(),
-            as: UTF8.self
+            as: UTF8.self,
         )
     }
 
     var error: String {
         String(
             decoding: errorPipe.fileHandleForReading.readDataToEndOfFile(),
-            as: UTF8.self
+            as: UTF8.self,
         )
     }
 
