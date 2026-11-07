@@ -6,7 +6,7 @@ struct ImportTests {
     /// Assert that repeated imports of the same file produce the expected results
     @Test func doubleImport() throws {
         let resource: TestResource = .file(
-            Bundle.module.url(forResource: "Import1", withExtension: "strings")
+            Bundle.module.url(forResource: "Import1", withExtension: "strings"),
         )
         var process = try LocalizerProcess(copying: resource)
         var output = try process.runOutputting(with: [
@@ -41,7 +41,7 @@ struct ImportTests {
     /// Assert that repeated imports of the same file (that has changes) produce the expected results
     @Test func repeatImport() throws {
         var resource: TestResource = .file(
-            Bundle.module.url(forResource: "Import1", withExtension: "strings")
+            Bundle.module.url(forResource: "Import1", withExtension: "strings"),
         )
         var process = try LocalizerProcess(copying: resource)
         var output = try process.runOutputting(with: [
@@ -59,7 +59,7 @@ struct ImportTests {
         try process.recycle()
 
         resource = .file(
-            Bundle.module.url(forResource: "Import2", withExtension: "strings")
+            Bundle.module.url(forResource: "Import2", withExtension: "strings"),
         )
         process = try LocalizerProcess(copying: resource, cleanupDirectory: true, id: id)
         output = try process.runOutputting(with: [

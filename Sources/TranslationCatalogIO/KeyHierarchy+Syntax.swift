@@ -13,7 +13,7 @@ public extension KeyHierarchy {
                 ImportDeclSyntax(
                     path: ImportPathComponentListSyntax {
                         ImportPathComponentSyntax(name: TokenSyntax("LocaleSupport"))
-                    }
+                    },
                 )
 
                 EnumDeclSyntax.localizedStringConvertibleEnumerationDecl(for: self, named: name)
@@ -32,13 +32,13 @@ public extension KeyHierarchy {
                 ImportDeclSyntax(
                     path: ImportPathComponentListSyntax {
                         ImportPathComponentSyntax(name: TokenSyntax("SwiftUI"))
-                    }
+                    },
                 )
 
                 ExtensionDeclSyntax(
                     leadingTrivia: .newlines(2),
                     attributes: AttributeListSyntax([.attribute("@MainActor")]),
-                    extendedType: TypeSyntax(stringLiteral: "LocalizedStringKey")
+                    extendedType: TypeSyntax(stringLiteral: "LocalizedStringKey"),
                 ) {
                     let hierarchy = self
                     for key in hierarchy.sortedContentsKeys {
@@ -46,7 +46,7 @@ public extension KeyHierarchy {
                             VariableDeclSyntax.localizedStringKey(
                                 name: key.lowerCamelCased,
                                 value: content.key,
-                                comment: content.defaultValue.isEmpty ? nil : content.defaultValue
+                                comment: content.defaultValue.isEmpty ? nil : content.defaultValue,
                             )
                         }
                     }
@@ -65,18 +65,18 @@ public extension KeyHierarchy {
 
     func syntaxTree(
         style: SyntaxStyle = .localeSupport,
-        rootDeclaration name: String = "LocalizedStrings"
+        rootDeclaration name: String = "LocalizedStrings",
     ) -> String {
         switch style {
         case .localeSupport:
             String(
                 decoding: localizedStringConvertible(rootDeclaration: name),
-                as: UTF8.self
+                as: UTF8.self,
             )
         case .swiftUI:
             String(
                 decoding: localizedStringKey(),
-                as: UTF8.self
+                as: UTF8.self,
             )
         }
     }
@@ -99,7 +99,7 @@ extension [String] {
 extension EnumDeclSyntax {
     static func localizedStringConvertibleEnumerationDecl(
         for hierarchy: KeyHierarchy,
-        named name: String? = nil
+        named name: String? = nil,
     ) -> EnumDeclSyntax {
         var inheritanceClause: InheritanceClauseSyntax?
         if !hierarchy.contents.isEmpty {
@@ -107,27 +107,27 @@ extension EnumDeclSyntax {
                 inheritedTypes: InheritedTypeListSyntax {
                     InheritedTypeSyntax(type: TypeSyntax("String"))
                     InheritedTypeSyntax(type: TypeSyntax("LocalizedStringConvertible"))
-                }
+                },
             )
         }
 
         return EnumDeclSyntax(
             leadingTrivia: .newlines(2),
             name: TokenSyntax(stringLiteral: name ?? hierarchy.declName),
-            inheritanceClause: inheritanceClause
+            inheritanceClause: inheritanceClause,
         ) {
             for key in hierarchy.sortedContentsKeys {
                 if let content = hierarchy.contents[key] {
                     EnumCaseDeclSyntax.localizedStringConvertibleEnumerationCase(
                         key: key.lowerCamelCased,
                         value: content.defaultValue,
-                        comment: content.comment
+                        comment: content.comment,
                     )
                 }
             }
 
             if !hierarchy.contents.isEmpty {
-                let prefix = hierarchy.prefix.flatMap { $0 }.lowerCamelCased
+                let prefix = hierarchy.prefix.flatMap(\.self).lowerCamelCased
                 if !prefix.isEmpty {
                     VariableDeclSyntax.stringValuePrefix(prefix)
                 }
@@ -140,18 +140,18 @@ extension EnumDeclSyntax {
     }
 
     static func localizedStringKeyEnumerationDecl(
-        for hierarchy: KeyHierarchy
+        for hierarchy: KeyHierarchy,
     ) -> EnumDeclSyntax {
         EnumDeclSyntax(
             leadingTrivia: .newlines(2),
-            name: TokenSyntax(stringLiteral: hierarchy.declName)
+            name: TokenSyntax(stringLiteral: hierarchy.declName),
         ) {
             for key in hierarchy.sortedContentsKeys {
                 if let content = hierarchy.contents[key] {
                     VariableDeclSyntax.localizedStringKey(
                         name: key.lowerCamelCased,
                         value: content.key,
-                        comment: content.defaultValue.isEmpty ? nil : content.defaultValue
+                        comment: content.defaultValue.isEmpty ? nil : content.defaultValue,
                     )
                 }
             }
@@ -186,12 +186,12 @@ extension EnumCaseDeclSyntax {
         }
 
         return EnumCaseDeclSyntax(
-            leadingTrivia: trivia
+            leadingTrivia: trivia,
         ) {
             EnumCaseElementListSyntax {
                 EnumCaseElementSyntax(
                     name: token,
-                    rawValue: rawValue
+                    rawValue: rawValue,
                 )
             }
         }
@@ -202,16 +202,16 @@ extension VariableDeclSyntax {
     static func stringValuePrefix(_ value: String) -> VariableDeclSyntax {
         VariableDeclSyntax(
             leadingTrivia: .newlines(2),
-            bindingSpecifier: TokenSyntax("var")
+            bindingSpecifier: TokenSyntax("var"),
         ) {
             PatternBindingSyntax(
                 pattern: IdentifierPatternSyntax(identifier: TokenSyntax("prefix")),
                 typeAnnotation: TypeAnnotationSyntax(
-                    type: OptionalTypeSyntax(wrappedType: IdentifierTypeSyntax(name: TokenSyntax("String")))
+                    type: OptionalTypeSyntax(wrappedType: IdentifierTypeSyntax(name: TokenSyntax("String"))),
                 ),
                 accessorBlock: AccessorBlockSyntax(
-                    accessors: .getter(CodeBlockItemListSyntax { StringLiteralExprSyntax(content: value) })
-                )
+                    accessors: .getter(CodeBlockItemListSyntax { StringLiteralExprSyntax(content: value) }),
+                ),
             )
         }
     }
@@ -230,12 +230,12 @@ extension VariableDeclSyntax {
             modifiers: DeclModifierListSyntax([
                 DeclModifierSyntax(name: .keyword(.static)),
             ]),
-            bindingSpecifier: .keyword(.let)
+            bindingSpecifier: .keyword(.let),
         ) {
             PatternBindingSyntax(
                 pattern: IdentifierPatternSyntax(identifier: .identifier(name)),
                 typeAnnotation: TypeAnnotationSyntax(
-                    type: IdentifierTypeSyntax(name: .identifier("LocalizedStringKey"))
+                    type: IdentifierTypeSyntax(name: .identifier("LocalizedStringKey")),
                 ),
                 initializer: InitializerClauseSyntax(
                     value: StringLiteralExprSyntax(
@@ -243,9 +243,9 @@ extension VariableDeclSyntax {
                         segments: StringLiteralSegmentListSyntax([
                             .stringSegment(StringSegmentSyntax(content: .stringSegment(value))),
                         ]),
-                        closingQuote: .stringQuoteToken()
-                    )
-                )
+                        closingQuote: .stringQuoteToken(),
+                    ),
+                ),
             )
         }
     }

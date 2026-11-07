@@ -13,7 +13,7 @@ extension Catalog {
                 ExpressionEntity.self,
                 TranslationEntity.self,
             ],
-            helpNames: .shortAndLong
+            helpNames: .shortAndLong,
         )
     }
 }
@@ -25,7 +25,7 @@ extension Catalog.Delete {
             commandName: "project",
             abstract: "Delete a Project from the catalog.",
             version: "1.0.0",
-            helpNames: .shortAndLong
+            helpNames: .shortAndLong,
         )
 
         @Argument(help: "Unique ID of the Project.")
@@ -59,7 +59,7 @@ extension Catalog.Delete {
             commandName: "expression",
             abstract: "Delete a Expression from the catalog.",
             version: "1.0.0",
-            helpNames: .shortAndLong
+            helpNames: .shortAndLong,
         )
 
         @Argument(help: "Unique ID of the Expression.")
@@ -86,7 +86,7 @@ extension Catalog.Delete {
             commandName: "translation",
             abstract: "Delete a Translation from the catalog.",
             version: "1.0.0",
-            helpNames: .shortAndLong
+            helpNames: .shortAndLong,
         )
 
         @Argument(help: "Unique ID of the Translation.")

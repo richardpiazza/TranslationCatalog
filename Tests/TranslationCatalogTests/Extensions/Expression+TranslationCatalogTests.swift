@@ -16,7 +16,7 @@ extension TranslationCatalog.Expression {
             .translation14,
             .translation15,
             .translation16,
-        ]
+        ],
     )
     static let expression2 = Expression(
         id: .expression2,
@@ -29,7 +29,7 @@ extension TranslationCatalog.Expression {
             .translation4,
             .translation5,
             .translation6,
-        ]
+        ],
     )
     static let expression3 = Expression(
         id: .expression3,
@@ -43,7 +43,7 @@ extension TranslationCatalog.Expression {
             .translation7,
             .translation8,
             .translation9,
-        ]
+        ],
     )
     static let expression4 = Expression(
         id: .expression4,
@@ -55,7 +55,7 @@ extension TranslationCatalog.Expression {
         feature: "Git,Internet",
         translations: [
             .translation10,
-        ]
+        ],
     )
     static let expression5 = Expression(
         id: .expression5,
@@ -69,6 +69,6 @@ extension TranslationCatalog.Expression {
             .translation11,
             .translation12,
             .translation13,
-        ]
+        ],
     )
 }

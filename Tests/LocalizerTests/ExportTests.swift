@@ -8,27 +8,27 @@ struct ExportTests {
         var resources: [(TestResource, Catalog.Storage)] = [
             (
                 .file(
-                    Bundle.module.url(forResource: "test_multi_language_v5", withExtension: "sqlite")
+                    Bundle.module.url(forResource: "test_multi_language_v5", withExtension: "sqlite"),
                 ),
-                .sqlite
+                .sqlite,
             ),
             (
                 .directory(
                     Bundle.module.resourceURL?
                         .appending(path: "StructuredResources", directoryHint: .isDirectory)
-                        .appending(path: "MultiLanguageCatalog", directoryHint: .isDirectory)
+                        .appending(path: "MultiLanguageCatalog", directoryHint: .isDirectory),
                 ),
-                .filesystem
+                .filesystem,
             ),
         ]
         #if canImport(CoreData) && os(macOS)
         resources.append(
             (
                 .file(
-                    Bundle.module.url(forResource: "test_multi_language_core_data_v3", withExtension: "sqlite")
+                    Bundle.module.url(forResource: "test_multi_language_core_data_v3", withExtension: "sqlite"),
                 ),
-                .coreData
-            )
+                .coreData,
+            ),
         )
         #endif
         return resources

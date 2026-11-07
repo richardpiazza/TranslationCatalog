@@ -27,7 +27,7 @@ final class CatalogDeleteTests {
         let projectId = try #require(UUID(uuidString: "06937A10-2E46-4FFD-A2E7-60A3F03ED007"))
         let project = Project(
             id: projectId,
-            name: "Example Project"
+            name: "Example Project",
         )
 
         try catalog.createProject(project)
@@ -49,7 +49,7 @@ final class CatalogDeleteTests {
             id: expressionId,
             key: "TEST_EXPRESSION",
             value: "Test Expression",
-            languageCode: .english
+            languageCode: .english,
         )
 
         try catalog.createExpression(expression)
@@ -71,7 +71,7 @@ final class CatalogDeleteTests {
             id: expressionId,
             key: "TRACK_TITLE",
             value: "Track Title",
-            languageCode: .english
+            languageCode: .english,
         )
 
         let translationId = try #require(UUID(uuidString: "A93E74CD-58F2-4D00-BA6B-F722FFCCCFBF"))
@@ -81,7 +81,7 @@ final class CatalogDeleteTests {
             value: "Overture to Egmont, Op. 84",
             language: .english,
             region: .unitedStates,
-            state: .translated
+            state: .translated,
         )
 
         try catalog.createExpression(expression)
@@ -111,7 +111,7 @@ final class CatalogDeleteTests {
             id: expressionId,
             key: "TRACK_TITLE",
             value: "Track Title",
-            languageCode: .english
+            languageCode: .english,
         )
 
         let translationId = try #require(UUID(uuidString: "A93E74CD-58F2-4D00-BA6B-F722FFCCCFBF"))
@@ -121,7 +121,7 @@ final class CatalogDeleteTests {
             value: "Overture to Egmont, Op. 84",
             language: .english,
             region: .unitedStates,
-            state: .translated
+            state: .translated,
         )
 
         try catalog.createExpression(expression)
@@ -149,7 +149,7 @@ final class CatalogDeleteTests {
         let projectId = try #require(UUID(uuidString: "06937A10-2E46-4FFD-A2E7-60A3F03ED007"))
         let project = Project(
             id: projectId,
-            name: "Example Project"
+            name: "Example Project",
         )
 
         let expressionId = try #require(UUID(uuidString: "F590AA58-626D-4EAB-AEDA-21F047B9BA42"))
@@ -157,7 +157,7 @@ final class CatalogDeleteTests {
             id: expressionId,
             key: "TRACK_TITLE",
             value: "Track Title",
-            languageCode: .english
+            languageCode: .english,
         )
 
         try catalog.createProject(project)

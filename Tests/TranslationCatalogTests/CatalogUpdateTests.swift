@@ -27,7 +27,7 @@ final class CatalogUpdateTests {
         let projectId = try #require(UUID(uuidString: "2CF3BCAD-18A6-4839-9A26-3A3D1348156C"))
         let project = Project(
             id: projectId,
-            name: "Example 1"
+            name: "Example 1",
         )
 
         try catalog.createProject(project)
@@ -47,7 +47,7 @@ final class CatalogUpdateTests {
         let projectId = try #require(UUID(uuidString: "305EFF45-DC61-4129-8BE7-D11FA03ABAA8"))
         let project = Project(
             id: projectId,
-            name: "Project"
+            name: "Project",
         )
 
         let expressionId = try #require(UUID(uuidString: "966D8BFF-607C-4C8D-9F84-59B21DD5B25E"))
@@ -55,7 +55,7 @@ final class CatalogUpdateTests {
             id: expressionId,
             key: "TEST_KEY",
             value: "Test",
-            languageCode: .english
+            languageCode: .english,
         )
 
         try catalog.createProject(project)
@@ -78,14 +78,14 @@ final class CatalogUpdateTests {
             id: expressionId,
             key: "TEST_KEY",
             value: "Test",
-            languageCode: .english
+            languageCode: .english,
         )
 
         let projectId = try #require(UUID(uuidString: "305EFF45-DC61-4129-8BE7-D11FA03ABAA8"))
         let project = Project(
             id: projectId,
             name: "Project",
-            expressions: [expression]
+            expressions: [expression],
         )
 
         try catalog.createProject(project)
@@ -107,7 +107,7 @@ final class CatalogUpdateTests {
             id: expressionId,
             key: "TEST_KEY",
             value: "Test",
-            languageCode: .english
+            languageCode: .english,
         )
 
         try catalog.createExpression(expression)
@@ -129,7 +129,7 @@ final class CatalogUpdateTests {
             id: expressionId,
             key: "TEST_KEY",
             value: "Test",
-            languageCode: .english
+            languageCode: .english,
         )
 
         try catalog.createExpression(expression)
@@ -151,7 +151,7 @@ final class CatalogUpdateTests {
             id: expressionId,
             key: "TEST_KEY",
             value: "Test",
-            languageCode: .english
+            languageCode: .english,
         )
 
         try catalog.createExpression(expression)
@@ -176,21 +176,21 @@ final class CatalogUpdateTests {
             key: "KEY_ONE",
             value: "Test 1",
             languageCode: .english,
-            context: nil
+            context: nil,
         )
         let expression2 = Expression(
             id: id2,
             key: "KEY_TWO",
             value: "Test 2",
             languageCode: .english,
-            context: "General"
+            context: "General",
         )
         let expression3 = Expression(
             id: id3,
             key: "KEY_THREE",
             value: "Test 3",
             languageCode: .english,
-            context: "Common"
+            context: "Common",
         )
 
         try catalog.createExpression(expression1)
@@ -227,21 +227,21 @@ final class CatalogUpdateTests {
             key: "KEY_ONE",
             value: "Test 1",
             languageCode: .english,
-            feature: nil
+            feature: nil,
         )
         let expression2 = Expression(
             id: id2,
             key: "KEY_TWO",
             value: "Test 2",
             languageCode: .english,
-            feature: "General"
+            feature: "General",
         )
         let expression3 = Expression(
             id: id3,
             key: "KEY_THREE",
             value: "Test 3",
             languageCode: .english,
-            feature: "Common"
+            feature: "Common",
         )
 
         try catalog.createExpression(expression1)
@@ -279,14 +279,14 @@ final class CatalogUpdateTests {
             language: .english,
             script: nil,
             region: nil,
-            state: .translated
+            state: .translated,
         )
         let expression = Expression(
             id: expressionId,
             key: "TEST_KEY",
             value: "A Expression",
             languageCode: .english,
-            translations: [translation]
+            translations: [translation],
         )
 
         try catalog.createExpression(expression)
@@ -314,7 +314,7 @@ final class CatalogUpdateTests {
             language: .english,
             script: nil,
             region: nil,
-            state: .translated
+            state: .translated,
         )
         let t2 = TranslationCatalog.Translation(
             id: id2,
@@ -323,7 +323,7 @@ final class CatalogUpdateTests {
             language: .english,
             script: .arabic,
             region: nil,
-            state: .translated
+            state: .translated,
         )
         let t3 = TranslationCatalog.Translation(
             id: id3,
@@ -332,14 +332,14 @@ final class CatalogUpdateTests {
             language: .english,
             script: .hanSimplified,
             region: nil,
-            state: .translated
+            state: .translated,
         )
         let expression = Expression(
             id: expressionId,
             key: "TEST_KEY",
             value: "A Expression",
             languageCode: .english,
-            translations: [t1, t2, t3]
+            translations: [t1, t2, t3],
         )
 
         try catalog.createExpression(expression)
@@ -376,7 +376,7 @@ final class CatalogUpdateTests {
             value: "Test",
             language: .english,
             region: nil,
-            state: .translated
+            state: .translated,
         )
         let t2 = TranslationCatalog.Translation(
             id: id2,
@@ -384,7 +384,7 @@ final class CatalogUpdateTests {
             value: "Test",
             language: .english,
             region: .unitedKingdom,
-            state: .translated
+            state: .translated,
         )
         let t3 = TranslationCatalog.Translation(
             id: id3,
@@ -392,14 +392,14 @@ final class CatalogUpdateTests {
             value: "Test",
             language: .english,
             region: .australia,
-            state: .translated
+            state: .translated,
         )
         let expression = Expression(
             id: expressionId,
             key: "TEST_KEY",
             value: "A Expression",
             languageCode: .english,
-            translations: [t1, t2, t3]
+            translations: [t1, t2, t3],
         )
 
         try catalog.createExpression(expression)
@@ -433,14 +433,14 @@ final class CatalogUpdateTests {
             expressionId: expressionId,
             value: "Initial",
             language: .english,
-            state: .translated
+            state: .translated,
         )
         let expression = Expression(
             id: expressionId,
             key: "KEY",
             value: "Name",
             languageCode: .english,
-            translations: [translation]
+            translations: [translation],
         )
 
         try catalog.createExpression(expression)

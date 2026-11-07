@@ -13,7 +13,7 @@ extension Catalog {
                 ExpressionCommand.self,
                 TranslationCommand.self,
             ],
-            helpNames: .shortAndLong
+            helpNames: .shortAndLong,
         )
     }
 }
@@ -25,7 +25,7 @@ extension Catalog.Insert {
             commandName: "project",
             abstract: "Add a Project to the catalog.",
             version: "1.0.0",
-            helpNames: .shortAndLong
+            helpNames: .shortAndLong,
         )
 
         @Argument(help: "Name that identifies a collection of expressions.")
@@ -63,7 +63,7 @@ extension Catalog.Insert {
             commandName: "expression",
             abstract: "Add an Expression to the catalog.",
             version: "1.0.0",
-            helpNames: .shortAndLong
+            helpNames: .shortAndLong,
         )
 
         @Argument(help: "Unique key that identifies the expression in translation files.")
@@ -114,7 +114,7 @@ extension Catalog.Insert {
                 name: name,
                 context: context,
                 feature: feature,
-                translations: []
+                translations: [],
             )
 
             let id = try catalog.createExpression(expression)
@@ -128,7 +128,7 @@ extension Catalog.Insert {
             commandName: "translation",
             abstract: "Add a Translation to the catalog.",
             version: "1.0.0",
-            helpNames: .shortAndLong
+            helpNames: .shortAndLong,
         )
 
         @Argument(help: "ID of the Expression to which this translation links.")
@@ -162,7 +162,7 @@ extension Catalog.Insert {
                 id: .zero,
                 expressionId: expression,
                 value: value,
-                language: language
+                language: language,
             )
 
             let id = try catalog.createTranslation(translation)

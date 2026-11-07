@@ -95,7 +95,7 @@ extension TranslationCatalog.Expression {
             languageCode: entity.defaultLanguage,
             name: name,
             context: entity.context,
-            feature: entity.feature
+            feature: entity.feature,
         )
     }
 }

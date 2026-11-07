@@ -8,7 +8,7 @@ extension Configure {
             commandName: "get",
             abstract: "Gets configuration parameters.",
             version: "1.0.0",
-            helpNames: .shortAndLong
+            helpNames: .shortAndLong,
         )
 
         func run() async throws {

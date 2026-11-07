@@ -1,4 +1,4 @@
-// swift-tools-version:5.9
+// swift-tools-version:6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -23,11 +23,11 @@ let package = Package(
                 "TranslationCatalogIO",
                 "TranslationCatalogSQLite",
                 "TranslationCatalogFilesystem",
-            ]
+            ],
         ),
         .executable(
             name: "localizer",
-            targets: ["localizer"]
+            targets: ["localizer"],
         ),
     ],
     dependencies: [
@@ -35,7 +35,7 @@ let package = Package(
         .package(url: "https://github.com/richardpiazza/Statement.git", from: "0.8.1"),
         .package(url: "https://github.com/richardpiazza/CoreDataPlus.git", from: "0.5.0"),
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.7.1"),
-        .package(url: "https://github.com/apple/swift-syntax.git", from: "509.0.0"),
+        .package(url: "https://github.com/apple/swift-syntax.git", from: "602.0.0"),
         .package(url: "https://github.com/CoreOffice/XMLCoder.git", from: "0.18.1"),
         .package(url: "https://github.com/stephencelis/SQLite.swift.git", from: "0.16.0"),
     ],
@@ -44,7 +44,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "TranslationCatalog",
-            dependencies: []
+            dependencies: [],
         ),
         .target(
             name: "TranslationCatalogCoreData",
@@ -55,7 +55,7 @@ let package = Package(
             resources: [
                 .process("Resources"),
                 .copy("PrecompiledResources"),
-            ]
+            ],
         ),
         .target(
             name: "TranslationCatalogIO",
@@ -65,7 +65,7 @@ let package = Package(
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
                 .product(name: "LocaleSupport", package: "LocaleSupport"),
-            ]
+            ],
         ),
         .target(
             name: "TranslationCatalogSQLite",
@@ -74,13 +74,13 @@ let package = Package(
                 .product(name: "Statement", package: "Statement"),
                 .product(name: "StatementSQLite", package: "Statement"),
                 .product(name: "SQLite", package: "SQLite.swift"),
-            ]
+            ],
         ),
         .target(
             name: "TranslationCatalogFilesystem",
             dependencies: [
                 "TranslationCatalog",
-            ]
+            ],
         ),
         .executableTarget(
             name: "localizer",
@@ -92,7 +92,7 @@ let package = Package(
                 "TranslationCatalogFilesystem",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "LocaleSupport", package: "LocaleSupport"),
-            ]
+            ],
         ),
         .testTarget(
             name: "LocalizerTests",
@@ -100,7 +100,7 @@ let package = Package(
             resources: [
                 .process("Resources"),
                 .copy("StructuredResources"),
-            ]
+            ],
         ),
         .testTarget(
             name: "TranslationCatalogTests",
@@ -110,10 +110,10 @@ let package = Package(
                 "TranslationCatalogIO",
                 "TranslationCatalogFilesystem",
                 "TranslationCatalogSQLite",
-            ]
+            ],
         ),
     ],
-    swiftLanguageVersions: [.v5]
+    swiftLanguageModes: [.v5],
 )
 
 for target in package.targets {

@@ -13,7 +13,7 @@ extension Catalog {
                 ProjectCommand.self,
                 ExpressionCommand.self,
             ],
-            helpNames: .shortAndLong
+            helpNames: .shortAndLong,
         )
     }
 }
@@ -25,7 +25,7 @@ extension Catalog.Query {
             commandName: "project",
             abstract: "Query for projects in the catalog.",
             version: "1.0.0",
-            helpNames: .shortAndLong
+            helpNames: .shortAndLong,
         )
 
         @Option(help: "Partial name search")
@@ -62,7 +62,7 @@ extension Catalog.Query {
             let table = try MarkdownTable(
                 content: projects,
                 paths: [\.id.uuidString, \.name],
-                headers: ["Project.ID", "Name"]
+                headers: ["Project.ID", "Name"],
             )
 
             print(table)
@@ -75,7 +75,7 @@ extension Catalog.Query {
             commandName: "expression",
             abstract: "Query for expressions in the catalog.",
             version: "1.0.0",
-            helpNames: .shortAndLong
+            helpNames: .shortAndLong,
         )
 
         @Option(help: "Unique key used in localization files.")
@@ -140,8 +140,8 @@ extension Catalog.Query {
                     matching: GenericExpressionQuery.translationsHaving(
                         languageCode,
                         locale.language.script,
-                        locale.language.region
-                    )
+                        locale.language.region,
+                    ),
                 )
             } else if let translationState {
                 expressions = try catalog.expressions(matching: GenericExpressionQuery.translationsHavingState(translationState))
@@ -152,7 +152,7 @@ extension Catalog.Query {
             let table = try MarkdownTable(
                 content: expressions,
                 paths: [\.id.uuidString, \.key, \.defaultValue, \.defaultLanguageCode.identifier, \.name, \.context, \.feature],
-                headers: ["Expression.ID", "Key", "Default Value", "Default Language", "Name", "Context", "Feature"]
+                headers: ["Expression.ID", "Key", "Default Value", "Default Language", "Name", "Context", "Feature"],
             )
 
             print(table)

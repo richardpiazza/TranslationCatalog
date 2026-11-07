@@ -7,7 +7,7 @@ struct SyntaxTests {
         let resource: TestResource = .directory(
             Bundle.module.resourceURL?
                 .appending(path: "StructuredResources", directoryHint: .isDirectory)
-                .appending(path: "MultiLanguageCatalog", directoryHint: .isDirectory)
+                .appending(path: "MultiLanguageCatalog", directoryHint: .isDirectory),
         )
         let process = try LocalizerProcess(copying: resource)
         let output = try process.runOutputting(with: [

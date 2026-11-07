@@ -24,7 +24,7 @@ public struct Translation: Hashable, Sendable, Identifiable, Codable {
         language: Locale.LanguageCode,
         script: Locale.Script? = nil,
         region: Locale.Region? = nil,
-        state: TranslationState = .new
+        state: TranslationState = .new,
     ) {
         self.id = id
         self.expressionId = expressionId
@@ -39,7 +39,7 @@ public struct Translation: Hashable, Sendable, Identifiable, Codable {
     /// while overriding the `Expression.ID`.
     public init(
         translation: Translation,
-        expressionId: Expression.ID
+        expressionId: Expression.ID,
     ) {
         id = translation.id
         self.expressionId = expressionId

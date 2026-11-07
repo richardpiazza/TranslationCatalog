@@ -8,35 +8,35 @@ struct ShallowKeyHierarchyTests {
     let keys: [LocalizationKey] = [
         LocalizationKey(
             key: "GREETING",
-            defaultValue: "Hello World!"
+            defaultValue: "Hello World!",
         ),
         LocalizationKey(
             key: "APPLICATION_NAME",
-            defaultValue: "Lingua"
+            defaultValue: "Lingua",
         ),
         LocalizationKey(
             key: "HIDDEN_MESSAGE",
-            defaultValue: ""
+            defaultValue: "",
         ),
         LocalizationKey(
             key: "PLATFORM_ANDROID",
-            defaultValue: "Android"
+            defaultValue: "Android",
         ),
         LocalizationKey(
             key: "PLATFORM_APPLE",
-            defaultValue: "Apple"
+            defaultValue: "Apple",
         ),
         LocalizationKey(
             key: "PLATFORM_APPLE_MAC",
-            defaultValue: "macOS"
+            defaultValue: "macOS",
         ),
         LocalizationKey(
             key: "PLATFORM_WEB",
-            defaultValue: "Web"
+            defaultValue: "Web",
         ),
         LocalizationKey(
             key: "ZULU_TIME_DEFINITION",
-            defaultValue: "definition"
+            defaultValue: "definition",
         ),
     ]
 
@@ -212,7 +212,7 @@ struct ShallowKeyHierarchyTests {
     @Test func localizedStringConvertibleOrphanOnlyCompression() throws {
         let key = LocalizationKey(
             key: "ZULU_ZONE",
-            defaultValue: "zone"
+            defaultValue: "zone",
         )
         var test = hierarchy
         try test.processKey(key, path: [["ZULU"], ["ZONE"]])
@@ -365,7 +365,7 @@ struct ShallowKeyHierarchyTests {
     @Test func localizedStringKeyOrphanOnlyCompression() throws {
         let key = LocalizationKey(
             key: "ZULU_ZONE",
-            defaultValue: "zone"
+            defaultValue: "zone",
         )
         var test = hierarchy
         try test.processKey(key, path: [["ZULU"], ["ZONE"]])
