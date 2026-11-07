@@ -10,7 +10,9 @@
 # Rules
 --disable blankLinesAtStartOfScope
 --disable hoistPatternLet
+--disable nestedIf
 --disable redundantType
+--disable repeatedGuard
 --disable swiftTestingTestCaseNames
 --disable unusedArguments
 --disable wrapArguments

@@ -1,11 +1,11 @@
 import Foundation
 import Testing
 @testable @preconcurrency import TranslationCatalog
+@testable import TranslationCatalogFilesystem
+@testable import TranslationCatalogSQLite
 #if canImport(CoreData)
 @testable import TranslationCatalogCoreData
 #endif
-@testable import TranslationCatalogFilesystem
-@testable import TranslationCatalogSQLite
 
 final class CatalogUpdateTests {
 

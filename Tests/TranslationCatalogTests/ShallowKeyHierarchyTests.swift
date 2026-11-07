@@ -277,6 +277,42 @@ struct ShallowKeyHierarchyTests {
         """)
     }
 
+    @Test func localizedStringConvertibleCompressionDefaultValue() throws {
+        let defaultIndicator = try #require(DefaultValueIndicator(argument: "[]"))
+        let syntax = try hierarchy
+            .compressed()
+            .syntaxTree(defaultIndicator: defaultIndicator)
+        #expect(syntax == """
+        import LocaleSupport
+
+        enum LocalizedStrings: String, LocalizedStringConvertible {
+            case applicationName = "Lingua"
+            case greeting = "Hello World!"
+            case hiddenMessage = ""
+            case zuluTimeDefinition = "definition"
+
+            var defaultValueIndicator: DefaultValueIndicator? {
+                DefaultValueIndicator(prefix: "[", suffix: "]")
+            }
+
+            enum Platform: String, LocalizedStringConvertible {
+                case android = "Android"
+                case apple = "Apple"
+                case appleMac = "macOS"
+                case web = "Web"
+
+                var prefix: String? {
+                    "platform"
+                }
+
+                var defaultValueIndicator: DefaultValueIndicator? {
+                    DefaultValueIndicator(prefix: "[", suffix: "]")
+                }
+            }
+        }
+        """)
+    }
+
     @Test func localizedStringKey() {
         let syntax = hierarchy.syntaxTree(style: .swiftUI)
         #expect(syntax == """

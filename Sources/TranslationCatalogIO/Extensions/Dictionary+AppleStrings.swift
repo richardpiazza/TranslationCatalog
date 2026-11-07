@@ -61,7 +61,7 @@ extension [String: String] {
     ) -> [TranslationCatalog.Expression] {
         map { key, value -> TranslationCatalog.Expression in
             if defaultLanguage == language, script == nil, region == nil {
-                return TranslationCatalog.Expression(
+                TranslationCatalog.Expression(
                     id: .zero,
                     key: key,
                     value: value,
@@ -70,7 +70,7 @@ extension [String: String] {
                     feature: feature,
                 )
             } else {
-                return TranslationCatalog.Expression(
+                TranslationCatalog.Expression(
                     id: .zero,
                     key: key,
                     value: "",

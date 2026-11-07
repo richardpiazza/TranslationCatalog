@@ -2,8 +2,8 @@ import ArgumentParser
 import Foundation
 import LocaleSupport
 import TranslationCatalog
+import TranslationCatalogIO
 
-#if hasFeature(RetroactiveAttribute)
 extension Locale: @retroactive ExpressibleByArgument {
     public init?(argument: String) {
         let locale = Locale(identifier: argument)
@@ -50,54 +50,8 @@ extension UUID: @retroactive ExpressibleByArgument {
         self.init(uuidString: argument)
     }
 }
-#else
-extension Locale: ExpressibleByArgument {
-    public init?(argument: String) {
-        let locale = Locale(identifier: argument)
-        guard locale.language.languageCode?.isISOLanguage == true else {
-            return nil
-        }
 
-        self = locale
-    }
-}
-
-extension Locale.LanguageCode: ExpressibleByArgument {
-    public init?(argument: String) {
-        guard let languageCode = try? Locale.LanguageCode(matching: argument) else {
-            return nil
-        }
-
-        self = languageCode
-    }
-}
-
-extension Locale.Region: ExpressibleByArgument {
-    public init?(argument: String) {
-        guard let region = try? Locale.Region(matching: argument) else {
-            return nil
-        }
-
-        self = region
-    }
-}
-
-extension Locale.Script: ExpressibleByArgument {
-    public init?(argument: String) {
-        guard let script = try? Locale.Script(matching: argument) else {
-            return nil
-        }
-
-        self = script
-    }
-}
-
-extension UUID: ExpressibleByArgument {
-    public init?(argument: String) {
-        self.init(uuidString: argument)
-    }
-}
-#endif
+extension DefaultValueIndicator: @retroactive ExpressibleByArgument {}
 
 extension TranslationState: ExpressibleByArgument {
     public init?(argument: String) {

@@ -24,9 +24,9 @@ extension [TranslationCatalog.Expression] {
     ) -> [TranslationCatalog.Expression] {
         compactMap { expression -> TranslationCatalog.Expression? in
             if expression.value(for: locale) != nil || fallback {
-                return expression
+                expression
             } else {
-                return nil
+                nil
             }
         }
     }
