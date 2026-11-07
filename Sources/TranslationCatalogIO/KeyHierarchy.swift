@@ -68,7 +68,7 @@ public struct KeyHierarchy {
         id: KeyNodeID = [],
         parent: KeyNodePath = [],
         contents: [KeyNodeID: LocalizationKey] = [:],
-        nodes: [KeyHierarchy] = []
+        nodes: [KeyHierarchy] = [],
     ) {
         self.id = id
         self.parent = parent
@@ -98,7 +98,7 @@ public struct KeyHierarchy {
                 try LocalizationKey(
                     key: $0.key,
                     defaultValue: $0.defaultValue.encodingDarwinStrings(),
-                    comment: $0.context
+                    comment: $0.context,
                 )
             }
 
@@ -286,12 +286,12 @@ public struct KeyHierarchy {
     /// will be merged into the parent `node`.
     public func compressed(
         mergePhantoms: Bool = true,
-        mergeOrphans: Bool = true
+        mergeOrphans: Bool = true,
     ) throws -> KeyHierarchy {
         var hierarchy = self
         try hierarchy.compress(
             mergePhantoms: mergePhantoms,
-            mergeOrphans: mergeOrphans
+            mergeOrphans: mergeOrphans,
         )
         return hierarchy
     }
@@ -299,7 +299,7 @@ public struct KeyHierarchy {
     /// Mutates the hierarchy by merging phantom or orphaned nodes.
     public mutating func compress(
         mergePhantoms: Bool = true,
-        mergeOrphans: Bool = true
+        mergeOrphans: Bool = true,
     ) throws {
         if mergePhantoms {
             try self.mergePhantoms()

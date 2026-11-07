@@ -7,7 +7,7 @@ extension Project {
         expressions: [
             .expression1,
             .expression2,
-        ]
+        ],
     )
     static let project2 = Project(
         id: .project2,
@@ -16,7 +16,7 @@ extension Project {
             .expression1,
             .expression2,
             .expression3,
-        ]
+        ],
     )
     static let project3 = Project(
         id: .project3,
@@ -24,6 +24,6 @@ extension Project {
         expressions: [
             .expression1,
             .expression5,
-        ]
+        ],
     )
 }

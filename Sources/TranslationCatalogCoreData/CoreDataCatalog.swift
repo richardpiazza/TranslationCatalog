@@ -17,7 +17,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
         container = try CatalogContainer(
             version: .v3,
             persistence: .memory,
-            name: "CatalogModel"
+            name: "CatalogModel",
         )
     }
 
@@ -31,7 +31,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
             version: .v3,
             persistence: .store(storeURL),
             name: "CatalogModel",
-            silentMigration: false
+            silentMigration: false,
         ) { source, destination, context in
             switch (source, destination) {
             case (.v1, .v2):
@@ -224,12 +224,12 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
             ]
             if let scriptCode {
                 subpredicates.append(
-                    NSPredicate(format: "ANY %K == %@", "translationEntities.scriptCodeRawValue", scriptCode.identifier)
+                    NSPredicate(format: "ANY %K == %@", "translationEntities.scriptCodeRawValue", scriptCode.identifier),
                 )
             }
             if let regionCode {
                 subpredicates.append(
-                    NSPredicate(format: "ANY %K == %@", "translationEntities.regionCodeRawValue", regionCode.identifier)
+                    NSPredicate(format: "ANY %K == %@", "translationEntities.regionCodeRawValue", regionCode.identifier),
                 )
             }
 
@@ -237,7 +237,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
         case GenericExpressionQuery.translationsHavingOnly(let languageCode):
             fetchRequest.predicate = NSPredicate(
                 format: "SUBQUERY(translationEntities, $translation, $translation.languageCodeRawValue == %@ AND $translation.scriptCodeRawValue == NIL AND $translation.regionCodeRawValue == NIL).@count > 0",
-                languageCode.identifier
+                languageCode.identifier,
             )
         case GenericExpressionQuery.translationsHavingState(let state):
             fetchRequest.predicate = NSPredicate(format: "ANY %K == %@", "translationEntities.stateRawValue", state.rawValue)
@@ -248,7 +248,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
             let mappedExpressions = expressions.map { expression in
                 TranslationCatalog.Expression(
                     expression: expression,
-                    translations: translations.filter { $0.expressionId == expression.id }
+                    translations: translations.filter { $0.expressionId == expression.id },
                 )
             }
             return mappedExpressions.filter { !$0.hasValuesForLocales(locales) }
@@ -447,12 +447,12 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
             ]
             if let scriptCode {
                 subpredicates.append(
-                    NSPredicate(format: "%K == %@", "scriptCodeRawValue", scriptCode.identifier)
+                    NSPredicate(format: "%K == %@", "scriptCodeRawValue", scriptCode.identifier),
                 )
             }
             if let regionCode {
                 subpredicates.append(
-                    NSPredicate(format: "%K == %@", "regionCodeRawValue", regionCode.identifier)
+                    NSPredicate(format: "%K == %@", "regionCodeRawValue", regionCode.identifier),
                 )
             }
 
@@ -465,7 +465,7 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
                     NSPredicate(format: "%K == %@", "languageCodeRawValue", languageCode.identifier),
                     NSPredicate(format: "%K == NIL", "scriptCodeRawValue"),
                     NSPredicate(format: "%K == NIL", "regionCodeRawValue"),
-                ]
+                ],
             )
         default:
             throw CatalogError.unhandledQuery(query)
@@ -497,26 +497,26 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
             ]
             if let scriptCode {
                 subpredicates.append(
-                    NSPredicate(format: "%K == %@", "scriptCodeRawValue", scriptCode.identifier)
+                    NSPredicate(format: "%K == %@", "scriptCodeRawValue", scriptCode.identifier),
                 )
             } else {
                 subpredicates.append(
-                    NSPredicate(format: "%K == NIL", "scriptCodeRawValue")
+                    NSPredicate(format: "%K == NIL", "scriptCodeRawValue"),
                 )
             }
             if let regionCode {
                 subpredicates.append(
-                    NSPredicate(format: "%K == %@", "regionCodeRawValue", regionCode.identifier)
+                    NSPredicate(format: "%K == %@", "regionCodeRawValue", regionCode.identifier),
                 )
             } else {
                 subpredicates.append(
-                    NSPredicate(format: "%K == NIL", "regionCodeRawValue")
+                    NSPredicate(format: "%K == NIL", "regionCodeRawValue"),
                 )
             }
 
             fetchRequest.predicate = NSCompoundPredicate(
                 type: .and,
-                subpredicates: subpredicates
+                subpredicates: subpredicates,
             )
 
             translation = try viewContext.performAndWait {
@@ -670,14 +670,14 @@ public class CoreDataCatalog: TranslationCatalog.Catalog {
     public func locales() throws -> Set<Locale> {
         let expressions = try expressions()
         let expressionLocales = Set(
-            expressions.map { Locale(languageCode: $0.defaultLanguageCode) }
+            expressions.map { Locale(languageCode: $0.defaultLanguageCode) },
         )
 
         let translations = try translations()
         let translationLocales = Set(
             translations.map { translation in
                 Locale(languageCode: translation.language, script: translation.script, languageRegion: translation.region)
-            }
+            },
         )
 
         return expressionLocales.union(translationLocales)
@@ -704,7 +704,7 @@ private extension CoreDataCatalog {
                         NSPredicate(format: "%K == %@", argumentArray: ["languageCodeRawValue", language]),
                         NSPredicate(format: "%K == NIL", "scriptCodeRawValue"),
                         NSPredicate(format: "%K == NIL", "regionCodeRawValue"),
-                    ]
+                    ],
                 )
 
                 if let translationEntity = try context.fetch(translationRequest).first {
@@ -725,7 +725,7 @@ private extension CoreDataCatalog {
                 subpredicates: [
                     NSPredicate(format: "%K == NIL", "stateRawValue"),
                     NSPredicate(format: "%K == %@", argumentArray: ["stateRawValue", ""]),
-                ]
+                ],
             )
 
             let translationEntities = try context.fetch(translationRequest)
@@ -741,7 +741,7 @@ private extension CoreDataCatalog {
 private extension ProjectEntity {
     func addExpressions(
         _ expressions: [TranslationCatalog.Expression],
-        context: NSManagedObjectContext
+        context: NSManagedObjectContext,
     ) throws {
         for expression in expressions {
             var expressionId = expression.id
@@ -776,7 +776,7 @@ private extension ProjectEntity {
 private extension ExpressionEntity {
     func addTranslations(
         _ translations: [TranslationCatalog.Translation],
-        context: NSManagedObjectContext
+        context: NSManagedObjectContext,
     ) throws {
         for translation in translations {
             var translationId = translation.id

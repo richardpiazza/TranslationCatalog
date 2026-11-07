@@ -23,11 +23,11 @@ let package = Package(
                 "TranslationCatalogIO",
                 "TranslationCatalogSQLite",
                 "TranslationCatalogFilesystem",
-            ]
+            ],
         ),
         .executable(
             name: "localizer",
-            targets: ["localizer"]
+            targets: ["localizer"],
         ),
     ],
     dependencies: [
@@ -42,7 +42,7 @@ let package = Package(
     targets: [
         .target(
             name: "TranslationCatalog",
-            dependencies: []
+            dependencies: [],
         ),
         .target(
             name: "TranslationCatalogCoreData",
@@ -53,7 +53,7 @@ let package = Package(
             resources: [
                 .process("Resources"),
                 .copy("PrecompiledResources"),
-            ]
+            ],
         ),
         .target(
             name: "TranslationCatalogIO",
@@ -63,7 +63,7 @@ let package = Package(
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
                 .product(name: "LocaleSupport", package: "LocaleSupport"),
-            ]
+            ],
         ),
         .target(
             name: "TranslationCatalogSQLite",
@@ -72,13 +72,13 @@ let package = Package(
                 .product(name: "Statement", package: "Statement"),
                 .product(name: "StatementSQLite", package: "Statement"),
                 .product(name: "SQLite", package: "SQLite.swift"),
-            ]
+            ],
         ),
         .target(
             name: "TranslationCatalogFilesystem",
             dependencies: [
                 "TranslationCatalog",
-            ]
+            ],
         ),
         .executableTarget(
             name: "localizer",
@@ -90,7 +90,7 @@ let package = Package(
                 "TranslationCatalogFilesystem",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "LocaleSupport", package: "LocaleSupport"),
-            ]
+            ],
         ),
         .testTarget(
             name: "LocalizerTests",
@@ -98,7 +98,7 @@ let package = Package(
             resources: [
                 .process("Resources"),
                 .copy("StructuredResources"),
-            ]
+            ],
         ),
         .testTarget(
             name: "TranslationCatalogTests",
@@ -108,10 +108,10 @@ let package = Package(
                 "TranslationCatalogIO",
                 "TranslationCatalogFilesystem",
                 "TranslationCatalogSQLite",
-            ]
+            ],
         ),
     ],
-    swiftLanguageModes: [.v5]
+    swiftLanguageModes: [.v5],
 )
 
 for target in package.targets {

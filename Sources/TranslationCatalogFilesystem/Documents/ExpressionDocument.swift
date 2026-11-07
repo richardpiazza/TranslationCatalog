@@ -17,7 +17,7 @@ struct ExpressionDocument: Document {
         defaultLanguage: Locale.LanguageCode,
         defaultValue: String,
         context: String? = nil,
-        feature: String? = nil
+        feature: String? = nil,
     ) {
         self.id = id
         self.key = key
@@ -41,7 +41,7 @@ extension TranslationCatalog.Expression {
             name: document.name,
             context: document.context,
             feature: document.feature,
-            translations: translations
+            translations: translations,
         )
     }
 }

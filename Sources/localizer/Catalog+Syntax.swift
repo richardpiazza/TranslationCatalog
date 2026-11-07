@@ -42,7 +42,7 @@ extension Catalog {
             }
             """,
             version: "1.0.0",
-            helpNames: .shortAndLong
+            helpNames: .shortAndLong,
         )
 
         @Option(help: "Name used for the root declaration. (Default 'LocalizedStrings')")
@@ -87,7 +87,7 @@ extension Catalog {
             if compressed {
                 try keyHierarchy.compress(
                     mergePhantoms: !excludePhantoms,
-                    mergeOrphans: !excludeOrphans
+                    mergeOrphans: !excludeOrphans,
                 )
             }
 

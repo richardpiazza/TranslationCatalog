@@ -30,7 +30,7 @@ struct Catalog: AsyncParsableCommand {
             Syntax.self,
             Update.self,
         ],
-        helpNames: .shortAndLong
+        helpNames: .shortAndLong,
     )
 }
 

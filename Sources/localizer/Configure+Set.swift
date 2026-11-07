@@ -8,7 +8,7 @@ extension Configure {
             commandName: "set",
             abstract: "Sets configuration parameters.",
             version: "1.0.0",
-            helpNames: .shortAndLong
+            helpNames: .shortAndLong,
         )
 
         @Option(help: "The default LanguageCode used when no other option is presented.")

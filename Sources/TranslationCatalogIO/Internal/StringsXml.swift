@@ -34,8 +34,8 @@ struct StringsXml: Codable, DynamicNodeDecoding, DynamicNodeEncoding {
             withRootKey: "resources",
             header: XMLHeader(
                 version: 1.0,
-                encoding: "UTF-8"
-            )
+                encoding: "UTF-8",
+            ),
         )
         var string = String(decoding: encoded, as: UTF8.self)
         string = string.replacingOccurrences(of: "&apos;", with: "\\'")
@@ -50,7 +50,7 @@ extension StringsXml {
         defaultLanguage: Locale.LanguageCode = .default,
         language: Locale.LanguageCode,
         script: Locale.Script?,
-        region: Locale.Region?
+        region: Locale.Region?,
     ) -> [TranslationCatalog.Expression] {
         resources.map {
             $0.expression(
@@ -58,7 +58,7 @@ extension StringsXml {
                 defaultLanguage: defaultLanguage,
                 language: language,
                 script: script,
-                region: region
+                region: region,
             )
         }
     }

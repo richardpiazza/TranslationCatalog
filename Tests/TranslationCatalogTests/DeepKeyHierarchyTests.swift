@@ -8,39 +8,39 @@ struct DeepKeyHierarchyTests {
     let keys: [LocalizationKey] = [
         LocalizationKey(
             key: "PAYMENT_METHOD_ADD_ACTION",
-            defaultValue: "Add payment method"
+            defaultValue: "Add payment method",
         ),
         LocalizationKey(
             key: "PAYMENT_METHOD_ADD_CARD_FAILURE_MESSAGE",
-            defaultValue: "Your payment method could not be added at this time."
+            defaultValue: "Your payment method could not be added at this time.",
         ),
         LocalizationKey(
             key: "PAYMENT_METHOD_ADD_CARD_SUCCESS_MESSAGE",
-            defaultValue: "Your payment method has been added."
+            defaultValue: "Your payment method has been added.",
         ),
         LocalizationKey(
             key: "PAYMENT_METHOD_CONFIRM_DELETE",
-            defaultValue: "Are you sure you want to delete this payment method?"
+            defaultValue: "Are you sure you want to delete this payment method?",
         ),
         LocalizationKey(
             key: "PAYMENT_METHOD_EXPIRATION_ABBREVIATION",
-            defaultValue: "Exp"
+            defaultValue: "Exp",
         ),
         LocalizationKey(
             key: "PAYMENT_METHOD_NAVIGATION_TITLE",
-            defaultValue: "Manage Payments"
+            defaultValue: "Manage Payments",
         ),
         LocalizationKey(
             key: "PAYMENT_METHOD_REMOVE_CARD_FAILURE_MESSAGE",
-            defaultValue: "Your payment method could not be deleted at this time."
+            defaultValue: "Your payment method could not be deleted at this time.",
         ),
         LocalizationKey(
             key: "PAYMENT_METHOD_REMOVE_CARD_SUCCESS_MESSAGE",
-            defaultValue: "Your payment method has been deleted."
+            defaultValue: "Your payment method has been deleted.",
         ),
         LocalizationKey(
             key: "PAYMENT_METHOD_SECTION_TITLE",
-            defaultValue: "Payment Methods"
+            defaultValue: "Payment Methods",
         ),
     ]
 

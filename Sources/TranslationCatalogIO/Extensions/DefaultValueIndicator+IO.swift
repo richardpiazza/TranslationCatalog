@@ -1,7 +1,7 @@
 import LocaleSupport
 
-extension DefaultValueIndicator {
-    public init?(argument: String) {
+public extension DefaultValueIndicator {
+    init?(argument: String) {
         guard let prefix = argument.first else {
             return nil
         }

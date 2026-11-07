@@ -64,7 +64,7 @@ extension ExpressionEntity {
             name: name,
             context: context,
             feature: feature,
-            translations: translations
+            translations: translations,
         )
     }
 }

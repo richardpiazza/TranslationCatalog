@@ -20,7 +20,7 @@ extension Translation {
             language: document.languageCode,
             script: document.scriptCode,
             region: document.regionCode,
-            state: document.state
+            state: document.state,
         )
     }
 }

@@ -9,7 +9,7 @@ extension Translation {
         language: .english,
         script: nil,
         region: .unitedKingdom,
-        state: .translated
+        state: .translated,
     )
     static let translation2 = TranslationCatalog.Translation(
         id: .translation2,
@@ -18,7 +18,7 @@ extension Translation {
         language: .spanish,
         script: nil,
         region: nil,
-        state: .translated
+        state: .translated,
     )
     static let translation3 = TranslationCatalog.Translation(
         id: .translation3,
@@ -27,7 +27,7 @@ extension Translation {
         language: .french,
         script: nil,
         region: nil,
-        state: .needsReview
+        state: .needsReview,
     )
     static let translation4 = TranslationCatalog.Translation(
         id: .translation4,
@@ -36,7 +36,7 @@ extension Translation {
         language: .english,
         script: nil,
         region: .unitedKingdom,
-        state: .translated
+        state: .translated,
     )
     static let translation5 = TranslationCatalog.Translation(
         id: .translation5,
@@ -45,7 +45,7 @@ extension Translation {
         language: .spanish,
         script: nil,
         region: nil,
-        state: .translated
+        state: .translated,
     )
     static let translation6 = TranslationCatalog.Translation(
         id: .translation6,
@@ -54,7 +54,7 @@ extension Translation {
         language: .french,
         script: nil,
         region: nil,
-        state: .needsReview
+        state: .needsReview,
     )
     static let translation7 = TranslationCatalog.Translation(
         id: .translation7,
@@ -63,7 +63,7 @@ extension Translation {
         language: .english,
         script: nil,
         region: .unitedKingdom,
-        state: .translated
+        state: .translated,
     )
     static let translation8 = TranslationCatalog.Translation(
         id: .translation8,
@@ -72,7 +72,7 @@ extension Translation {
         language: .chinese,
         script: .hanSimplified,
         region: nil,
-        state: .needsReview
+        state: .needsReview,
     )
     static let translation9 = TranslationCatalog.Translation(
         id: .translation9,
@@ -81,7 +81,7 @@ extension Translation {
         language: .portuguese,
         script: nil,
         region: .brazil,
-        state: .needsReview
+        state: .needsReview,
     )
     static let translation10 = TranslationCatalog.Translation(
         id: .translation10,
@@ -90,7 +90,7 @@ extension Translation {
         language: .english,
         script: nil,
         region: .unitedKingdom,
-        state: .translated
+        state: .translated,
     )
     static let translation11 = TranslationCatalog.Translation(
         id: .translation11,
@@ -99,7 +99,7 @@ extension Translation {
         language: .english,
         script: nil,
         region: .unitedKingdom,
-        state: .translated
+        state: .translated,
     )
     static let translation12 = TranslationCatalog.Translation(
         id: .translation12,
@@ -108,7 +108,7 @@ extension Translation {
         language: .french,
         script: nil,
         region: nil,
-        state: .needsReview
+        state: .needsReview,
     )
     static let translation13 = TranslationCatalog.Translation(
         id: .translation13,
@@ -117,7 +117,7 @@ extension Translation {
         language: .french,
         script: nil,
         region: .canada,
-        state: .needsReview
+        state: .needsReview,
     )
     static let translation14 = TranslationCatalog.Translation(
         id: .translation14,
@@ -126,7 +126,7 @@ extension Translation {
         language: .french,
         script: nil,
         region: .canada,
-        state: .needsReview
+        state: .needsReview,
     )
     static let translation15 = TranslationCatalog.Translation(
         id: .translation15,
@@ -135,7 +135,7 @@ extension Translation {
         language: .portuguese,
         script: nil,
         region: .brazil,
-        state: .needsReview
+        state: .needsReview,
     )
     static let translation16 = TranslationCatalog.Translation(
         id: .translation16,
@@ -144,6 +144,6 @@ extension Translation {
         language: .chinese,
         script: .hanSimplified,
         region: nil,
-        state: .needsReview
+        state: .needsReview,
     )
 }

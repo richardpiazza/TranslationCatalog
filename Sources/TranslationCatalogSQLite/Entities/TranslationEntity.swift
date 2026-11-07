@@ -59,7 +59,7 @@ extension TranslationEntity {
             language: languageCode,
             script: scriptCode,
             region: regionCode,
-            state: state
+            state: state,
         )
     }
 }

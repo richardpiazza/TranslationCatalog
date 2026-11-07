@@ -40,7 +40,7 @@ extension Resource {
         feature: String? = nil,
         language: Locale.LanguageCode,
         script: Locale.Script? = nil,
-        region: Locale.Region? = nil
+        region: Locale.Region? = nil,
     ) -> TranslationCatalog.Expression {
         if defaultLanguage == language, script == nil, region == nil {
             TranslationCatalog.Expression(
@@ -50,7 +50,7 @@ extension Resource {
                 languageCode: defaultLanguage,
                 name: name,
                 context: comment,
-                feature: feature
+                feature: feature,
             )
         } else {
             TranslationCatalog.Expression(
@@ -69,9 +69,9 @@ extension Resource {
                         language: language,
                         script: script,
                         region: region,
-                        state: .new
+                        state: .new,
                     ),
-                ]
+                ],
             )
         }
     }
