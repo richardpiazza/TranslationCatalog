@@ -60,6 +60,9 @@ extension Catalog {
         @Option(help: "Generated reference style.")
         var style: SyntaxStyle = .localeSupport
 
+        @Option(help: "Optional characters used to indicate a default value fallbacks. i.e. '[]'")
+        var defaultIndicator: DefaultValueIndicator?
+
         @Flag(help: "Reduce the instance of single-content nodes.")
         var compressed: Bool = false
 
@@ -91,11 +94,13 @@ extension Catalog {
             let syntax = if let name, !name.isEmpty {
                 keyHierarchy.syntaxTree(
                     style: style,
-                    rootDeclaration: name
+                    rootDeclaration: name,
+                    defaultIndicator: defaultIndicator,
                 )
             } else {
                 keyHierarchy.syntaxTree(
-                    style: style
+                    style: style,
+                    defaultIndicator: defaultIndicator,
                 )
             }
 

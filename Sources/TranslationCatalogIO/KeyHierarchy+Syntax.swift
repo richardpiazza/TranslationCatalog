@@ -7,7 +7,10 @@ import TranslationCatalog
 
 public extension KeyHierarchy {
     /// Data containing a file with a hierarchy of enums conforming to `LocalizedStringConvertible`.
-    func localizedStringConvertible(rootDeclaration name: String = "LocalizedStrings") -> Data {
+    func localizedStringConvertible(
+        rootDeclaration name: String = "LocalizedStrings",
+        defaultIndicator: DefaultValueIndicator? = nil,
+    ) -> Data {
         let sourceFile = SourceFileSyntax {
             CodeBlockItemListSyntax {
                 ImportDeclSyntax(
@@ -16,7 +19,11 @@ public extension KeyHierarchy {
                     }
                 )
 
-                EnumDeclSyntax.localizedStringConvertibleEnumerationDecl(for: self, named: name)
+                EnumDeclSyntax.localizedStringConvertibleEnumerationDecl(
+                    for: self,
+                    named: name,
+                    defaultIndicator: defaultIndicator,
+                )
             }
         }
 
@@ -65,12 +72,16 @@ public extension KeyHierarchy {
 
     func syntaxTree(
         style: SyntaxStyle = .localeSupport,
-        rootDeclaration name: String = "LocalizedStrings"
+        rootDeclaration name: String = "LocalizedStrings",
+        defaultIndicator: DefaultValueIndicator? = nil,
     ) -> String {
         switch style {
         case .localeSupport:
             String(
-                decoding: localizedStringConvertible(rootDeclaration: name),
+                decoding: localizedStringConvertible(
+                    rootDeclaration: name,
+                    defaultIndicator: defaultIndicator,
+                ),
                 as: UTF8.self
             )
         case .swiftUI:
@@ -99,7 +110,8 @@ extension [String] {
 extension EnumDeclSyntax {
     static func localizedStringConvertibleEnumerationDecl(
         for hierarchy: KeyHierarchy,
-        named name: String? = nil
+        named name: String? = nil,
+        defaultIndicator: DefaultValueIndicator? = nil,
     ) -> EnumDeclSyntax {
         var inheritanceClause: InheritanceClauseSyntax?
         if !hierarchy.contents.isEmpty {
@@ -131,10 +143,17 @@ extension EnumDeclSyntax {
                 if !prefix.isEmpty {
                     VariableDeclSyntax.stringValuePrefix(prefix)
                 }
+
+                if let defaultIndicator {
+                    VariableDeclSyntax.defaultValueIndicatorValue(defaultIndicator)
+                }
             }
 
             for node in hierarchy.sortedNodes {
-                localizedStringConvertibleEnumerationDecl(for: node)
+                localizedStringConvertibleEnumerationDecl(
+                    for: node,
+                    defaultIndicator: defaultIndicator,
+                )
             }
         }
     }
@@ -211,6 +230,25 @@ extension VariableDeclSyntax {
                 ),
                 accessorBlock: AccessorBlockSyntax(
                     accessors: .getter(CodeBlockItemListSyntax { StringLiteralExprSyntax(content: value) })
+                )
+            )
+        }
+    }
+
+    static func defaultValueIndicatorValue(_ value: DefaultValueIndicator) -> VariableDeclSyntax {
+        VariableDeclSyntax(
+            leadingTrivia: .newlines(2),
+            bindingSpecifier: TokenSyntax("var"),
+        ) {
+            PatternBindingSyntax(
+                pattern: IdentifierPatternSyntax(identifier: TokenSyntax("defaultValueIndicator")),
+                typeAnnotation: TypeAnnotationSyntax(
+                    type: OptionalTypeSyntax(wrappedType: IdentifierTypeSyntax(name: TokenSyntax("DefaultValueIndicator")))
+                ),
+                accessorBlock: AccessorBlockSyntax(
+                    accessors: .getter(CodeBlockItemListSyntax {
+                        "DefaultValueIndicator(prefix: \"\(raw: value.prefix)\", suffix: \"\(raw: value.suffix)\")"
+                    })
                 )
             )
         }
