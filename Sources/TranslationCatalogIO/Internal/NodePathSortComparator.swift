@@ -1,14 +1,11 @@
 import Foundation
 
-/// Represents a multi-part identifier.
-///
-/// A 'node' is represented by a series of strings (words).
-public typealias KeyNodeID = [String]
+struct NodePathSortComparator: SortComparator {
 
-struct NodeIDSortComparator: SortComparator {
     var order: SortOrder = .forward
+    let elementSort = NodeIDSortComparator()
 
-    func compare(_ lhs: KeyNodeID, _ rhs: KeyNodeID) -> ComparisonResult {
+    func compare(_ lhs: KeyNodePath, _ rhs: KeyNodePath) -> ComparisonResult {
         switch (lhs.isEmpty, rhs.isEmpty) {
         case (true, true):
             return .orderedSame
@@ -22,7 +19,8 @@ struct NodeIDSortComparator: SortComparator {
 
         var left = lhs
         var right = rhs
-        let comparison = left.removeFirst().compare(right.removeFirst())
+
+        let comparison = elementSort.compare(left.removeFirst(), right.removeFirst())
         if comparison != .orderedSame {
             return comparison
         }

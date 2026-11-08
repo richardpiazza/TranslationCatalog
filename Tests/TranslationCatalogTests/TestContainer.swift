@@ -40,7 +40,7 @@ struct TestContainer {
                 break
             #endif
             case let directoryCatalog as DirectoryCatalog:
-                let url = directoryCatalog.url
+                let url = directoryCatalog.medium
                 try FileManager.default.removeItem(at: url)
             case let sqliteCatalog as SQLiteCatalog:
                 let url = sqliteCatalog.url

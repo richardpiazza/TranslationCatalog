@@ -5,42 +5,42 @@ import Testing
 
 struct DeepKeyHierarchyTests {
 
-    let keys: [LocalizationKey] = [
-        LocalizationKey(
+    let keys: [any AnnotatedLocalizationReference] = [
+        AnyAnnotatedLocalizationReference(
             key: "PAYMENT_METHOD_ADD_ACTION",
-            defaultValue: "Add payment method",
+            value: "Add payment method",
         ),
-        LocalizationKey(
+        AnyAnnotatedLocalizationReference(
             key: "PAYMENT_METHOD_ADD_CARD_FAILURE_MESSAGE",
-            defaultValue: "Your payment method could not be added at this time.",
+            value: "Your payment method could not be added at this time.",
         ),
-        LocalizationKey(
+        AnyAnnotatedLocalizationReference(
             key: "PAYMENT_METHOD_ADD_CARD_SUCCESS_MESSAGE",
-            defaultValue: "Your payment method has been added.",
+            value: "Your payment method has been added.",
         ),
-        LocalizationKey(
+        AnyAnnotatedLocalizationReference(
             key: "PAYMENT_METHOD_CONFIRM_DELETE",
-            defaultValue: "Are you sure you want to delete this payment method?",
+            value: "Are you sure you want to delete this payment method?",
         ),
-        LocalizationKey(
+        AnyAnnotatedLocalizationReference(
             key: "PAYMENT_METHOD_EXPIRATION_ABBREVIATION",
-            defaultValue: "Exp",
+            value: "Exp",
         ),
-        LocalizationKey(
+        AnyAnnotatedLocalizationReference(
             key: "PAYMENT_METHOD_NAVIGATION_TITLE",
-            defaultValue: "Manage Payments",
+            value: "Manage Payments",
         ),
-        LocalizationKey(
+        AnyAnnotatedLocalizationReference(
             key: "PAYMENT_METHOD_REMOVE_CARD_FAILURE_MESSAGE",
-            defaultValue: "Your payment method could not be deleted at this time.",
+            value: "Your payment method could not be deleted at this time.",
         ),
-        LocalizationKey(
+        AnyAnnotatedLocalizationReference(
             key: "PAYMENT_METHOD_REMOVE_CARD_SUCCESS_MESSAGE",
-            defaultValue: "Your payment method has been deleted.",
+            value: "Your payment method has been deleted.",
         ),
-        LocalizationKey(
+        AnyAnnotatedLocalizationReference(
             key: "PAYMENT_METHOD_SECTION_TITLE",
-            defaultValue: "Payment Methods",
+            value: "Payment Methods",
         ),
     ]
 

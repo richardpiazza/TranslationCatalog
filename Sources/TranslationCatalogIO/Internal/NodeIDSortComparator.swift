@@ -1,24 +1,9 @@
 import Foundation
 
-/// Represents a path of multi-part strings.
-///
-/// The human readable path `Strings > EnumName > SubType > Category` would be represented by:
-/// ```swift
-/// [
-///   ["Strings"],
-///   ["Enum", "Name"],
-///   ["Sub", "Type"],
-///   ["Category"]
-/// ]
-/// ```
-public typealias KeyNodePath = [KeyNodeID]
-
-struct NodePathSortComparator: SortComparator {
-
+struct NodeIDSortComparator: SortComparator {
     var order: SortOrder = .forward
-    let elementSort = NodeIDSortComparator()
 
-    func compare(_ lhs: KeyNodePath, _ rhs: KeyNodePath) -> ComparisonResult {
+    func compare(_ lhs: KeyNodeID, _ rhs: KeyNodeID) -> ComparisonResult {
         switch (lhs.isEmpty, rhs.isEmpty) {
         case (true, true):
             return .orderedSame
@@ -32,8 +17,7 @@ struct NodePathSortComparator: SortComparator {
 
         var left = lhs
         var right = rhs
-
-        let comparison = elementSort.compare(left.removeFirst(), right.removeFirst())
+        let comparison = left.removeFirst().compare(right.removeFirst())
         if comparison != .orderedSame {
             return comparison
         }

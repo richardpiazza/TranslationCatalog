@@ -53,7 +53,7 @@ public extension KeyHierarchy {
                             VariableDeclSyntax.localizedStringKey(
                                 name: key.lowerCamelCased,
                                 value: content.key,
-                                comment: content.defaultValue.isEmpty ? nil : content.defaultValue,
+                                comment: content.value.isEmpty ? nil : content.value,
                             )
                         }
                     }
@@ -132,7 +132,7 @@ extension EnumDeclSyntax {
                 if let content = hierarchy.contents[key] {
                     EnumCaseDeclSyntax.localizedStringConvertibleEnumerationCase(
                         key: key.lowerCamelCased,
-                        value: content.defaultValue,
+                        value: content.value,
                         comment: content.comment,
                     )
                 }
@@ -170,7 +170,7 @@ extension EnumDeclSyntax {
                     VariableDeclSyntax.localizedStringKey(
                         name: key.lowerCamelCased,
                         value: content.key,
-                        comment: content.defaultValue.isEmpty ? nil : content.defaultValue,
+                        comment: content.value.isEmpty ? nil : content.value,
                     )
                 }
             }
