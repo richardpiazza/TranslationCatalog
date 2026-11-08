@@ -31,7 +31,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/richardpiazza/LocaleSupport.git", from: "0.9.0"),
+        .package(url: "https://github.com/richardpiazza/LocaleSupport.git", from: "0.10.0"),
         .package(url: "https://github.com/richardpiazza/Statement.git", from: "0.8.1"),
         .package(url: "https://github.com/richardpiazza/CoreDataPlus.git", from: "0.5.0"),
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.7.1"),

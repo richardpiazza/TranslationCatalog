@@ -5,38 +5,38 @@ import Testing
 
 struct ShallowKeyHierarchyTests {
 
-    let keys: [LocalizationKey] = [
-        LocalizationKey(
+    let keys: [any AnnotatedLocalizationReference] = [
+        AnyAnnotatedLocalizationReference(
             key: "GREETING",
-            defaultValue: "Hello World!",
+            value: "Hello World!",
         ),
-        LocalizationKey(
+        AnyAnnotatedLocalizationReference(
             key: "APPLICATION_NAME",
-            defaultValue: "Lingua",
+            value: "Lingua",
         ),
-        LocalizationKey(
+        AnyAnnotatedLocalizationReference(
             key: "HIDDEN_MESSAGE",
-            defaultValue: "",
+            value: "",
         ),
-        LocalizationKey(
+        AnyAnnotatedLocalizationReference(
             key: "PLATFORM_ANDROID",
-            defaultValue: "Android",
+            value: "Android",
         ),
-        LocalizationKey(
+        AnyAnnotatedLocalizationReference(
             key: "PLATFORM_APPLE",
-            defaultValue: "Apple",
+            value: "Apple",
         ),
-        LocalizationKey(
+        AnyAnnotatedLocalizationReference(
             key: "PLATFORM_APPLE_MAC",
-            defaultValue: "macOS",
+            value: "macOS",
         ),
-        LocalizationKey(
+        AnyAnnotatedLocalizationReference(
             key: "PLATFORM_WEB",
-            defaultValue: "Web",
+            value: "Web",
         ),
-        LocalizationKey(
+        AnyAnnotatedLocalizationReference(
             key: "ZULU_TIME_DEFINITION",
-            defaultValue: "definition",
+            value: "definition",
         ),
     ]
 
@@ -210,12 +210,12 @@ struct ShallowKeyHierarchyTests {
     }
 
     @Test func localizedStringConvertibleOrphanOnlyCompression() throws {
-        let key = LocalizationKey(
+        let reference = AnyAnnotatedLocalizationReference(
             key: "ZULU_ZONE",
-            defaultValue: "zone",
+            value: "zone",
         )
         var test = hierarchy
-        try test.processKey(key, path: [["ZULU"], ["ZONE"]])
+        try test.processReference(reference, path: [["ZULU"], ["ZONE"]])
         let syntax = try test
             .compressed(mergePhantoms: false)
             .syntaxTree()
@@ -399,12 +399,12 @@ struct ShallowKeyHierarchyTests {
     }
 
     @Test func localizedStringKeyOrphanOnlyCompression() throws {
-        let key = LocalizationKey(
+        let reference = AnyAnnotatedLocalizationReference(
             key: "ZULU_ZONE",
-            defaultValue: "zone",
+            value: "zone",
         )
         var test = hierarchy
-        try test.processKey(key, path: [["ZULU"], ["ZONE"]])
+        try test.processReference(reference, path: [["ZULU"], ["ZONE"]])
         let syntax = try test
             .compressed(mergePhantoms: false)
             .syntaxTree(style: .swiftUI)

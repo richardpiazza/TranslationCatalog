@@ -1,5 +1,5 @@
 {
-  "originHash" : "0166a63a2d3ecfbaa9238a83c348c06871dc4cd4fefc89dc7891c829fd748791",
+  "originHash" : "c789416da6dc68b88a900f647fb2be2b80b92cd65d451dd905345c3bf46ec11e",
   "pins" : [
     {
       "identity" : "coredataplus",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/richardpiazza/LocaleSupport.git",
       "state" : {
-        "revision" : "14c131d7b1e4710e8278778ca546ae4e4fab3338",
-        "version" : "0.9.0"
+        "revision" : "d4ac22c737de7eeb12168b405991d0b11975ec3b",
+        "version" : "0.10.0"
       }
     },
     {

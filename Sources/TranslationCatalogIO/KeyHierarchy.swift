@@ -1,6 +1,5 @@
 import Foundation
 import LocaleSupport
-import TranslationCatalog
 
 public struct KeyHierarchy {
 
@@ -28,7 +27,7 @@ public struct KeyHierarchy {
 
     public private(set) var id: KeyNodeID
     public private(set) var parent: KeyNodePath
-    public private(set) var contents: [KeyNodeID: LocalizationKey]
+    public private(set) var contents: [KeyNodeID: any AnnotatedLocalizationReference]
     public private(set) var nodes: [KeyHierarchy]
 
     private let pathSort = NodePathSortComparator()
@@ -67,7 +66,7 @@ public struct KeyHierarchy {
     public init(
         id: KeyNodeID = [],
         parent: KeyNodePath = [],
-        contents: [KeyNodeID: LocalizationKey] = [:],
+        contents: [KeyNodeID: any AnnotatedLocalizationReference] = [:],
         nodes: [KeyHierarchy] = [],
     ) {
         self.id = id
@@ -76,36 +75,23 @@ public struct KeyHierarchy {
         self.nodes = nodes
     }
 
-    public static func make(with localizationKeys: [LocalizationKey]) throws -> KeyHierarchy {
+    public static func make(with references: [any AnnotatedLocalizationReference]) throws -> KeyHierarchy {
         var hierarchy = KeyHierarchy()
 
-        try localizationKeys.forEach { key in
-            let id = key.key
-                .components(separatedBy: String(key.strategy.separator))
+        try references.forEach { reference in
+            let id = reference.key
+                .components(separatedBy: String(reference.keyStrategy.separator))
                 .map {
                     [$0]
                 }
 
-            try hierarchy.processKey(key, path: id)
+            try hierarchy.processReference(reference, path: id)
         }
 
         return hierarchy
     }
 
-    public static func make(with expressions: [TranslationCatalog.Expression]) throws -> KeyHierarchy {
-        let localizationKeys = try expressions
-            .map {
-                try LocalizationKey(
-                    key: $0.key,
-                    defaultValue: $0.defaultValue.encodingDarwinStrings(),
-                    comment: $0.context,
-                )
-            }
-
-        return try make(with: localizationKeys)
-    }
-
-    mutating func processKey(_ key: LocalizationKey, path: KeyNodePath) throws {
+    mutating func processReference(_ reference: any AnnotatedLocalizationReference, path: KeyNodePath) throws {
         guard !path.isEmpty else {
             throw HierarchyError.emptyNodePath
         }
@@ -131,7 +117,7 @@ public struct KeyHierarchy {
                 throw HierarchyError.reservedType(Int.self)
             }
 
-            contents[nodeId] = key
+            contents[nodeId] = reference
             return
         }
 
@@ -161,7 +147,7 @@ public struct KeyHierarchy {
         }
 
         guard !_path.isEmpty else {
-            contents[_nodeId] = key
+            contents[_nodeId] = reference
             return
         }
 
@@ -172,11 +158,11 @@ public struct KeyHierarchy {
         _parent.append(id)
 
         if let index = nodes.firstIndex(where: { $0.id == _nodeId }) {
-            try nodes[index].processKey(key, path: _path)
+            try nodes[index].processReference(reference, path: _path)
         } else {
             var node = KeyHierarchy(id: _nodeId, parent: _parent)
             if !_path.isEmpty {
-                try node.processKey(key, path: _path)
+                try node.processReference(reference, path: _path)
             }
             nodes.append(node)
         }
